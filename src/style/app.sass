@@ -1,0 +1,184 @@
+@use 'colors.sass'
+
+@import "../style/milligram/milligram"
+
+body
+  margin: 0
+  padding: 0
+
+.container
+  display: flex
+  justify-content: center
+  align-items: flex-start
+  min-height: 100vh
+  color: gainsboro
+  min-width: 80rem
+  margin-top: 4rem
+
+.container-content
+  min-height: 100vh
+
+.hidden
+  display: none
+
+.invisible
+  opacity: 0
+
+.visible
+ opacity: 1
+
+.fades-out
+  opacity: 1
+  visibility: visible
+  transition: opacity 500ms ease-in, visibility 0s 500ms
+
+  &.faded
+    visibility: hidden
+    opacity: 0
+
+body
+  background-color: colors.$primary
+
+@font-face
+  font-family: 'FreeSerif'
+  src: url('../../public/fonts/FreeSerif.woff')
+
+.chess-piece
+  stroke-opacity: 1
+  fill-opacity: 1
+  fill-rule: evenodd
+  stroke-width: 1
+  cursor: pointer
+
+  .piece-fill
+    stroke-width: 0
+
+  text
+    font: 100 6.5rem FreeSerif
+    user-select: none
+
+  &.black-piece
+    fill: #000000
+    stroke: aquamarine
+
+    .piece-fill
+      fill: aquamarine
+
+  &.white-piece
+    fill: #ffffff
+    stroke: #80082B
+
+    .piece-fill
+      stroke-width: 0
+      fill: #80082B
+
+.square
+  stroke-width: 0
+
+  .black-square
+    fill: #003b00
+
+  .white-square
+    fill: #dedede
+
+  .move-indicator
+    fill: aquamarine
+    fill-opacity: 80%
+    stroke: darken(#dedede,50%)
+    stroke-width: 1
+    stroke-opacity: 80%
+
+  circle.move-indicator
+    cursor: pointer
+
+.margin-left
+  margin-left: 2rem
+
+.margin-top
+  margin-top: 2rem
+
+.margin-top2
+  margin-top: 4rem
+
+
+
+
+.button-small
+  font-size: 1rem
+  padding: 0 1rem
+  line-height: 2rem
+  height: 2.2rem
+
+
+.button-black
+  background-color: black
+  border-color: white
+  color: colors.$light
+
+.button-white
+  background-color: colors.$light
+  color: colors.$primary
+  border-color: black
+
+.button-red
+  background-color: colors.$danger
+  border-color: white
+  color: white
+
+
+.button-green
+  background-color: colors.$success
+  color: black
+  border-color: black
+
+
+.selected
+  text-decoration: underline
+  color: colors.$secondary
+  background-color: colors.$primary
+
+
+.selected .app-link
+  text-decoration: underline
+  color: colors.$secondary
+
+
+#app-header .selected .app-link
+  font-size: 2rem
+  text-decoration: none
+
+
+.error-text
+  color: colors.$danger
+  font-size: smaller
+  font-weight: bold
+
+
+#header-logo-column
+  min-width: 20rem
+  text-align: left
+
+
+input[type="text"]
+  background-color: white
+
+
+input[type="text"]:focus
+  border-color: colors.$secondary
+//
+//
+///* Larger than mobile screen */
+//@media (min-width: 40.0rem)
+//  #app-header .row
+///*min-width: 12rem*/
+//
+//
+///* Larger than tablet screen */
+//@media (min-width: 80.0rem)
+//  #app-header .row
+///*min-width: 12rem*/
+//
+///* Larger than desktop screen */
+//@media (min-width: 120.0rem)
+//  #app-header .row
+///*min-width: 12rem*/
