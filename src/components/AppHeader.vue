@@ -11,7 +11,7 @@ const route = useRoute()
   <div id="app-header">
     <div class="row">
       <div class="column" id="header-logo-column">
-        <Piece color="black" width=40 x=0 y=0 piece-name="rook" class="header-logo"></Piece>
+        <Piece class="header-logo" color="black" piece-name="rook" width=40 x=0 y=0></Piece>
         <strong class="header-title">Rook Takes</strong>
       </div>
 
