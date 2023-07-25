@@ -1,7 +1,7 @@
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import Square from "@/classes/Chess/Square/Square";
 import OutOfBoundsSquare from "@/classes/Chess/Square/OutOfBoundsSquare";
-import type Pieces64 from "@/classes/Chess/Board/Pieces64";
+import type Squares64 from "@/classes/Chess/Board/Squares64";
 import Piece from "@/classes/Chess/Piece";
 import type FenNumber from "@/classes/Chess/Board/FenNumber";
 import PieceList from "@/classes/Chess/Board/PieceList";
@@ -14,20 +14,19 @@ import PieceList from "@/classes/Chess/Board/PieceList";
  */
 export default class Squares144 {
 
-    // 'x' indicates out of bounds squares. null indicates a real/named square
-    static readonly seed = [
-        'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x',
-        'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x',
-        'x', 'x', null, null, null, null, null, null, null, null, 'x', 'x', // rank 8
-        'x', 'x', null, null, null, null, null, null, null, null, 'x', 'x', // rank 7
-        'x', 'x', null, null, null, null, null, null, null, null, 'x', 'x', // rank 6
-        'x', 'x', null, null, null, null, null, null, null, null, 'x', 'x', // rank 5
-        'x', 'x', null, null, null, null, null, null, null, null, 'x', 'x', // rank 4
-        'x', 'x', null, null, null, null, null, null, null, null, 'x', 'x', // rank 3
-        'x', 'x', null, null, null, null, null, null, null, null, 'x', 'x', // rank 2
-        'x', 'x', null, null, null, null, null, null, null, null, 'x', 'x', // rank 1
-        'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x',
-        'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x', 'x',
+    static readonly boardBoundary: (0|1)[] = [
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, // rank 8
+        0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, // rank 7
+        0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, // rank 6
+        0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, // rank 5
+        0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, // rank 4
+        0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, // rank 3
+        0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, // rank 2
+        0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, // rank 1
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     ]
 
     static squaresByIndex: { [index: number]: SquareType } = {
@@ -48,80 +47,39 @@ export default class Squares144 {
         Squares144.indexesBySquare = Object.fromEntries(Object.entries(this.squaresByIndex).map(([key, value]) => [value, parseInt(key)]))
     }
 
+    static isIndexOutOfBounds(index: number): boolean {
+        return Squares144.boardBoundary[index] === 0
+    }
+
     static getIndex(name: SquareType): number {
         return Squares144.indexesBySquare[name]
     }
 
-    static getSquareType(index: number): SquareType {
-        return Squares144.squaresByIndex[index]
-    }
-
-    cells: (Square | OutOfBoundsSquare)[]
-
     fenNumber: FenNumber
 
-    pieceList: PieceList
+    squares64: Squares64
 
     constructor(fenNumber: FenNumber) {
 
         this.fenNumber = fenNumber.clone()
-        this.pieceList = new PieceList()
-
-        const pieces64 = fenNumber.getPieces64()
-
-        this.cells = [];
-        for (let i = 0; i < Squares144.seed.length; i++) {
-            const seedValue = Squares144.seed[i]
-
-            // out-of-bounds squares
-            if (seedValue === 'x') {
-                this.cells[i] = new OutOfBoundsSquare()
-                continue;
-            }
-
-            // set real squares and their pieces
-            const squareType = Squares144.getSquareType(i)
-            const piece = pieces64.get(squareType)
-            this.cells[i] = new Square(squareType, piece)
-
-            if (piece instanceof Piece) {
-                this.pieceList.add(piece)
-            }
-        }
-    }
-
-    getCell(index: number): Square | OutOfBoundsSquare {
-        return this.cells[index]
+        this.squares64 = fenNumber.toSquares64()
     }
 
     getSquare(squareType: SquareType): Square {
-        const square = this.getCell(Squares144.getIndex(squareType))
-        if (square instanceof OutOfBoundsSquare) {
-            throw new Error('Square with index ${index} is out of bounds')
-        }
-        return square
+        return this.squares64.get(squareType)
     }
 
     setPiece(squareType: SquareType, piece: null | Piece): void {
-        const square = this.getSquare(squareType)
-
-        // update pieceList, if captures
-        const capturedPiece = square.getPiece()
-        if (piece === null && capturedPiece instanceof Piece) {
-            this.pieceList.remove(capturedPiece)
-        }
-
-        square.setPiece(piece)
+        this.squares64.set(squareType, piece)
     }
 
-    getSquares(): Square[] {
-        const squares = []
-        for (const index in Squares144.squaresByIndex){
-            //@ts-ignore
-            squares.push(this.getCell(index))
+    getPseudoLegalMoves(squareType: SquareType){
+        const square = this.getSquare(squareType)
+        const piece = square.getPiece()
+
+        if(piece === null){
+            return null
         }
-        //@ts-ignore
-        return squares
     }
 
 }

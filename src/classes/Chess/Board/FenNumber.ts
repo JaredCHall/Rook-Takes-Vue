@@ -1,4 +1,4 @@
-import Pieces64 from "@/classes/Chess/Board/Pieces64";
+import Squares64 from "@/classes/Chess/Board/Squares64";
 import Piece from "@/classes/Chess/Piece";
 import type {ChessPieceType} from "@/classes/Chess/Piece";
 import {Color} from "@/classes/Chess/Color";
@@ -90,8 +90,8 @@ export default class FenNumber {
         return map[lowerCaseType]
     }
 
-    getPieces64(): Pieces64 {
-        const pieces64 = new Pieces64()
+    toSquares64(): Squares64 {
+        const squares64 = new Squares64()
 
         const rows = this.piecePlacements.split('/').reverse()
         if (rows.length !== 8) {
@@ -108,9 +108,6 @@ export default class FenNumber {
                     const emptySpaces = parseInt(character)
                     const lastEmptySpace = columnNumber + emptySpaces - 1
                     while (columnNumber <= lastEmptySpace) {
-                        const squareName = columnNames[columnNumber - 1] + rowNumber.toString()
-                        //@ts-ignore
-                        pieces64.set(squareName, null)
                         columnNumber++
                     }
                 } else if (/[rbnqkpRBNQKP]/.test(character)) {
@@ -121,14 +118,14 @@ export default class FenNumber {
                     // @ts-ignore
                     const piece = new Piece(pieceType, colorType, squareName)
                     // @ts-ignore
-                    pieces64.set(squareName, piece)
+                    squares64.set(squareName, piece)
                     columnNumber++
                 } else {
                     throw new Error("Unrecognized position character: " + character)
                 }
             }
         }
-        return pieces64
+        return squares64
     }
 
     toString(): string {
@@ -139,8 +136,8 @@ export default class FenNumber {
             this.enPassantTarget == null ? '-' : this.enPassantTarget,
             this.halfMoveClock,
             this.fullMoveCounter,
-            this.isCheck ? '0' : '1',
-            this.isMate ? '0' : '1',
+            this.isCheck ? '1' : '0',
+            this.isMate ? '1' : '0',
         ].join(' ')
     }
 
