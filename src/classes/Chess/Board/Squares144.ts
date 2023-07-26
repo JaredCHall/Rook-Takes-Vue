@@ -69,6 +69,11 @@ export default class Squares144 {
         return this.squares64.get(squareType)
     }
 
+    getSquareByIndex(index: number): Square {
+        // @ts-ignore
+        return this.getSquare(this.getSquareByIndex[index])
+    }
+
     setPiece(squareType: SquareType, piece: null | Piece): void {
         this.squares64.set(squareType, piece)
     }
