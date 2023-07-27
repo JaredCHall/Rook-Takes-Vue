@@ -1,5 +1,4 @@
 import { describe, it, expect } from 'vitest'
-import OutOfBoundsSquare from "@/classes/Chess/Square/OutOfBoundsSquare";
 import SquareCoordinates from "@/classes/Chess/Square/SquareCoordinates";
 
 

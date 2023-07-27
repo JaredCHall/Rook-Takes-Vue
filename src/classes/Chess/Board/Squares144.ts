@@ -1,10 +1,8 @@
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import Square from "@/classes/Chess/Square/Square";
-import OutOfBoundsSquare from "@/classes/Chess/Square/OutOfBoundsSquare";
 import type Squares64 from "@/classes/Chess/Board/Squares64";
 import Piece from "@/classes/Chess/Piece";
 import type FenNumber from "@/classes/Chess/Board/FenNumber";
-import PieceList from "@/classes/Chess/Board/PieceList";
 
 /**
  * A representation of the 64 squares and all nearby out-of-bounds squares

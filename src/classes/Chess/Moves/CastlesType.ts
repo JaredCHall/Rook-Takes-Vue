@@ -1,4 +1,5 @@
 import type {SquareType} from "@/classes/Chess/Square/Square";
+import type {ColorType} from "@/classes/Chess/Color";
 
 export default class CastlesType {
     readonly rooksOldSquare: SquareType
@@ -69,4 +70,23 @@ export default class CastlesType {
             )
         }
     }
+
+    static forColor(color: ColorType, castleRights: string): CastlesType[]
+    {
+        const typeNames = color === 'black' ? ['k','q'] : ['K','Q']
+
+        let types = [];
+        for(const i in typeNames){
+            const type = typeNames[i];
+            if(castleRights.indexOf(type)){
+                continue
+            }
+
+            //@ts-ignore
+            types.push(CastlesType.create(type))
+        }
+
+        return types
+    }
+
 }

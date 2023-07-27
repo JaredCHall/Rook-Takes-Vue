@@ -3,6 +3,7 @@ import MoveEngine from "@/classes/Chess/MoveFactory/MoveEngine";
 import MoveArbiter from "@/classes/Chess/MoveFactory/MoveArbiter";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import type MoveList from "@/classes/Chess/Moves/MoveList";
+import type ChessMove from "@/classes/Chess/Moves/ChessMove";
 
 export default class MoveFactory {
 
@@ -20,6 +21,12 @@ export default class MoveFactory {
 
     getMovesFromSquare(squareName: SquareType, isLegal: boolean): MoveList
     {
-        return this.moveEngine.getPseudoLegalMoves(squareName)
+        const moves = this.moveEngine.getPseudoLegalMoves(squareName, this.squares144.fenNumber)
+
+        if(isLegal){
+            moves.filter((move: ChessMove) => this.moveArbiter.isMoveLegal(move))
+        }
+
+        return moves
     }
 }

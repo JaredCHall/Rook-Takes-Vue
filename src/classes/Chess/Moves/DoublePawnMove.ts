@@ -8,25 +8,24 @@ export default class DoublePawnMove extends ChessMove
 {
 
     constructor(oldSquare: SquareType, newSquare: SquareType, movingPiece: Piece) {
+
+        if(movingPiece.type !== 'pawn'){
+            throw new Error('requires pawn')
+        }
+        if([4,5].indexOf(new Square(newSquare).rank) === -1){
+            throw new Error('Double pawn moves must end on the 4th or 5th rank')
+        }
+
         super(oldSquare, newSquare, movingPiece, null)
     }
 
     getEnPassantTargetSquare(): string
     {
-        if(this.newSquare === null){
-            throw new Error('this.newSquare is null')
+        const square = new Square(this.newSquare)
+
+        if(square.rank === 4){ // white moving
+            return square.file + '3'
         }
-
-        if(this.movingPiece === null){
-            throw new Error('this.piece is null')
-        }
-
-        const isWhiteMoving = this.movingPiece.color == 'white'
-        const newSquare = new Square(this.newSquare)
-
-        // target square is one square back from the new square
-        const targetRank = newSquare.rank - (isWhiteMoving ? 1 : -1)
-        return newSquare.file + targetRank.toString()
+        return square.file + '6'
     }
-
 }

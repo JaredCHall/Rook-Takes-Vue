@@ -1,7 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import Squares144 from "@/classes/Chess/Board/Squares144";
 import FenNumber from "@/classes/Chess/Board/FenNumber";
-import OutOfBoundsSquare from "@/classes/Chess/Square/OutOfBoundsSquare";
 import Squares64 from "@/classes/Chess/Board/Squares64";
 import Piece from "@/classes/Chess/Piece";
 
