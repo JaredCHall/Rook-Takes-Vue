@@ -2,7 +2,7 @@ import type {SquareType} from "@/classes/Chess/Square/Square";
 import Square from "@/classes/Chess/Square/Square";
 import type Squares64 from "@/classes/Chess/Board/Squares64";
 import Piece from "@/classes/Chess/Piece";
-import type FenNumber from "@/classes/Chess/Board/FenNumber";
+import FenNumber from "@/classes/Chess/Board/FenNumber";
 
 /**
  * A representation of the 64 squares and all nearby out-of-bounds squares
@@ -57,10 +57,10 @@ export default class Squares144 {
 
     squares64: Squares64
 
-    constructor(fenNumber: FenNumber) {
+    constructor(fenNumber: FenNumber|string) {
 
-        this.fenNumber = fenNumber.clone()
-        this.squares64 = fenNumber.toSquares64()
+        this.fenNumber = fenNumber instanceof FenNumber ? fenNumber.clone() : new FenNumber(fenNumber)
+        this.squares64 = this.fenNumber.toSquares64()
     }
 
     getSquare(squareType: SquareType): Square {
@@ -69,7 +69,7 @@ export default class Squares144 {
 
     getSquareByIndex(index: number): Square {
         // @ts-ignore
-        return this.getSquare(this.getSquareByIndex[index])
+        return this.getSquare(Squares144.squaresByIndex[index])
     }
 
     setPiece(squareType: SquareType, piece: null | Piece): void {

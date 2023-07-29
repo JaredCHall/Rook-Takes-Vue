@@ -8,6 +8,7 @@ export default class CastlesType {
     readonly kingsNewSquare: SquareType
     readonly squaresThatMustBeEmpty: SquareType[]
     readonly squaresThatMustBeSafe: SquareType[]
+    readonly type: 'K'|'Q'|'q'|'k'
     readonly notation: 'O-O'|'O-O-O'
 
     constructor(
@@ -17,6 +18,7 @@ export default class CastlesType {
         kingsNewSquare: SquareType,
         squaresThatMustBeEmpty: SquareType[],
         squaresThatMustBeSafe: SquareType[],
+        type: 'K'|'Q'|'q'|'k',
         notation: 'O-O'|'O-O-O'
     ) {
         this.rooksOldSquare = rooksOldSquare
@@ -25,6 +27,7 @@ export default class CastlesType {
         this.kingsNewSquare = kingsNewSquare
         this.squaresThatMustBeEmpty = squaresThatMustBeEmpty
         this.squaresThatMustBeSafe = squaresThatMustBeSafe
+        this.type = type
         this.notation = notation
     }
 
@@ -39,6 +42,7 @@ export default class CastlesType {
                 'c1',
                 ['d1','c1','b1'],
                 ['d1','c1','b1'],
+                'Q',
                 'O-O-O'
                 )
             case 'K': return new CastlesType(
@@ -48,6 +52,7 @@ export default class CastlesType {
                 'g1',
                 ['f1','g1'],
                 ['e1','f1','g1'],
+                'K',
                 'O-O',
             )
             case 'q': return new CastlesType(
@@ -57,6 +62,7 @@ export default class CastlesType {
                 'c8',
                 ['d8','c8','b8'],
                 ['e8','d8','c8'],
+                'q',
                 'O-O-O'
             )
             case 'k': return new CastlesType(
@@ -66,24 +72,27 @@ export default class CastlesType {
                 'g8',
                 ['f8','g8'],
                 ['e8','f8','g8'],
+                'k',
                 'O-O'
             )
         }
     }
 
-    static forColor(color: ColorType, castleRights: string): CastlesType[]
+    static forColor(color: ColorType, castleRights: string|null): CastlesType[]
     {
+        if(!castleRights){
+            return []
+        }
+
         const typeNames = color === 'black' ? ['k','q'] : ['K','Q']
 
         let types: CastlesType[] = [];
         for(const i in typeNames){
             const type = typeNames[i];
-            if(castleRights && castleRights.indexOf(type) !== -1){
-                continue
+            if(castleRights.indexOf(type) !== -1){
+                //@ts-ignore
+                types.push(CastlesType.create(type))
             }
-
-            //@ts-ignore
-            types.push(CastlesType.create(type))
         }
 
         return types

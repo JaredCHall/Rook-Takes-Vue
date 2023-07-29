@@ -22,6 +22,18 @@ describe('Squares144', () => {
         expect(squares144.squares64).toBeInstanceOf(Squares64)
 
     })
+    it('it constructs itself from string fen', () => {
+
+        const squares144 = new Squares144('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w')
+
+        // fenNumber object created
+        expect(squares144.fenNumber).toBeInstanceOf(FenNumber)
+
+        // squares 64 created
+        expect(squares144).toHaveProperty('squares64')
+        expect(squares144.squares64).toBeInstanceOf(Squares64)
+
+    })
 
     it('it calculates out-of-bounds indexes',() =>{
 

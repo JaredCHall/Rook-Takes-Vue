@@ -12,6 +12,7 @@ describe('CastlesType', () => {
             'g8',
             ['f8','g8'],
             ['e8','f8','g8'],
+            'k',
             'O-O');
 
         expect(castlesType).toHaveProperty('rooksOldSquare','h8')
@@ -20,6 +21,7 @@ describe('CastlesType', () => {
         expect(castlesType).toHaveProperty('kingsNewSquare','g8')
         expect(castlesType).toHaveProperty('squaresThatMustBeEmpty',['f8','g8'])
         expect(castlesType).toHaveProperty('squaresThatMustBeSafe',['e8','f8','g8'])
+        expect(castlesType).toHaveProperty('type','k')
         expect(castlesType).toHaveProperty('notation','O-O')
     })
 
@@ -31,6 +33,7 @@ describe('CastlesType', () => {
             'c1',
             ['d1','c1','b1'],
             ['d1','c1','b1'],
+            'Q',
             'O-O-O'
         )
         const castle_K = new CastlesType(
@@ -40,6 +43,7 @@ describe('CastlesType', () => {
             'g1',
             ['f1','g1'],
             ['e1','f1','g1'],
+            'K',
             'O-O',
         )
         const castle_q = new CastlesType(
@@ -49,6 +53,7 @@ describe('CastlesType', () => {
             'c8',
             ['d8','c8','b8'],
             ['e8','d8','c8'],
+            'q',
             'O-O-O'
         )
         const castle_k = new CastlesType(
@@ -58,6 +63,7 @@ describe('CastlesType', () => {
             'g8',
             ['f8','g8'],
             ['e8','f8','g8'],
+            'k',
             'O-O'
         )
 
@@ -70,31 +76,22 @@ describe('CastlesType', () => {
 
     it('gets correct types for color', () => {
 
-        let castles = CastlesType.forColor('white')
-        expect(castles).toHaveLength(2)
-        expect(castles[0].rooksOldSquare).toEqual('h1')
-        expect(castles[1].rooksOldSquare).toEqual('a1')
+        // empty sets
+        expect(CastlesType.forColor('white')).toHaveLength(0)
+        expect(CastlesType.forColor('black')).toHaveLength(0)
+        expect(CastlesType.forColor('black','KQ')).toHaveLength(0)
+        expect(CastlesType.forColor('white','kq')).toHaveLength(0)
 
-        castles = CastlesType.forColor('black')
-        expect(castles).toHaveLength(2)
-        expect(castles[0].rooksOldSquare).toEqual('h8')
-        expect(castles[1].rooksOldSquare).toEqual('a8')
-
-        castles = CastlesType.forColor('black','KQ')
-        expect(castles).toHaveLength(2)
-        expect(castles[0].rooksOldSquare).toEqual('h8')
-        expect(castles[1].rooksOldSquare).toEqual('a8')
-
-        castles = CastlesType.forColor('white','kq')
-        expect(castles).toHaveLength(2)
-        expect(castles[0].rooksOldSquare).toEqual('h1')
-        expect(castles[1].rooksOldSquare).toEqual('a1')
+        let castles
 
         castles = CastlesType.forColor('black','kq')
-        expect(castles).toHaveLength(0)
+        expect(castles).toHaveLength(2)
+        expect(castles[0].rooksOldSquare).toEqual('h8')
+        expect(castles[1].rooksOldSquare).toEqual('a8')
 
         castles = CastlesType.forColor('white','KQ')
-        expect(castles).toHaveLength(0)
-
+        expect(castles).toHaveLength(2)
+        expect(castles[0].rooksOldSquare).toEqual('h1')
+        expect(castles[1].rooksOldSquare).toEqual('a1')
     })
 })

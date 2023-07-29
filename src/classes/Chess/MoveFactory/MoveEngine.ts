@@ -63,7 +63,16 @@ export default class MoveEngine {
         const piece = this.#getMovingPiece(square, 'knight')
 
         const moves = new MoveList()
-        const moveOffsets = [10, 14, 23, 25, -10, -14, -23, -25]
+        const moveOffsets = [
+            -23, // NNE
+            -10, // ENE
+            14,  // ESE
+            25,  // SSE
+            23,  // SSW
+            10,  // WSW
+            -14, // WNW
+            -25  // NNW
+        ]
         for(let i = 0; i<moveOffsets.length;i++){
             const offset = moveOffsets[i]
             const newIndex = square.index144 + offset
@@ -101,10 +110,10 @@ export default class MoveEngine {
         const piece= this.#getMovingPiece(square, 'rook')
 
         const rayVectors = [
-            [1,0], // right
-            [-1,0], // left
-            [0,-1], // up
-            [0,1], // down
+            [0,-1], // N
+            [1,0],  // E
+            [0,1],  // S
+            [-1,0], // W
         ]
 
         return this.traceRayVectors(square, piece, rayVectors)
@@ -114,10 +123,10 @@ export default class MoveEngine {
     {
         const piece= this.#getMovingPiece(square, 'bishop')
         const rayVectors = [
-            [1,1], // 45%
-            [-1,1], // 135%
-            [-1,-1], // 225%
-            [1,-1], // 315%
+            [1,-1],  // NE
+            [1,1],   // SE
+            [-1,1],  // SW
+            [-1,-1], // NW
         ]
 
         return this.traceRayVectors(square, piece, rayVectors)
@@ -127,14 +136,14 @@ export default class MoveEngine {
     {
         const piece= this.#getMovingPiece(square, 'queen')
         const rayVectors = [
-            [1,0], // right
-            [-1,0], // left
-            [0,-1], // up
-            [0,1], // down
-            [1,1], // 45%
-            [-1,1], // 135%
-            [-1,-1], // 225%
-            [1,-1], // 315%
+            [0,-1],  // N
+            [1,-1],  // NE
+            [1,0],   // E
+            [1,1],   // SE
+            [0,1],   // S
+            [-1,1],  // SW
+            [-1,0],  // W
+            [-1,-1], // NW
         ]
 
         return this.traceRayVectors(square, piece, rayVectors)
@@ -147,45 +156,22 @@ export default class MoveEngine {
 
         const moves = new MoveList()
         const isPieceWhite = piece.color == 'white'
-        const sign = isPieceWhite ? -1 : 1
-        const captureOffsets = [11,13]
-        let moveOffsets = [12]
+
+        const moveOffsets = isPieceWhite ? [-12] : [12] // N or S
+        const captureOffsets = isPieceWhite ? [-11, -13] : [11,13] // NE,NW or SW,SE
 
         // determine if pawn is on starting square
         const startingRank = square.rank
         const isOnStartingRank = (isPieceWhite && startingRank == 2) || (!isPieceWhite && startingRank == 7)
         if(isOnStartingRank){
             // pawns on the starting square can potentially move forward 2 squares
-            moveOffsets.push(24)
-        }
-
-        // test if pawn can capture diagonally
-        for(let i = 0; i<captureOffsets.length;i++){
-            const offset = captureOffsets[i]
-            const newIndex = square.index144 + sign * offset
-
-            const newSquare = this.squares144.getSquareByIndex(newIndex)
-            // test if square has an enemy piece
-            const move = new ChessMove(square.name, newSquare.name, piece, newSquare.piece);
-            if(newSquare.piece && newSquare.piece.color != piece.color){
-                moves.add(move)
-
-            }else if(newSquare.name === enPassantTarget){
-
-                // Handle En Passant
-
-                const capturedSquare = EnPassantMove.getOpponentPawnSquare(move)
-                const capturedPawn = this.squares144.getSquare(capturedSquare).piece
-                if(capturedPawn !== null){
-                    moves.add(new EnPassantMove(square.name, newSquare.name, piece, capturedPawn, capturedSquare))
-                }
-            }
+            moveOffsets.push(isPieceWhite ? -24 : 24) // N or S
         }
 
         // test if pawn can move forward
-        for(let i = 0; i<moveOffsets.length;i++){
+        for(const i in moveOffsets){
             const offset = moveOffsets[i]
-            const newIndex = square.index144 + sign * offset
+            const newIndex = square.index144 + offset
 
             if(Squares144.isIndexOutOfBounds(newIndex)){
                 break
@@ -196,12 +182,42 @@ export default class MoveEngine {
                 break
             }
 
-            if(i === 1){
+            if(Math.abs(offset) === 24){
                 moves.add(new DoublePawnMove(square.name, newSquare.name, piece));
             }else{
                 moves.add(new ChessMove(square.name, newSquare.name, piece))
             }
         }
+
+
+        // test if pawn can capture diagonally
+        for(const i in captureOffsets){
+            const offset = captureOffsets[i]
+            const newIndex = square.index144 + offset
+
+            if(Squares144.isIndexOutOfBounds(newIndex)){
+                continue
+            }
+
+            const newSquare = this.squares144.getSquareByIndex(newIndex)
+            const move = new ChessMove(square.name, newSquare.name, piece, newSquare.piece);
+
+            // test if square has an enemy piece
+            if(newSquare.piece && newSquare.piece.color != piece.color){
+                moves.add(move)
+
+            }else if(newSquare.name === enPassantTarget){
+
+                // Handle En Passant
+                const capturedSquare = EnPassantMove.getOpponentPawnSquare(move)
+                const capturedPawn = this.squares144.getSquare(capturedSquare).piece
+                if(capturedPawn !== null){
+                    moves.add(new EnPassantMove(square.name, newSquare.name, piece, capturedPawn, capturedSquare))
+                }
+            }
+        }
+
+
 
         // check for promoted pawns
         moves.map((move: ChessMove) => {
@@ -218,14 +234,14 @@ export default class MoveEngine {
     {
         const piece = this.#getMovingPiece(square, 'king')
         const rayVectors = [
-            [1,0], // right
-            [-1,0], // left
-            [0,-1], // up
-            [0,1], // down
-            [1,1], // 45%
-            [-1,1], // 135%
-            [-1,-1], // 225%
-            [1,-1], // 315%
+            [0,-1],  // N
+            [1,-1],  // NE
+            [1,0],   // E
+            [1,1],   // SE
+            [0,1],   // S
+            [-1,1],  // SW
+            [-1,0],  // W
+            [-1,-1], // NW
         ]
         let moves = this.traceRayVectors(square, piece, rayVectors, 1)
         if(castleRights === null){
@@ -272,6 +288,11 @@ export default class MoveEngine {
 
         fenNumber ??= this.squares144.fenNumber
         const square = this.squares144.getSquare(squareName)
+
+
+        if(!square.piece){
+            throw new Error("No piece on square "+square.name)
+        }
 
         //@ts-ignore
         switch(square.piece.type){
