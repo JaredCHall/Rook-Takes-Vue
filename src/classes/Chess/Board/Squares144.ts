@@ -1,7 +1,7 @@
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import Square from "@/classes/Chess/Square/Square";
 import type Squares64 from "@/classes/Chess/Board/Squares64";
-import Piece from "@/classes/Chess/Piece/Piece";
+import Piece from "@/classes/Chess/Piece";
 import type FenNumber from "@/classes/Chess/Board/FenNumber";
 
 /**

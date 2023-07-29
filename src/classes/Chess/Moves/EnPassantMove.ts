@@ -1,7 +1,7 @@
 
 import ChessMove from "./ChessMove";
 import MoveStep from "./MoveStep";
-import type Piece from "@/classes/Chess/Piece/Piece";
+import type Piece from "@/classes/Chess/Piece";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import Square from "@/classes/Chess/Square/Square";
 export default class EnPassantMove extends ChessMove

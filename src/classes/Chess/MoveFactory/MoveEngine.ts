@@ -1,5 +1,5 @@
-import type {ChessPieceType} from "@/classes/Chess/Piece/Piece";
-import Piece from "@/classes/Chess/Piece/Piece";
+import type {ChessPieceType} from "@/classes/Chess/Piece";
+import Piece from "@/classes/Chess/Piece";
 import Squares144 from "@/classes/Chess/Board/Squares144";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import type FenNumber from "@/classes/Chess/Board/FenNumber";

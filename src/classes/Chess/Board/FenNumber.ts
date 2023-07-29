@@ -1,6 +1,6 @@
 import Squares64 from "@/classes/Chess/Board/Squares64";
-import Piece from "@/classes/Chess/Piece/Piece";
-import type {ChessPieceType} from "@/classes/Chess/Piece/Piece";
+import Piece from "@/classes/Chess/Piece";
+import type {ChessPieceType} from "@/classes/Chess/Piece";
 import {Color} from "@/classes/Chess/Color";
 
 export default class FenNumber {

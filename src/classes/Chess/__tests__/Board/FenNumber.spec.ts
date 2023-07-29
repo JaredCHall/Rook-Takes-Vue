@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 
 import FenNumber from "@/classes/Chess/Board/FenNumber";
-import Piece from "@/classes/Chess/Piece/Piece";
+import Piece from "@/classes/Chess/Piece";
 
 
 describe('FenNumber', () => {
