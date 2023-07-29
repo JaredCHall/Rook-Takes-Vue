@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import Square from "@/classes/Chess/Square/Square";
-import Piece from "@/classes/Chess/Piece";
+import Piece from "@/classes/Chess/Piece/Piece";
 
 
 describe('Square', () => {
@@ -50,7 +50,7 @@ describe('Square', () => {
         const f3 = new Square('f3')
         expect(f3).toHaveProperty('piece',null)
 
-        f3.setPiece(new Piece('knight','white','f3'));
+        f3.setPiece(new Piece('knight','white'));
         expect(f3.piece).toBeInstanceOf(Piece)
 
         f3.setPiece(null)
@@ -62,7 +62,7 @@ describe('Square', () => {
         const d3 = new Square('f3')
         expect(d3.getPiece()).toBeNull()
 
-        const h8 = new Square('h8',new Piece('rook','black','h8'))
+        const h8 = new Square('h8', new Piece('rook','black'))
         expect(h8.getPiece()).toBeInstanceOf(Piece)
     })
 

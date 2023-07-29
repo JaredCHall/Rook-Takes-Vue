@@ -1,6 +1,6 @@
 
 import MoveStep from "./MoveStep";
-import type Piece from "@/classes/Chess/Piece";
+import type Piece from "@/classes/Chess/Piece/Piece";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 
 

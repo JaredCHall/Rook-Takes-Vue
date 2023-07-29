@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import Piece from "@/classes/Chess/Piece";
+import Piece from "@/classes/Chess/Piece/Piece";
 import MoveStep from "@/classes/Chess/Moves/MoveStep";
 import ChessMove from "@/classes/Chess/Moves/ChessMove";
 import DoublePawnMove from "@/classes/Chess/Moves/DoublePawnMove";
@@ -9,7 +9,7 @@ import Square from "@/classes/Chess/Square/Square";
 describe('DoublePawnMove', () => {
     it('it constructs itself', () => {
 
-        const piece = new Piece('pawn','white','e2')
+        const piece = new Piece('pawn','white')
         const move = new DoublePawnMove('e2','e4',piece)
 
         expect(move).toHaveProperty('oldSquare','e2')
@@ -20,7 +20,7 @@ describe('DoublePawnMove', () => {
 
         // test throws
 
-        const knight = new Piece('knight','white','e2')
+        const knight = new Piece('knight','white')
         expect(() => {new DoublePawnMove('e2','e1', knight)})
             .toThrowError('requires pawn')
 

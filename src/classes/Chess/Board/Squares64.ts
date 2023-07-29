@@ -1,7 +1,8 @@
 import type {SquareType} from "@/classes/Chess/Square/Square";
-import Piece from "@/classes/Chess/Piece";
-import PieceList from "@/classes/Chess/Board/PieceList";
+import Piece from "@/classes/Chess/Piece/Piece";
+import type {ChessPieceType} from "@/classes/Chess/Piece/Piece";
 import Square from "@/classes/Chess/Square/Square";
+import type {ColorType} from "@/classes/Chess/Color";
 
 /**
  * A representation of the 64 squares
@@ -30,10 +31,12 @@ export default class Squares64
     // 64 Square objects which may or may not contain Piece objects
     squares: { [squareType: string]: Square } = {}
 
-    pieceList: PieceList
+    kingSquare: {white: Square|null, black: Square|null} = {
+        white: null,
+        black: null,
+    }
 
     constructor() {
-        this.pieceList = new PieceList()
         for(const i in Squares64.squaresOrder){
             const squareName = Squares64.squaresOrder[i]
             this.squares[squareName] = new Square(squareName, null)
@@ -42,16 +45,38 @@ export default class Squares64
 
     set(squareType: SquareType, piece: null|Piece): void {
 
-        const capturedPiece = this.get(squareType).piece
+        const square = this.get(squareType)
 
         // set new piece for square
-        this.squares[squareType].setPiece(piece)
+        this.get(squareType).setPiece(piece)
 
-        // remove existing piece, if it is being captured
-        if(capturedPiece instanceof Piece){
-            this.pieceList.remove(capturedPiece)
+        // if it is the king, update kingSquare
+        if(piece && piece.type === 'king'){
+            this.kingSquare[piece.color] = square
         }
+
     }
+
+    getKingSquare(color: ColorType): Square|null {
+        return this.kingSquare[color]
+    }
+
+    getPieceSquares(color: ColorType, type: ChessPieceType|null): Square[]
+    {
+        const squares: Square[] = []
+        this.each((square: Square) => {
+            if(square.piece && square.piece.color === color) {
+                if(!type || type === square.piece.type){
+                    squares.push(square)
+                }
+            }
+        })
+
+        return squares
+    }
+
+
+
 
     get(squareType: SquareType): Square {
         return this.squares[squareType]

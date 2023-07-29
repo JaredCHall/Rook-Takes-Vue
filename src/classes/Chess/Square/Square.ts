@@ -1,6 +1,6 @@
 import {Color, type ColorType} from "@/classes/Chess/Color";
 import SquareCoordinates from "@/classes/Chess/Square/SquareCoordinates";
-import type Piece from "@/classes/Chess/Piece";
+import type Piece from "@/classes/Chess/Piece/Piece";
 import Squares144 from "@/classes/Chess/Board/Squares144";
 import Squares64 from "@/classes/Chess/Board/Squares64";
 

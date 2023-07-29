@@ -2,7 +2,7 @@ import { describe, it, expect, vi } from 'vitest'
 import Squares144 from "@/classes/Chess/Board/Squares144";
 import FenNumber from "@/classes/Chess/Board/FenNumber";
 import Squares64 from "@/classes/Chess/Board/Squares64";
-import Piece from "@/classes/Chess/Piece";
+import Piece from "@/classes/Chess/Piece/Piece";
 
 vi.mock('@/classes/Chess/Board/Squares64')
 
@@ -79,7 +79,7 @@ describe('Squares144', () => {
 
         vi.clearAllMocks()
 
-        const king = new Piece('king','white','e4');
+        const king = new Piece('king','white');
         squares144.setPiece('e4',king)
 
         expect(squares144.squares64.set).toHaveBeenCalledWith('e4',king)

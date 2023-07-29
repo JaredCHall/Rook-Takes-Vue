@@ -1,12 +1,12 @@
 import { describe, it, expect, vi } from 'vitest'
-import Piece from "@/classes/Chess/Piece";
+import Piece from "@/classes/Chess/Piece/Piece";
 import MoveStep from "@/classes/Chess/Moves/MoveStep";
 
 
 describe('MoveStep', () => {
     it('it constructs itself', () => {
 
-        const piece = new Piece('knight','white','f3')
+        const piece = new Piece('knight','white')
         let moveStep = new MoveStep('e4', piece)
 
         expect(moveStep).toHaveProperty('squareName', 'e4')

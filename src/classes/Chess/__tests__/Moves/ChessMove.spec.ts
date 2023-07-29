@@ -1,12 +1,12 @@
 import { describe, it, expect, vi } from 'vitest'
-import Piece from "@/classes/Chess/Piece";
+import Piece from "@/classes/Chess/Piece/Piece";
 import ChessMove from "@/classes/Chess/Moves/ChessMove";
 
 
 describe('ChessMove', () => {
     it('it constructs itself', () => {
 
-        const piece = new Piece('knight','white','f3')
+        const piece = new Piece('knight','white')
         const move = new ChessMove('f3','f2',piece, null)
 
         expect(move).toHaveProperty('oldSquare','f3')
@@ -16,8 +16,8 @@ describe('ChessMove', () => {
 
     })
     it('it clones itself',() => {
-        const piece = new Piece('knight','white','f3')
-        const piece2 = new Piece('bishop','black','e5')
+        const piece = new Piece('knight','white')
+        const piece2 = new Piece('bishop','black')
         const move = new ChessMove('f3','f2',piece, piece2)
 
         const clone = move.clone()
@@ -35,7 +35,7 @@ describe('ChessMove', () => {
     })
 
     it('it gets move steps', () => {
-        const piece = new Piece('knight','white','f3')
+        const piece = new Piece('knight','white')
         const move = new ChessMove('f3','f2',piece, null)
         const steps = move.getMoveSteps()
 
@@ -48,8 +48,8 @@ describe('ChessMove', () => {
     })
 
     it('it gets capture undo steps', () => {
-        const piece = new Piece('knight','white','f3')
-        const piece2 = new Piece('bishop','black','e5')
+        const piece = new Piece('knight','white')
+        const piece2 = new Piece('bishop','black')
         const move = new ChessMove('f3','f2',piece, piece2)
         const steps = move.getUndoSteps()
 
@@ -62,7 +62,7 @@ describe('ChessMove', () => {
 
 
     it('it gets undo steps', () => {
-        const piece = new Piece('knight','white','f3')
+        const piece = new Piece('knight','white')
         const move = new ChessMove('f3','f2',piece, null)
         const steps = move.getUndoSteps()
 

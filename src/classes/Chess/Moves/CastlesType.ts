@@ -75,10 +75,10 @@ export default class CastlesType {
     {
         const typeNames = color === 'black' ? ['k','q'] : ['K','Q']
 
-        let types = [];
+        let types: CastlesType[] = [];
         for(const i in typeNames){
             const type = typeNames[i];
-            if(castleRights.indexOf(type)){
+            if(castleRights && castleRights.indexOf(type) !== -1){
                 continue
             }
 

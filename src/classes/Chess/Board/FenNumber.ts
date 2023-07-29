@@ -1,6 +1,6 @@
 import Squares64 from "@/classes/Chess/Board/Squares64";
-import Piece from "@/classes/Chess/Piece";
-import type {ChessPieceType} from "@/classes/Chess/Piece";
+import Piece from "@/classes/Chess/Piece/Piece";
+import type {ChessPieceType} from "@/classes/Chess/Piece/Piece";
 import {Color} from "@/classes/Chess/Color";
 
 export default class FenNumber {
@@ -116,7 +116,7 @@ export default class FenNumber {
                     const pieceType = FenNumber.getPieceType(character)
                     const colorType = character.toLowerCase() === character ? Color.BLACK : Color.WHITE
                     // @ts-ignore
-                    const piece = new Piece(pieceType, colorType, squareName)
+                    const piece = new Piece(pieceType, colorType)
                     // @ts-ignore
                     squares64.set(squareName, piece)
                     columnNumber++

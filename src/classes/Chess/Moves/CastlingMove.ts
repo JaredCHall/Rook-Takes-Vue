@@ -1,16 +1,11 @@
 
 import ChessMove from "./ChessMove";
 import MoveStep from "./MoveStep";
-import type Piece from "@/classes/Chess/Piece";
+import type Piece from "@/classes/Chess/Piece/Piece";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import CastlesType from "@/classes/Chess/Moves/CastlesType";
 export default class CastlingMove extends ChessMove
 {
-    static readonly KING_SIDE_WHITE= 'K'
-    static readonly QUEEN_SIDE_WHITE = 'Q'
-    static readonly KING_SIDE_BLACK = 'k'
-    static readonly QUEEN_SIDE_BLACK = 'q'
-
     rook: Piece
 
     castlesType: CastlesType

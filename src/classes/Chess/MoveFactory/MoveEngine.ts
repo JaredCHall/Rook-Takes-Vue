@@ -1,5 +1,5 @@
-import type {ChessPieceType} from "@/classes/Chess/Piece";
-import Piece from "@/classes/Chess/Piece";
+import type {ChessPieceType} from "@/classes/Chess/Piece/Piece";
+import Piece from "@/classes/Chess/Piece/Piece";
 import Squares144 from "@/classes/Chess/Board/Squares144";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import type FenNumber from "@/classes/Chess/Board/FenNumber";
@@ -177,7 +177,7 @@ export default class MoveEngine {
                 const capturedSquare = EnPassantMove.getOpponentPawnSquare(move)
                 const capturedPawn = this.squares144.getSquare(capturedSquare).piece
                 if(capturedPawn !== null){
-                    moves.add(new EnPassantMove(square.name, newSquare.name, piece, capturedPawn))
+                    moves.add(new EnPassantMove(square.name, newSquare.name, piece, capturedPawn, capturedSquare))
                 }
             }
         }
