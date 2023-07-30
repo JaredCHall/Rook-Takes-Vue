@@ -17,4 +17,16 @@ export default class Piece
     clone(): Piece {
         return new Piece(this.type, this.color)
     }
+
+    promote(type: ChessPieceType): void {
+        if(this.type !== 'pawn'){
+            throw new Error('Only pawn may promote')
+        }
+        if(['pawn','king'].indexOf(type) !== -1){
+            throw new Error('Invalid promotion type')
+        }
+
+        this.type = type
+    }
+
 }

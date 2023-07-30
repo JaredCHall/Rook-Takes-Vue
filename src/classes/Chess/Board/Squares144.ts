@@ -3,6 +3,8 @@ import Square from "@/classes/Chess/Square/Square";
 import Squares64 from "@/classes/Chess/Board/Squares64";
 import Piece from "@/classes/Chess/Piece";
 import FenNumber from "@/classes/Chess/Board/FenNumber";
+import type ChessMove from "@/classes/Chess/Moves/ChessMove";
+import PawnPromotionMove from "@/classes/Chess/Moves/PawnPromotionMove";
 
 /**
  * A representation of the 64 squares and all nearby out-of-bounds squares
@@ -61,6 +63,23 @@ export default class Squares144 {
         this.fenNumber = fen instanceof FenNumber ? fen.clone() : new FenNumber(fen)
         this.squares64 = new Squares64(this.fenNumber)
     }
+
+    makeMove(move: ChessMove): FenNumber
+    {
+        if(move instanceof PawnPromotionMove){
+            move.movingPiece.promote(move.promoteToType)
+        }
+
+        const moveSteps = move.getMoveSteps()
+        for(let i = 0; i < moveSteps.length; i++){
+            this.squares64.set(moveSteps[i].squareName, moveSteps[i].piece)
+        }
+
+        this.fenNumber.incrementTurn(move)
+
+        return this.fenNumber
+    }
+
 
     getSquare(squareType: SquareType): Square {
         return this.squares64.get(squareType)

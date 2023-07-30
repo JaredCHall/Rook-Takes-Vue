@@ -127,10 +127,8 @@ export default class Squares64
                 } else if (/[rbnqkpRBNQKP]/.test(character)) {
 
                     const squareName = columnNames[columnNumber - 1] + rowNumber.toString()
-                    const pieceType = FenNumber.getPieceType(character)
-                    const colorType = character.toLowerCase() === character ? Color.BLACK : Color.WHITE
                     // @ts-ignore
-                    const piece = new Piece(pieceType, colorType)
+                    const piece = FenNumber.makePiece(character)
                     // @ts-ignore
                     this.set(squareName, piece)
                     columnNumber++

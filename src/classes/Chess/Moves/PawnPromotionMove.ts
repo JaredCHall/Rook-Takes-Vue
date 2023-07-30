@@ -1,16 +1,18 @@
 import ChessMove from "./ChessMove";
-import type Piece from "@/classes/Chess/Piece";
+import Piece from "@/classes/Chess/Piece";
 import type {ChessPieceType} from "@/classes/Chess/Piece";
 import Square from "@/classes/Chess/Square/Square";
 import type {SquareType} from "@/classes/Chess/Square/Square";
+import MoveStep from "@/classes/Chess/Moves/MoveStep";
 
 export default class PawnPromotionMove extends ChessMove
 {
 
-    promoteToType: ChessPieceType = 'queen'
+    promoteToType: ChessPieceType
 
-    constructor(chessMove: ChessMove) {
+    constructor(chessMove: ChessMove, promoteToType: ChessPieceType = 'queen') {
         super(chessMove.oldSquare, chessMove.newSquare, chessMove.movingPiece, chessMove.capturedPiece)
+        this.promoteToType = promoteToType
 
         if(chessMove.movingPiece.type !== 'pawn'){
             throw new Error('Not a pawn')
@@ -19,6 +21,26 @@ export default class PawnPromotionMove extends ChessMove
         if(!PawnPromotionMove.squareIsOnFinalRank(this.newSquare, this.movingPiece)){
             throw new Error('Not on final rank')
         }
+    }
+
+    getMoveSteps(): Array<MoveStep> {
+        return [
+            new MoveStep(this.oldSquare, null),
+            new MoveStep(
+                this.newSquare,
+                new Piece(this.promoteToType, this.movingPiece.color)
+            ),
+        ]
+    }
+
+    getUndoSteps(): Array<MoveStep> {
+        return [
+            new MoveStep(this.newSquare, null),
+            new MoveStep(
+                this.oldSquare,
+                new Piece('pawn', this.movingPiece.color)
+            ),
+        ]
     }
 
     static squareIsOnFinalRank(squareName: SquareType, piece: Piece): boolean

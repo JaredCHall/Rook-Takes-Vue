@@ -1,5 +1,7 @@
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import type {ColorType} from "@/classes/Chess/Color";
+import type Piece from "@/classes/Chess/Piece";
+import Square from "@/classes/Chess/Square/Square";
 
 export default class CastlesType {
     readonly rooksOldSquare: SquareType
@@ -96,6 +98,23 @@ export default class CastlesType {
         }
 
         return types
+    }
+
+    static fromRooksSquare(square: SquareType, rook: Piece): CastlesType|null
+    {
+        if(rook.color === 'black'){
+            switch(square){
+                case 'a8': return CastlesType.create('q')
+                case 'h8': return CastlesType.create('k')
+            }
+        }
+
+        switch(square){
+            case 'a1': return CastlesType.create('Q')
+            case 'h1': return CastlesType.create('K')
+        }
+
+        return null
     }
 
 }

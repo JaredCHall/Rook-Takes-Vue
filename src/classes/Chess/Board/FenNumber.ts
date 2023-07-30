@@ -2,10 +2,17 @@ import Squares64 from "@/classes/Chess/Board/Squares64";
 import Piece from "@/classes/Chess/Piece";
 import type {ChessPieceType} from "@/classes/Chess/Piece";
 import {Color} from "@/classes/Chess/Color";
+import type Square from "@/classes/Chess/Square/Square";
+import type ChessMove from "@/classes/Chess/Moves/ChessMove";
+import DoublePawnMove from "@/classes/Chess/Moves/DoublePawnMove";
+import CastlesType from "@/classes/Chess/Moves/CastlesType";
 
 export default class FenNumber {
 
-    piecePlacements: string = ''
+    /**
+     * piecePlacements is undefined between calls of incrementTurn() and setPiecePositions()
+     */
+    piecePlacements: string|undefined
 
     sideToMove: 'white' | 'black' = 'white'
 
@@ -17,11 +24,18 @@ export default class FenNumber {
 
     fullMoveCounter: number = 1
 
-    checkedKingSquare: string | null = null
-
     isCheck: boolean = false
 
     isMate: boolean = false
+
+    static readonly pieceTypeDictionary = {
+        r: 'rook',
+        b: 'bishop',
+        n: 'knight',
+        q: 'queen',
+        k: 'king',
+        p: 'pawn'
+    }
 
     constructor(fen: string|FenNumber) {
 
@@ -70,62 +84,163 @@ export default class FenNumber {
         }
     }
 
-    static getPieceType(fenType: string): ChessPieceType
-    {
-        const map = {
-            r: 'rook',
-            b: 'bishop',
-            n: 'knight',
-            q: 'queen',
-            k: 'king',
-            p: 'pawn'
+
+    /**
+     *
+     * @param chessMove - most necessary mutations can be determined from the move
+     */
+    incrementTurn(
+        chessMove: ChessMove,
+    ): FenNumber {
+
+        // position remains hypothetical until setPiecePlacements() is called
+        this.setPiecePlacements(undefined)
+
+        this.#updateEnPassantTargetSquare(chessMove)
+
+        this.#revokeCastleRights(chessMove)
+
+        this.#incrementMoveCounters(chessMove)
+
+        this.#switchSideToMove()
+
+        return this
+    }
+
+    #switchSideToMove(): void {
+        this.sideToMove = Color.getOpposite(this.sideToMove)
+    }
+
+    #updateEnPassantTargetSquare(move: ChessMove): void {
+        if(move instanceof DoublePawnMove){
+            this.enPassantTarget = move.getEnPassantTargetSquare()
+        }else{
+            this.enPassantTarget = null
+        }
+    }
+
+    #incrementMoveCounters(move: ChessMove): void {
+        // increment full move counter if black's turn
+        if(this.sideToMove === 'black'){
+            this.fullMoveCounter++
         }
 
-        const lowerCaseType = fenType.toLowerCase()
-        if(!map.hasOwnProperty(lowerCaseType)){
+        // increment or reset half-move clock as required
+        if(move.movingPiece.type === 'pawn' || move.capturedPiece){
+            this.halfMoveClock = 0
+        }else{
+            this.halfMoveClock++
+        }
+    }
+
+    #revokeCastleRights(move: ChessMove): void {
+        if(!this.castleRights){
+            return
+        }
+
+        const isRook = move.movingPiece.type === 'rook'
+        const isKing = move.movingPiece.type === 'king'
+        const capturedRook = move.capturedPiece?.type === 'rook' ? move.capturedPiece : null
+
+
+
+        if( !(isRook || isKing || capturedRook) ){
+            return
+        }
+
+        const revocations: string[] = []
+        if(capturedRook){
+            const revokedType = CastlesType.fromRooksSquare(move.newSquare, capturedRook)
+            if(revokedType){
+                revocations.push(revokedType.type)
+            }
+        }
+
+        const movingColor = move.movingPiece.color
+        if(isKing){
+            if(movingColor === 'white' && move.oldSquare === 'e1'){
+                revocations.push('KQ')
+            }else if(movingColor === 'black' && move.oldSquare === 'e8'){
+                revocations.push('kq')
+            }
+        }else if(isRook){
+            const revokedType = CastlesType.fromRooksSquare(move.oldSquare, move.movingPiece)
+            if(revokedType){
+                revocations.push(revokedType.type)
+            }
+        }
+
+        for(let i = 0; i<revocations.length; i++){
+            this.castleRights = this.castleRights.replace(revocations[i],'')
+        }
+    }
+
+
+    setPiecePlacements(squares64: Squares64|undefined): void
+    {
+        if(squares64 === undefined){
+            this.piecePlacements = undefined
+            return
+        }
+        const columnNames = ['a','b','c','d','e','f','g','h']
+        let emptySquares = 0
+
+        let piecePlacements = ''
+        for(let row=8;row>=1;row--){
+            for(let col =1; col<=8;col++){
+                const squareName = columnNames[col - 1] + row.toString()
+                //@ts-ignore
+                const piece = squares64.get(squareName).piece
+
+                if(piece) {
+                    if(emptySquares > 0){
+                        piecePlacements += emptySquares.toString()
+                        emptySquares = 0
+                    }
+                    piecePlacements += FenNumber.getPieceFenType(piece)
+                }else{
+                    emptySquares++
+                }
+            }
+
+            if(emptySquares > 0){
+                piecePlacements += emptySquares.toString()
+                emptySquares = 0
+            }
+            if(row > 1){
+                piecePlacements += '/'
+            }
+        }
+
+        this.piecePlacements = piecePlacements
+
+    }
+
+    static makePiece(fenType: ChessPieceType): Piece
+    {
+
+        const color = fenType.toLowerCase() === fenType ? Color.BLACK : Color.WHITE
+
+        //@ts-ignore
+        fenType = fenType.toLowerCase()
+        if(!FenNumber.pieceTypeDictionary.hasOwnProperty(fenType)){
             throw new Error(`Invalid piece type: ${fenType}`)
         }
 
-        //@ts-ignore
-        return map[lowerCaseType]
+        return new Piece(
+            //@ts-ignore
+            FenNumber.pieceTypeDictionary[fenType],
+            color
+        )
     }
 
-    toSquares64(): Squares64 {
-        const squares64 = new Squares64()
-
-        const rows = this.piecePlacements.split('/').reverse()
-        if (rows.length !== 8) {
-            throw new Error('FEN piece placement must include all eight rows')
+    static getPieceFenType(piece: Piece): string
+    {
+        const char = piece.type === 'knight' ? 'n' : piece.type.charAt(0)
+        if(piece.color === Color.WHITE){
+            return char.toUpperCase()
         }
-
-        const columnNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-        for (let rowNumber = 8; rowNumber > 0; rowNumber--) {
-            const chars = rows[rowNumber - 1].split('')
-            let columnNumber = 1;
-            for (let i = 0; i < chars.length; i++) {
-                const character = chars[i]
-                if (/[1-8]/.test(character)) {
-                    const emptySpaces = parseInt(character)
-                    const lastEmptySpace = columnNumber + emptySpaces - 1
-                    while (columnNumber <= lastEmptySpace) {
-                        columnNumber++
-                    }
-                } else if (/[rbnqkpRBNQKP]/.test(character)) {
-
-                    const squareName = columnNames[columnNumber - 1] + rowNumber.toString()
-                    const pieceType = FenNumber.getPieceType(character)
-                    const colorType = character.toLowerCase() === character ? Color.BLACK : Color.WHITE
-                    // @ts-ignore
-                    const piece = new Piece(pieceType, colorType)
-                    // @ts-ignore
-                    squares64.set(squareName, piece)
-                    columnNumber++
-                } else {
-                    throw new Error("Unrecognized position character: " + character)
-                }
-            }
-        }
-        return squares64
+        return char
     }
 
     toString(): string {
