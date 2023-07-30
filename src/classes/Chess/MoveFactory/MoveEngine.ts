@@ -34,16 +34,13 @@ export default class MoveEngine {
                     break
                 }
 
-
                 // if occupied by a friendly piece, the ray is terminated
                 const newSquare = this.squares144.getSquareByIndex(newIndex)
-                if((newSquare.piece && newSquare.piece.color == piece.color)){
-                    break
-                }
+                const capturedPiece = this.#getCapturedPiece(newSquare, piece)
 
-                let capturedPiece = null
-                if(newSquare.piece != null){
-                    capturedPiece = newSquare.piece
+                // occupied by a friendly piece
+                if(newSquare.piece && !capturedPiece){
+                    break
                 }
 
                 moves.add(new ChessMove(square.name, newSquare.name, piece, capturedPiece))
@@ -82,18 +79,26 @@ export default class MoveEngine {
             }
 
             const newSquare: Square = this.squares144.getSquareByIndex(newIndex)
-            let capturedPiece = null
-            if(newSquare.piece != null){
-                capturedPiece = newSquare.piece
+            const capturedPiece = this.#getCapturedPiece(newSquare, piece)
+
+            // occupied by a friendly piece
+            if(newSquare.piece && !capturedPiece){
+                continue
             }
 
-            // test if square is not out-of-bounds and is either empty or occupied by an enemy piece
-            if(!newSquare.piece || newSquare.piece.color != piece.color ){
-                moves.add(new ChessMove(square.name, newSquare.name, piece, capturedPiece))
-            }
+            moves.add(new ChessMove(square.name, newSquare.name, piece, capturedPiece))
+
         }
 
         return moves
+    }
+
+    #getCapturedPiece(square: Square, movingPiece: Piece): Piece|null
+    {
+        if(square.piece && square.piece.color != movingPiece.color){
+            return square.piece
+        }
+        return null
     }
 
     #getMovingPiece(square: Square, type: ChessPieceType): Piece
@@ -200,10 +205,12 @@ export default class MoveEngine {
             }
 
             const newSquare = this.squares144.getSquareByIndex(newIndex)
-            const move = new ChessMove(square.name, newSquare.name, piece, newSquare.piece);
+            const capturedPiece = this.#getCapturedPiece(newSquare, piece)
+
+            const move = new ChessMove(square.name, newSquare.name, piece, capturedPiece);
 
             // test if square has an enemy piece
-            if(newSquare.piece && newSquare.piece.color != piece.color){
+            if(capturedPiece){
                 moves.add(move)
 
             }else if(newSquare.name === enPassantTarget){
@@ -212,12 +219,10 @@ export default class MoveEngine {
                 const capturedSquare = EnPassantMove.getOpponentPawnSquare(move)
                 const capturedPawn = this.squares144.getSquare(capturedSquare).piece
                 if(capturedPawn !== null){
-                    moves.add(new EnPassantMove(square.name, newSquare.name, piece, capturedPawn, capturedSquare))
+                    moves.add(new EnPassantMove(move, capturedPawn, capturedSquare))
                 }
             }
         }
-
-
 
         // check for promoted pawns
         moves.map((move: ChessMove) => {

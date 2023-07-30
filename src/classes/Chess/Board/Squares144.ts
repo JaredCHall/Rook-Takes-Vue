@@ -66,10 +66,6 @@ export default class Squares144 {
 
     makeMove(move: ChessMove): FenNumber
     {
-        if(move instanceof PawnPromotionMove){
-            move.movingPiece.promote(move.promoteToType)
-        }
-
         const moveSteps = move.getMoveSteps()
         for(let i = 0; i < moveSteps.length; i++){
             this.squares64.set(moveSteps[i].squareName, moveSteps[i].piece)
@@ -80,6 +76,15 @@ export default class Squares144 {
         return this.fenNumber
     }
 
+    unMakeMove(move: ChessMove, previousFenNumber: FenNumber): FenNumber
+    {
+        const moveSteps = move.getUndoSteps()
+        for(let i = 0; i < moveSteps.length; i++){
+            this.squares64.set(moveSteps[i].squareName, moveSteps[i].piece)
+        }
+
+        return this.fenNumber = previousFenNumber
+    }
 
     getSquare(squareType: SquareType): Square {
         return this.squares64.get(squareType)

@@ -9,7 +9,7 @@ describe('EnPassantMove', () => {
 
         const piece = new Piece('pawn','black')
         const capturedPiece = new Piece('pawn','white')
-        const move = new EnPassantMove('f4','e3',piece, capturedPiece,'e4')
+        const move = new EnPassantMove(new ChessMove('f4','e3',piece), capturedPiece,'e4')
 
         expect(move.oldSquare).toEqual('f4')
         expect(move.newSquare).toEqual('e3')
@@ -35,14 +35,14 @@ describe('EnPassantMove', () => {
         const whitePawn = new Piece('pawn','white')
         const blackPawn = new Piece('pawn','black')
 
-        let move = new EnPassantMove('f4','e3',blackPawn, whitePawn,'e4')
+        let move = new EnPassantMove(new ChessMove('f4','e3',blackPawn), whitePawn,'e4')
         expect(move.getMoveSteps()).toEqual([
             new MoveStep('f4', null),
             new MoveStep('e3', blackPawn),
             new MoveStep('e4', null)
         ])
 
-        move = new EnPassantMove('c5','d6',whitePawn, blackPawn,'d5')
+        move = new EnPassantMove(new ChessMove('c5','d6',whitePawn), blackPawn,'d5')
         expect(move.getMoveSteps()).toEqual([
             new MoveStep('c5', null),
             new MoveStep('d6', whitePawn),
@@ -56,7 +56,7 @@ describe('EnPassantMove', () => {
         const whitePawn = new Piece('pawn','white')
         const blackPawn = new Piece('pawn','black')
 
-        let move = new EnPassantMove('f4','e3',blackPawn, whitePawn,'e4')
+        let move = new EnPassantMove(new ChessMove('f4','e3',blackPawn), whitePawn,'e4')
         expect(move.getUndoSteps()).toEqual([
             new MoveStep('e4', whitePawn),
             new MoveStep('f4', blackPawn),
@@ -64,13 +64,12 @@ describe('EnPassantMove', () => {
 
         ])
 
-        move = new EnPassantMove('c5','d6',whitePawn, blackPawn,'d5')
+        move = new EnPassantMove(new ChessMove('c5','d6',whitePawn), blackPawn,'d5')
         expect(move.getUndoSteps()).toEqual([
             new MoveStep('d5', blackPawn),
             new MoveStep('c5', whitePawn),
             new MoveStep('d6', null),
         ])
-
     })
 
 })
