@@ -13,17 +13,15 @@ vi.mock( "@/classes/Chess/MoveFactory/MoveArbiter")
 describe('MoveFactory', () => {
     it('it constructs itself', () => {
         const fenNumber = new FenNumber('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w')
-        const squares144 = new Squares144(fenNumber)
-        const moveFactory = new MoveFactory(squares144)
+        const moveFactory = new MoveFactory(fenNumber)
 
-        expect(moveFactory.squares144).toBe(squares144)
+        expect(moveFactory.squares144).toBeInstanceOf(Squares144)
         expect(moveFactory.moveEngine).toBeInstanceOf(MoveEngine)
         expect(moveFactory.moveArbiter).toBeInstanceOf(MoveArbiter)
     })
     it('it gets moves for square', () => {
         const fenNumber = new FenNumber('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w')
-        const squares144 = new Squares144(fenNumber)
-        const moveFactory = new MoveFactory(squares144)
+        const moveFactory = new MoveFactory(fenNumber)
 
         moveFactory.getMovesFromSquare('e4')
 

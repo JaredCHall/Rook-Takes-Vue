@@ -74,4 +74,13 @@ export default class Square {
         return this.piece
     }
 
+    clone(): Square
+    {
+        const clone = new Square(this.name)
+        if(this.piece){
+            clone.setPiece(this.piece.clone())
+        }
+        return clone
+    }
+
 }

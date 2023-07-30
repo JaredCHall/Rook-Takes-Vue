@@ -1,6 +1,6 @@
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import Square from "@/classes/Chess/Square/Square";
-import type Squares64 from "@/classes/Chess/Board/Squares64";
+import Squares64 from "@/classes/Chess/Board/Squares64";
 import Piece from "@/classes/Chess/Piece";
 import FenNumber from "@/classes/Chess/Board/FenNumber";
 
@@ -57,10 +57,9 @@ export default class Squares144 {
 
     squares64: Squares64
 
-    constructor(fenNumber: FenNumber|string) {
-
-        this.fenNumber = fenNumber instanceof FenNumber ? fenNumber.clone() : new FenNumber(fenNumber)
-        this.squares64 = this.fenNumber.toSquares64()
+    constructor(fen: FenNumber|string) {
+        this.fenNumber = fen instanceof FenNumber ? fen.clone() : new FenNumber(fen)
+        this.squares64 = new Squares64(this.fenNumber)
     }
 
     getSquare(squareType: SquareType): Square {
@@ -74,15 +73,6 @@ export default class Squares144 {
 
     setPiece(squareType: SquareType, piece: null | Piece): void {
         this.squares64.set(squareType, piece)
-    }
-
-    getPseudoLegalMoves(squareType: SquareType){
-        const square = this.getSquare(squareType)
-        const piece = square.getPiece()
-
-        if(piece === null){
-            return null
-        }
     }
 
 }

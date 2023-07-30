@@ -61,34 +61,6 @@ describe('FenNumber', () => {
 
     })
 
-    it('it serializes to Squares64', () => {
-        const gameOfTheCentury = new FenNumber('1Q6/5pk1/2p3p1/1p2N2p/1b5P/1bn5/2r3P1/2K5 w - - 16 42 1 1')
-        const squares64 = gameOfTheCentury.toSquares64()
-
-        expect(Object.keys(squares64.squares)).toHaveLength(64)
-
-        expect(squares64).toHaveProperty('squares.b8.piece.type','queen')
-        expect(squares64).toHaveProperty('squares.b8.piece.color','white')
-
-        expect(squares64).toHaveProperty('squares.f7.piece.type','pawn')
-        expect(squares64).toHaveProperty('squares.f7.piece.color','black')
-
-        expect(squares64).toHaveProperty('squares.g7.piece.type','king')
-        expect(squares64).toHaveProperty('squares.g7.piece.color','black')
-
-        expect(squares64).toHaveProperty('squares.e5.piece.type','knight')
-        expect(squares64).toHaveProperty('squares.e5.piece.color','white')
-
-        expect(squares64).toHaveProperty('squares.c3.piece.type','knight')
-        expect(squares64).toHaveProperty('squares.c3.piece.color','black')
-
-        expect(squares64).toHaveProperty('squares.c2.piece.type','rook')
-        expect(squares64).toHaveProperty('squares.c2.piece.color','black')
-
-        expect(squares64).toHaveProperty('squares.c1.piece.type','king')
-        expect(squares64).toHaveProperty('squares.c1.piece.color','white')
-    })
-
     it('it stringifies itself', () => {
         const gameOfTheCentury = new FenNumber('1Q6/5pk1/2p3p1/1p2N2p/1b5P/1bn5/2r3P1/2K5 w - - 16 42 1 1')
         expect(gameOfTheCentury.toString()).toEqual('1Q6/5pk1/2p3p1/1p2N2p/1b5P/1bn5/2r3P1/2K5 w - - 16 42 1 1')

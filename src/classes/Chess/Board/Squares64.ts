@@ -3,6 +3,8 @@ import Piece from "@/classes/Chess/Piece";
 import type {ChessPieceType} from "@/classes/Chess/Piece";
 import Square from "@/classes/Chess/Square/Square";
 import type {ColorType} from "@/classes/Chess/Color";
+import FenNumber from "@/classes/Chess/Board/FenNumber";
+import {Color} from "@/classes/Chess/Color";
 
 /**
  * A representation of the 64 squares
@@ -36,11 +38,16 @@ export default class Squares64
         black: null,
     }
 
-    constructor() {
+    constructor(fenNumber: FenNumber|null = null) {
         for(const i in Squares64.squaresOrder){
             const squareName = Squares64.squaresOrder[i]
             this.squares[squareName] = new Square(squareName, null)
         }
+
+        if(fenNumber instanceof FenNumber){
+            this.#setPiecesFromFenNumber(fenNumber)
+        }
+
     }
 
     set(squareType: SquareType, piece: null|Piece): void {
@@ -75,9 +82,6 @@ export default class Squares64
         return squares
     }
 
-
-
-
     get(squareType: SquareType): Square {
         return this.squares[squareType]
     }
@@ -87,4 +91,54 @@ export default class Squares64
             callback(this.squares[i], i)
         }
     }
+
+
+
+
+    clone(): Squares64 {
+        const clone = new Squares64()
+        for(const i in this.squares){
+            const square = this.squares[i]
+            if(square.piece){
+                clone.set(square.name, square.piece)
+            }
+        }
+        return clone
+    }
+
+    #setPiecesFromFenNumber(fenNumber: FenNumber): void {
+        const rows = fenNumber.piecePlacements.split('/').reverse()
+        if (rows.length !== 8) {
+            throw new Error('FEN piece placement must include all eight rows')
+        }
+
+        const columnNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+        for (let rowNumber = 8; rowNumber > 0; rowNumber--) {
+            const chars = rows[rowNumber - 1].split('')
+            let columnNumber = 1;
+            for (let i = 0; i < chars.length; i++) {
+                const character = chars[i]
+                if (/[1-8]/.test(character)) {
+                    const emptySpaces = parseInt(character)
+                    const lastEmptySpace = columnNumber + emptySpaces - 1
+                    while (columnNumber <= lastEmptySpace) {
+                        columnNumber++
+                    }
+                } else if (/[rbnqkpRBNQKP]/.test(character)) {
+
+                    const squareName = columnNames[columnNumber - 1] + rowNumber.toString()
+                    const pieceType = FenNumber.getPieceType(character)
+                    const colorType = character.toLowerCase() === character ? Color.BLACK : Color.WHITE
+                    // @ts-ignore
+                    const piece = new Piece(pieceType, colorType)
+                    // @ts-ignore
+                    this.set(squareName, piece)
+                    columnNumber++
+                } else {
+                    throw new Error("Unrecognized position character: " + character)
+                }
+            }
+        }
+    }
+
 }
