@@ -2,7 +2,7 @@ import Squares64 from "@/classes/Chess/Board/Squares64";
 import Piece from "@/classes/Chess/Piece";
 import type {ChessPieceType} from "@/classes/Chess/Piece";
 import {Color} from "@/classes/Chess/Color";
-import type Square from "@/classes/Chess/Square/Square";
+import type { SquareType } from "@/classes/Chess/Square/Square";
 import type ChessMove from "@/classes/Chess/Moves/ChessMove";
 import DoublePawnMove from "@/classes/Chess/Moves/DoublePawnMove";
 import CastlesType from "@/classes/Chess/Moves/CastlesType";
@@ -18,7 +18,7 @@ export default class FenNumber {
 
     castleRights: null | string = null
 
-    enPassantTarget: null | string = null
+    enPassantTarget: null | SquareType = null
 
     halfMoveClock: number = 0
 
@@ -65,6 +65,7 @@ export default class FenNumber {
         }
 
         if(parts[3] && parts[3] !== '-'){
+            //@ts-ignore
             this.enPassantTarget = parts[3]
         }
 
@@ -74,13 +75,6 @@ export default class FenNumber {
 
         if(parts[5] && parts[5] !== '-'){
             this.fullMoveCounter = parseInt(parts[5])
-        }
-
-        if(this.castleRights == '-'){
-            this.castleRights = null
-        }
-        if(this.enPassantTarget == '-'){
-            this.enPassantTarget = null
         }
     }
 

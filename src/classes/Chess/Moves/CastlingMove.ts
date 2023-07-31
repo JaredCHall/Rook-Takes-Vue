@@ -1,7 +1,7 @@
 
 import ChessMove from "./ChessMove";
 import MoveStep from "./MoveStep";
-import type Piece from "@/classes/Chess/Piece";
+import Piece from "@/classes/Chess/Piece";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import CastlesType from "@/classes/Chess/Moves/CastlesType";
 export default class CastlingMove extends ChessMove
@@ -9,6 +9,19 @@ export default class CastlingMove extends ChessMove
     rook: Piece
 
     castlesType: CastlesType
+
+    static create(castlesType: 'K'|'Q'|'k'|'q'): CastlingMove
+    {
+        const type = CastlesType.create(castlesType)
+        const color = castlesType.toUpperCase() === castlesType ? 'white' : 'black'
+        return new CastlingMove(
+            type.kingsOldSquare,
+            type.kingsNewSquare,
+            new Piece('king', color),
+            new Piece('rook', color),
+            castlesType
+        )
+    }
 
     constructor(oldSquare: SquareType, newSquare: SquareType, movingPiece: Piece, rook: Piece, castlesType: 'K'|'Q'|'k'|'q'|CastlesType) {
         super(oldSquare, newSquare, movingPiece, null)

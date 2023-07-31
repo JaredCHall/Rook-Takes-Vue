@@ -1,7 +1,7 @@
 import type {ChessPieceType} from "@/classes/Chess/Piece";
 import Piece from "@/classes/Chess/Piece";
 import Squares144 from "@/classes/Chess/Board/Squares144";
-import type {SquareType} from "@/classes/Chess/Square/Square";
+import type {SquaresList, SquareType} from "@/classes/Chess/Square/Square";
 import type FenNumber from "@/classes/Chess/Board/FenNumber";
 import Square from "@/classes/Chess/Square/Square";
 import MoveList from "@/classes/Chess/Moves/MoveList";
@@ -11,6 +11,9 @@ import DoublePawnMove from "@/classes/Chess/Moves/DoublePawnMove";
 import PawnPromotionMove from "@/classes/Chess/Moves/PawnPromotionMove";
 import CastlingMove from "@/classes/Chess/Moves/CastlingMove";
 import CastlesType from "@/classes/Chess/Moves/CastlesType";
+import type {ColorType} from "@/classes/Chess/Color";
+import type Squares64 from "@/classes/Chess/Board/Squares64";
+import {Color} from "@/classes/Chess/Color";
 
 export default class MoveEngine {
 
@@ -18,6 +21,10 @@ export default class MoveEngine {
 
     constructor(squares144: Squares144) {
         this.squares144 = squares144
+    }
+
+    get squares64(): Squares64 {
+        return this.squares144.squares64
     }
 
     traceRayVectors(square: Square, piece: Piece, vectors: number[][], maxRayLength: number=7): MoveList {
@@ -55,10 +62,8 @@ export default class MoveEngine {
         return moves
     }
 
-    getKnightMoves(square: Square): MoveList
+    getKnightMoves(square: Square, piece: Piece): MoveList
     {
-        const piece = this.#getMovingPiece(square, 'knight')
-
         const moves = new MoveList()
         const moveOffsets = [
             -23, // NNE
@@ -95,25 +100,14 @@ export default class MoveEngine {
 
     #getCapturedPiece(square: Square, movingPiece: Piece): Piece|null
     {
-        if(square.piece && square.piece.color != movingPiece.color){
+        if(square.piece && square.piece.color !== movingPiece.color){
             return square.piece
         }
         return null
     }
 
-    #getMovingPiece(square: Square, type: ChessPieceType): Piece
+    getRookMoves(square: Square, piece: Piece): MoveList
     {
-        const piece = square.piece
-        if(!piece || piece.type !== type){
-            throw new Error('Expected '+type+' is not on square '+square.name)
-        }
-        return piece
-    }
-
-    getRookMoves(square: Square): MoveList
-    {
-        const piece= this.#getMovingPiece(square, 'rook')
-
         const rayVectors = [
             [0,-1], // N
             [1,0],  // E
@@ -124,9 +118,8 @@ export default class MoveEngine {
         return this.traceRayVectors(square, piece, rayVectors)
     }
 
-    getBishopMoves(square: Square): MoveList
+    getBishopMoves(square: Square, piece: Piece): MoveList
     {
-        const piece= this.#getMovingPiece(square, 'bishop')
         const rayVectors = [
             [1,-1],  // NE
             [1,1],   // SE
@@ -137,9 +130,8 @@ export default class MoveEngine {
         return this.traceRayVectors(square, piece, rayVectors)
     }
 
-    getQueenMoves(square: Square): MoveList
+    getQueenMoves(square: Square, piece: Piece): MoveList
     {
-        const piece= this.#getMovingPiece(square, 'queen')
         const rayVectors = [
             [0,-1],  // N
             [1,-1],  // NE
@@ -154,10 +146,8 @@ export default class MoveEngine {
         return this.traceRayVectors(square, piece, rayVectors)
     }
 
-    getPawnMoves(square: Square, enPassantTarget: null|string): MoveList
+    getPawnMoves(square: Square, piece: Piece, enPassantTarget: null|string): MoveList
     {
-
-        const piece = this.#getMovingPiece(square,'pawn')
 
         const moves = new MoveList()
         const isPieceWhite = piece.color == 'white'
@@ -235,9 +225,8 @@ export default class MoveEngine {
         return moves
     }
 
-    getKingMoves(square: Square, castleRights: null|string): MoveList
+    getKingMoves(square: Square, piece: Piece, castleRights: null|string): MoveList
     {
-        const piece = this.#getMovingPiece(square, 'king')
         const rayVectors = [
             [0,-1],  // N
             [1,-1],  // NE
@@ -289,28 +278,98 @@ export default class MoveEngine {
         return moves
     }
 
-    getPseudoLegalMoves(squareName: SquareType, fenNumber: FenNumber|null = null): MoveList {
+    getPseudoLegalMoves(squareName: SquareType, enPassantTarget: SquareType|null = null, castleRights: string|null): MoveList {
 
-        fenNumber ??= this.squares144.fenNumber
         const square = this.squares144.getSquare(squareName)
-
-
         if(!square.piece){
             throw new Error("No piece on square "+square.name)
         }
 
         //@ts-ignore
         switch(square.piece.type){
-            case 'pawn': return this.getPawnMoves(square, fenNumber.enPassantTarget)
-            case 'rook': return this.getRookMoves(square)
-            case 'knight': return this.getKnightMoves(square)
-            case 'bishop': return this.getBishopMoves(square)
-            case 'queen': return this.getQueenMoves(square)
-            case 'king': return this.getKingMoves(square, fenNumber.castleRights)
+            case 'pawn': return this.getPawnMoves(square, square.piece, enPassantTarget)
+            case 'rook': return this.getRookMoves(square, square.piece)
+            case 'knight': return this.getKnightMoves(square, square.piece)
+            case 'bishop': return this.getBishopMoves(square, square.piece)
+            case 'queen': return this.getQueenMoves(square, square.piece)
+            case 'king': return this.getKingMoves(square, square.piece, castleRights)
         }
     }
 
+    isSquareThreatenedBy(square: Square|SquareType, color: ColorType): boolean
+    {
+        const movingColor = Color.getOpposite(color)
+        square = square instanceof Square ? square :  this.squares64.get(square)
 
+        if(square.piece && square.piece.color === color){
+            // can't threaten a piece that is the same color
+            return false
+        }
 
+        const dummyPiece = new Piece('king',movingColor)
+        let isSquareSafe = true
 
+        this.getKnightMoves(square, dummyPiece).each((move: ChessMove) => {
+            if(move.capturedPiece && move.capturedPiece.type === 'knight'){
+                return isSquareSafe = false
+            }
+        })
+        if(!isSquareSafe){
+            return !isSquareSafe
+        }
+
+        this.getRookMoves(square, dummyPiece).each( (move: ChessMove) => {
+            if(move.capturedPiece){
+                switch(move.capturedPiece.type){
+                    case 'rook':
+                    case 'queen':
+                        return isSquareSafe = false
+                    case 'king':
+                        // only counts if square is adjacent
+                        if(this.squares144.isSquareAdjacent(move.oldSquare, move.newSquare)){
+                            return isSquareSafe = false
+                        }
+                }
+            }
+        })
+        if(!isSquareSafe){
+            return !isSquareSafe
+        }
+
+        this.getBishopMoves(square, dummyPiece).each( (move: ChessMove) => {
+            if(move.capturedPiece){
+                switch(move.capturedPiece.type){
+                    case 'bishop':
+                    case 'queen':
+                        return isSquareSafe = false
+                    case 'king':
+                    case 'pawn':
+                        // only counts if square is adjacent
+                        if(this.squares144.isSquareAdjacent(move.oldSquare, move.newSquare)){
+                            return isSquareSafe = false
+                        }
+                }
+            }
+        })
+        return !isSquareSafe;
+
+    }
+
+    getSquaresThreatenedBy(color:ColorType): SquaresList
+    {
+        const enemyThreats: SquaresList = {}
+        const enemySquares = this.squares64.getPieceSquares(color)
+
+        for(const i in enemySquares){
+            const square = enemySquares[i].name
+
+            // only immediate threats. EnPassant and Castles are excluded
+            const threats = this.getPseudoLegalMoves(square, null, null)
+            threats.each((move: ChessMove) => {
+                enemyThreats[move.newSquare] = true
+            })
+        }
+
+        return enemyThreats
+    }
 }

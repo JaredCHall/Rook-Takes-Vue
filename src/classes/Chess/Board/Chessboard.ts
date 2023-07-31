@@ -3,7 +3,8 @@ import type {SquareType} from "@/classes/Chess/Square/Square";
 import Squares144 from "@/classes/Chess/Board/Squares144";
 import FenNumber from "@/classes/Chess/Board/FenNumber";
 import Squares64 from "@/classes/Chess/Board/Squares64";
-import MoveFactory from "@/classes/Chess/MoveFactory/MoveFactory";
+import MoveArbiter from "@/classes/Chess/MoveFactory/MoveArbiter";
+import MoveEngine from "@/classes/Chess/MoveFactory/MoveEngine";
 
 export default class Chessboard
 {
@@ -22,12 +23,16 @@ export default class Chessboard
 
     squares64: Squares64
 
-    moveFactory: MoveFactory
+    moveArbiter: MoveArbiter
 
     constructor(fen: string) {
         this.fenNumber = new FenNumber(fen)
         this.squares64 = new Squares64(this.fenNumber)
-        this.moveFactory = new MoveFactory(this.fenNumber)
+        this.moveArbiter = new MoveArbiter(new MoveEngine(new Squares144(this.fenNumber)))
+    }
+
+    get moveEngine(): MoveEngine {
+        return this.moveArbiter.moveEngine
     }
 
     getSquare(squareType: SquareType): Square

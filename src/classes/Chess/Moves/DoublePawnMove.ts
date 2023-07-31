@@ -19,13 +19,15 @@ export default class DoublePawnMove extends ChessMove
         super(oldSquare, newSquare, movingPiece, null)
     }
 
-    getEnPassantTargetSquare(): string
+    getEnPassantTargetSquare(): SquareType
     {
         const square = new Square(this.newSquare)
 
         if(square.rank === 4){ // white moving
+            //@ts-ignore
             return square.file + '3'
         }
+        //@ts-ignore
         return square.file + '6'
     }
 }

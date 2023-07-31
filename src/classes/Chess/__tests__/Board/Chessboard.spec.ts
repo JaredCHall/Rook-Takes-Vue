@@ -3,11 +3,11 @@ import { describe, it, expect, vi } from 'vitest'
 import Chessboard from "@/classes/Chess/Board/Chessboard";
 import FenNumber from "@/classes/Chess/Board/FenNumber";
 import Squares64 from "@/classes/Chess/Board/Squares64";
-import MoveFactory from "@/classes/Chess/MoveFactory/MoveFactory";
+import MoveArbiter from "@/classes/Chess/MoveFactory/MoveArbiter";
 
 vi.mock('@/classes/Chess/Board/FenNumber')
 vi.mock('@/classes/Chess/Board/Squares64')
-vi.mock('@/classes/Chess/MoveFactory/MoveFactory')
+vi.mock('@/classes/Chess/Board/MoveArbiter')
 
 describe('ChessBoard', () => {
 
@@ -15,10 +15,9 @@ describe('ChessBoard', () => {
         const board = new Chessboard('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
         expect(board.fenNumber).toBeInstanceOf(FenNumber)
         expect(board.squares64).toBeInstanceOf(Squares64)
-        expect(board.moveFactory).toBeInstanceOf(MoveFactory)
+        expect(board.moveArbiter).toBeInstanceOf(MoveArbiter)
 
         expect(FenNumber).toHaveBeenCalledWith('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
-        expect(MoveFactory).toHaveBeenCalledWith(board.fenNumber)
         expect(Squares64).toHaveBeenCalledWith(board.fenNumber)
     })
 

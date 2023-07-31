@@ -64,26 +64,14 @@ export default class Squares144 {
         this.squares64 = new Squares64(this.fenNumber)
     }
 
-    makeMove(move: ChessMove): FenNumber
+    makeMove(move: ChessMove): void
     {
-        const moveSteps = move.getMoveSteps()
-        for(let i = 0; i < moveSteps.length; i++){
-            this.squares64.set(moveSteps[i].squareName, moveSteps[i].piece)
-        }
-
-        this.fenNumber.incrementTurn(move)
-
-        return this.fenNumber
+        this.squares64.makeMove(move)
     }
 
-    unMakeMove(move: ChessMove, previousFenNumber: FenNumber): FenNumber
+    unMakeMove(move: ChessMove): void
     {
-        const moveSteps = move.getUndoSteps()
-        for(let i = 0; i < moveSteps.length; i++){
-            this.squares64.set(moveSteps[i].squareName, moveSteps[i].piece)
-        }
-
-        return this.fenNumber = previousFenNumber
+        this.squares64.unMakeMove(move)
     }
 
     getSquare(squareType: SquareType): Square {
@@ -97,6 +85,23 @@ export default class Squares144 {
 
     setPiece(squareType: SquareType, piece: null | Piece): void {
         this.squares64.set(squareType, piece)
+    }
+
+    isSquareAdjacent(square1: SquareType|Square, square2: SquareType|Square): boolean
+    {
+
+        if(square1 === square2){
+            return false
+        }
+
+        square1 = square1 instanceof Square ? square1 : this.getSquare(square1)
+        square2 = square2 instanceof Square ? square2 : this.getSquare(square2)
+
+        const colDiff = Math.abs(square1.whiteCoordinates.column - square2.whiteCoordinates.column)
+        const rowDiff = Math.abs(square1.whiteCoordinates.row - square2.whiteCoordinates.row)
+
+        return colDiff <= 1 && rowDiff <= 1
+
     }
 
 }

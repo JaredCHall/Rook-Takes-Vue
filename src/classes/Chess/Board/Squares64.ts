@@ -5,6 +5,7 @@ import Square from "@/classes/Chess/Square/Square";
 import type {ColorType} from "@/classes/Chess/Color";
 import FenNumber from "@/classes/Chess/Board/FenNumber";
 import {Color} from "@/classes/Chess/Color";
+import ChessMove from "@/classes/Chess/Moves/ChessMove";
 
 /**
  * A representation of the 64 squares
@@ -68,7 +69,7 @@ export default class Squares64
         return this.kingSquare[color]
     }
 
-    getPieceSquares(color: ColorType, type: ChessPieceType|null): Square[]
+    getPieceSquares(color: ColorType, type: ChessPieceType|null = null): Square[]
     {
         const squares: Square[] = []
         this.each((square: Square) => {
@@ -86,14 +87,28 @@ export default class Squares64
         return this.squares[squareType]
     }
 
+    makeMove(move: ChessMove): void
+    {
+        const moveSteps = move.getMoveSteps()
+        for(let i = 0; i < moveSteps.length; i++){
+            this.set(moveSteps[i].squareName, moveSteps[i].piece)
+        }
+    }
+
+    unMakeMove(move: ChessMove): void
+    {
+        const moveSteps = move.getUndoSteps()
+        for(let i = 0; i < moveSteps.length; i++){
+            this.set(moveSteps[i].squareName, moveSteps[i].piece)
+        }
+    }
+
+
     each(callback: any): void {
         for(const i in this.squares){
             callback(this.squares[i], i)
         }
     }
-
-
-
 
     clone(): Squares64 {
         const clone = new Squares64()
@@ -107,6 +122,11 @@ export default class Squares64
     }
 
     #setPiecesFromFenNumber(fenNumber: FenNumber): void {
+
+        if(fenNumber.piecePlacements === undefined){
+            throw new Error('FenNumber.piecePlacements is undefined')
+        }
+
         const rows = fenNumber.piecePlacements.split('/').reverse()
         if (rows.length !== 8) {
             throw new Error('FEN piece placement must include all eight rows')

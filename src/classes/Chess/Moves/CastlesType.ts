@@ -43,7 +43,7 @@ export default class CastlesType {
                 'e1',
                 'c1',
                 ['d1','c1','b1'],
-                ['d1','c1','b1'],
+                ['e1','d1','c1'],
                 'Q',
                 'O-O-O'
                 )

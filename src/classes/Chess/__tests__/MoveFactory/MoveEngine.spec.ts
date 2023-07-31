@@ -113,14 +113,13 @@ describe('MoveEngine', () => {
         const squares144 = new Squares144('8/8/8/5pP1/3Pp3/8/8/8 w - d3 0 1');
         const moveEngine = new MoveEngine(squares144)
 
-        let moves = moveEngine.getPseudoLegalMoves('e4').moves
+        let moves = moveEngine.getPseudoLegalMoves('e4','d3').moves
         expect(moves[1]).toBeInstanceOf(EnPassantMove)
         expect(moves[1].newSquare).toEqual('d3')
         expect(moves[1].capturedPiece).toEqual(new Piece('pawn','white'))
         expect(moves[1].capturedSquare).toEqual('d4')
 
-        squares144.fenNumber.enPassantTarget = 'f6'
-        moves = moveEngine.getPseudoLegalMoves('g5').moves
+        moves = moveEngine.getPseudoLegalMoves('g5', 'f6').moves
         expect(moves[1]).toBeInstanceOf(EnPassantMove)
         expect(moves[1].newSquare).toEqual('f6')
         expect(moves[1].capturedPiece).toEqual(new Piece('pawn','black'))
@@ -275,7 +274,7 @@ describe('MoveEngine', () => {
         const moveEngine = new MoveEngine(squares144)
         let moves
 
-        moves = moveEngine.getPseudoLegalMoves('e1').moves
+        moves = moveEngine.getPseudoLegalMoves('e1',null,'KQkq').moves
         // white short castles
         expect(moves[5].newSquare).toEqual('g1')
         expect(moves[5].castlesType.notation).toEqual('O-O')
@@ -284,7 +283,7 @@ describe('MoveEngine', () => {
         expect(moves[6].castlesType.notation).toEqual('O-O-O')
 
 
-        moves = moveEngine.getPseudoLegalMoves('e8').moves
+        moves = moveEngine.getPseudoLegalMoves('e8',null,'KQkq').moves
         // black short castles
         expect(moves[5].newSquare).toEqual('g8')
         expect(moves[5].castlesType.notation).toEqual('O-O')
@@ -292,8 +291,7 @@ describe('MoveEngine', () => {
         expect(moves[6].newSquare).toEqual('c8')
         expect(moves[6].castlesType.notation).toEqual('O-O-O')
 
-        // revoke castling rights
-        squares144.fenNumber.castleRights = null
+        // no castling moves if there are no castle rights
         expect(moves = moveEngine.getPseudoLegalMoves('e1').moves).toHaveLength(5)
         expect(moves = moveEngine.getPseudoLegalMoves('e8').moves).toHaveLength(5)
 
