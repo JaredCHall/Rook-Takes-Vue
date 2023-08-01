@@ -354,22 +354,4 @@ export default class MoveEngine {
         return !isSquareSafe;
 
     }
-
-    getSquaresThreatenedBy(color:ColorType): SquaresList
-    {
-        const enemyThreats: SquaresList = {}
-        const enemySquares = this.squares64.getPieceSquares(color)
-
-        for(const i in enemySquares){
-            const square = enemySquares[i].name
-
-            // only immediate threats. EnPassant and Castles are excluded
-            const threats = this.getPseudoLegalMoves(square, null, null)
-            threats.each((move: ChessMove) => {
-                enemyThreats[move.newSquare] = true
-            })
-        }
-
-        return enemyThreats
-    }
 }

@@ -43,7 +43,7 @@ export default class MoveArbiter {
 
         let isMoveLegal
         if(move instanceof CastlingMove){
-            isMoveLegal = this.isCastlingMoveLegal(move)
+            isMoveLegal = this.#isCastlingMoveLegal(move)
         }else{
             console.log(move)
             console.log(this.getKingSquare(movingColor))
@@ -55,7 +55,7 @@ export default class MoveArbiter {
         return isMoveLegal
     }
 
-    isCastlingMoveLegal(move: CastlingMove): boolean {
+    #isCastlingMoveLegal(move: CastlingMove): boolean {
         for(const i in move.castlesType.squaresThatMustBeSafe){
             const square = move.castlesType.squaresThatMustBeSafe[i]
             if(this.moveEngine.isSquareThreatenedBy(square, Color.getOpposite(move.movingPiece.color))){
@@ -77,25 +77,12 @@ export default class MoveArbiter {
         return legalMoves
     }
 
-    getEnemyThreats(): SquaresList
-    {
-        return this.moveEngine.getSquaresThreatenedBy(Color.getOpposite(this.fenNumber.sideToMove))
-    }
-
     getKingSquare(color: ColorType|null): SquareType
     {
         color ??= this.fenNumber.sideToMove
 
         //@ts-ignore
         return this.squares64.getKingSquare(color).name
-    }
-
-    isKingInCheck(enemyThreats: SquaresList|null=null): boolean
-    {
-        enemyThreats = enemyThreats ?? this.getEnemyThreats()
-        // @ts-ignore
-        return enemyThreats.hasOwnProperty(this.getMovingPlayersKingSquare());
-
     }
 
 }

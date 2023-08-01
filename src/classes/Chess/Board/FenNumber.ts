@@ -12,7 +12,7 @@ export default class FenNumber {
     /**
      * piecePlacements is undefined between calls of incrementTurn() and setPiecePositions()
      */
-    piecePlacements: string|undefined
+    piecePlacements: string
 
     sideToMove: 'white' | 'black' = 'white'
 
@@ -79,24 +79,20 @@ export default class FenNumber {
     }
 
 
-    /**
-     *
-     * @param chessMove - most necessary mutations can be determined from the move
-     */
     incrementTurn(
         chessMove: ChessMove,
+        squares64: Squares64
     ): FenNumber {
-
-        // position remains hypothetical until setPiecePlacements() is called
-        this.setPiecePlacements(undefined)
-
-        this.#updateEnPassantTargetSquare(chessMove)
-
-        this.#revokeCastleRights(chessMove)
 
         this.#incrementMoveCounters(chessMove)
 
         this.#switchSideToMove()
+
+        this.#setPiecePlacements(squares64)
+
+        this.#updateEnPassantTargetSquare(chessMove)
+
+        this.#revokeCastleRights(chessMove)
 
         return this
     }
@@ -170,16 +166,12 @@ export default class FenNumber {
     }
 
 
-    setPiecePlacements(squares64: Squares64|undefined): void
+    #setPiecePlacements(squares64: Squares64): void
     {
-        if(squares64 === undefined){
-            this.piecePlacements = undefined
-            return
-        }
         const columnNames = ['a','b','c','d','e','f','g','h']
         let emptySquares = 0
 
-        let piecePlacements = ''
+        this.piecePlacements = ''
         for(let row=8;row>=1;row--){
             for(let col =1; col<=8;col++){
                 const squareName = columnNames[col - 1] + row.toString()
@@ -188,25 +180,23 @@ export default class FenNumber {
 
                 if(piece) {
                     if(emptySquares > 0){
-                        piecePlacements += emptySquares.toString()
+                        this.piecePlacements += emptySquares.toString()
                         emptySquares = 0
                     }
-                    piecePlacements += FenNumber.getPieceFenType(piece)
+                    this.piecePlacements += FenNumber.getPieceFenType(piece)
                 }else{
                     emptySquares++
                 }
             }
 
             if(emptySquares > 0){
-                piecePlacements += emptySquares.toString()
+                this.piecePlacements += emptySquares.toString()
                 emptySquares = 0
             }
             if(row > 1){
-                piecePlacements += '/'
+                this.piecePlacements += '/'
             }
         }
-
-        this.piecePlacements = piecePlacements
 
     }
 
