@@ -1,14 +1,10 @@
-import Squares144 from "@/classes/Chess/Board/Squares144";
-import type ChessMove from "@/classes/Chess/Moves/ChessMove";
+import type ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
 import type {ColorType} from "@/classes/Chess/Color";
-import FenNumber from "@/classes/Chess/Board/FenNumber";
 import {Color} from "@/classes/Chess/Color";
 import MoveEngine from "@/classes/Chess/MoveFactory/MoveEngine";
-import type {SquaresList, SquareType} from "@/classes/Chess/Square/Square";
-import MoveList from "@/classes/Chess/Moves/MoveList";
-import DoublePawnMove from "@/classes/Chess/Moves/DoublePawnMove";
-import type Squares64 from "@/classes/Chess/Board/Squares64";
-import CastlingMove from "@/classes/Chess/Moves/CastlingMove";
+import type {SquareType} from "@/classes/Chess/Square/Square";
+import MoveList from "@/classes/Chess/Move/MoveList";
+import CastlingMove from "@/classes/Chess/Move/MoveType/CastlingMove";
 
 export default class MoveArbiter {
 
@@ -45,8 +41,6 @@ export default class MoveArbiter {
         if(move instanceof CastlingMove){
             isMoveLegal = this.#isCastlingMoveLegal(move)
         }else{
-            console.log(move)
-            console.log(this.getKingSquare(movingColor))
             isMoveLegal = !this.moveEngine.isSquareThreatenedBy(this.getKingSquare(movingColor), enemyColor)
         }
 

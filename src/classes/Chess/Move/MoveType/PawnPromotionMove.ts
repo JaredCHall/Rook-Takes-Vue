@@ -3,7 +3,7 @@ import Piece from "@/classes/Chess/Piece";
 import type {ChessPieceType} from "@/classes/Chess/Piece";
 import Square from "@/classes/Chess/Square/Square";
 import type {SquareType} from "@/classes/Chess/Square/Square";
-import MoveStep from "@/classes/Chess/Moves/MoveStep";
+import MoveStep from "@/classes/Chess/Move/MoveStep";
 
 export default class PawnPromotionMove extends ChessMove
 {

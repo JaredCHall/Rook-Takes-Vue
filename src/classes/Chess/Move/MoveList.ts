@@ -1,4 +1,4 @@
-import ChessMove from "./ChessMove";
+import ChessMove from "./MoveType/ChessMove";
 
 export default class MoveList {
 

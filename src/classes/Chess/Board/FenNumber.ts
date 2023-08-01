@@ -3,9 +3,9 @@ import Piece from "@/classes/Chess/Piece";
 import type {ChessPieceType} from "@/classes/Chess/Piece";
 import {Color} from "@/classes/Chess/Color";
 import type { SquareType } from "@/classes/Chess/Square/Square";
-import type ChessMove from "@/classes/Chess/Moves/ChessMove";
-import DoublePawnMove from "@/classes/Chess/Moves/DoublePawnMove";
-import CastlesType from "@/classes/Chess/Moves/CastlesType";
+import type ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
+import DoublePawnMove from "@/classes/Chess/Move/MoveType/DoublePawnMove";
+import CastlesType from "@/classes/Chess/Move/MoveType/CastlesType";
 
 export default class FenNumber {
 

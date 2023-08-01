@@ -3,8 +3,7 @@ import Square from "@/classes/Chess/Square/Square";
 import Squares64 from "@/classes/Chess/Board/Squares64";
 import Piece from "@/classes/Chess/Piece";
 import FenNumber from "@/classes/Chess/Board/FenNumber";
-import type ChessMove from "@/classes/Chess/Moves/ChessMove";
-import PawnPromotionMove from "@/classes/Chess/Moves/PawnPromotionMove";
+import type ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
 
 /**
  * A representation of the 64 squares and all nearby out-of-bounds squares

@@ -1,10 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import Piece from "@/classes/Chess/Piece";
-import MoveStep from "@/classes/Chess/Moves/MoveStep";
-import ChessMove from "@/classes/Chess/Moves/ChessMove";
-import DoublePawnMove from "@/classes/Chess/Moves/DoublePawnMove";
-import Square from "@/classes/Chess/Square/Square";
-import PawnPromotionMove from "@/classes/Chess/Moves/PawnPromotionMove";
+import ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
+import PawnPromotionMove from "@/classes/Chess/Move/MoveType/PawnPromotionMove";
 
 
 describe('PawnPromotionMove', () => {

@@ -6,9 +6,9 @@ import Squares144 from "@/classes/Chess/Board/Squares144";
 import MoveEngine from "@/classes/Chess/MoveFactory/MoveEngine";
 import MoveArbiter from "@/classes/Chess/MoveFactory/MoveArbiter";
 import Squares64 from "@/classes/Chess/Board/Squares64";
-import ChessMove from "@/classes/Chess/Moves/ChessMove";
+import ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
 import Piece from "@/classes/Chess/Piece";
-import CastlingMove from "@/classes/Chess/Moves/CastlingMove";
+import CastlingMove from "@/classes/Chess/Move/MoveType/CastlingMove";
 
 
 const getTestMoveArbiter = (fen) => {

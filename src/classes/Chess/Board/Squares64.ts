@@ -4,8 +4,7 @@ import type {ChessPieceType} from "@/classes/Chess/Piece";
 import Square from "@/classes/Chess/Square/Square";
 import type {ColorType} from "@/classes/Chess/Color";
 import FenNumber from "@/classes/Chess/Board/FenNumber";
-import {Color} from "@/classes/Chess/Color";
-import ChessMove from "@/classes/Chess/Moves/ChessMove";
+import ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
 
 /**
  * A representation of the 64 squares
