@@ -5,6 +5,9 @@ import FenNumber from "@/classes/Chess/Board/FenNumber";
 import Squares64 from "@/classes/Chess/Board/Squares64";
 import MoveArbiter from "@/classes/Chess/MoveFactory/MoveArbiter";
 import MoveEngine from "@/classes/Chess/MoveFactory/MoveEngine";
+import MoveHistory from "@/classes/Chess/Move/MoveHistory";
+import type MoveList from "@/classes/Chess/Move/MoveList";
+import type ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
 
 export default class Chessboard
 {
@@ -25,10 +28,13 @@ export default class Chessboard
 
     moveArbiter: MoveArbiter
 
+    moveHistory: MoveHistory
+
     constructor(fen: string) {
         this.fenNumber = new FenNumber(fen)
         this.squares64 = new Squares64(this.fenNumber)
         this.moveArbiter = new MoveArbiter(new MoveEngine(new Squares144(this.fenNumber)))
+        this.moveHistory = new MoveHistory()
     }
 
     get moveEngine(): MoveEngine {
@@ -40,8 +46,24 @@ export default class Chessboard
         return this.squares64.get(squareType)
     }
 
-    getMoves(squareType: SquareType): []
+    getMoves(squareType: SquareType): MoveList
     {
-        return []
+        return this.moveArbiter.getLegalMoves(squareType)
     }
+
+    makeMove(move: ChessMove): void {
+        const madeMove = this.moveArbiter.makeMove(move)
+        this.fenNumber = madeMove.fenAfter.clone()
+        this.squares64.makeMove(madeMove.move)
+        this.moveHistory.add(madeMove)
+
+    }
+
+    undoLastMove(): void {
+        const lastMove = this.moveHistory.pop()
+        this.moveArbiter.unMakeMove(lastMove.move)
+        this.fenNumber = lastMove.fenAfter.clone()
+    }
+
+
 }

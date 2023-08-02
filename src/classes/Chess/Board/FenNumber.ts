@@ -78,6 +78,10 @@ export default class FenNumber {
         }
     }
 
+    get halfStepCounter(): number
+    {
+        return this.fullMoveCounter * 2 - 1 + (this.sideToMove === 'black' ? 1 : 0)
+    }
 
     incrementTurn(
         chessMove: ChessMove,

@@ -5,6 +5,8 @@ import MoveEngine from "@/classes/Chess/MoveFactory/MoveEngine";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import MoveList from "@/classes/Chess/Move/MoveList";
 import CastlingMove from "@/classes/Chess/Move/MoveType/CastlingMove";
+import FenNumber from "@/classes/Chess/Board/FenNumber";
+import MadeMove from "@/classes/Chess/Move/MadeMove";
 
 export default class MoveArbiter {
 
@@ -24,6 +26,17 @@ export default class MoveArbiter {
 
     get fenNumber() {
         return this.squares144.fenNumber
+    }
+
+    makeMove(move: ChessMove): MadeMove
+    {
+        this.squares144.makeMove(move)
+        return MadeMove.make(this.squares144, move)
+    }
+
+    unMakeMove(move: ChessMove): void
+    {
+        this.squares144.unMakeMove(move)
     }
 
     isMoveLegal(move: ChessMove): boolean {
