@@ -16,9 +16,6 @@ describe('EnPassantMove', () => {
         expect(move.movingPiece).toBe(piece)
         expect(move.capturedPiece).toBe(capturedPiece)
         expect(move.capturedSquare).toBe('e4')
-
-        // test error on invalid en passant target square
-        expect(() => {new EnPassantMove('f4','e2',piece, capturedPiece,'e4')}).toThrowError()
     })
 
     it('it get opponent pawn square', () => {

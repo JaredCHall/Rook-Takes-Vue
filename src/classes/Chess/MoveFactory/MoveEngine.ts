@@ -341,10 +341,21 @@ export default class MoveEngine {
                     case 'queen':
                         return isSquareSafe = false
                     case 'king':
-                    case 'pawn':
-                        // only counts if square is adjacent
                         if(this.squares144.isSquareAdjacent(move.oldSquare, move.newSquare)){
                             return isSquareSafe = false
+                        }
+                        break
+                    case 'pawn':
+                        if(this.squares144.isSquareAdjacent(move.oldSquare, move.newSquare)){
+                            // pawns can only capture in certain directions
+                            const oldSquare = new Square(move.oldSquare)
+                            const newSquare = new Square(move.newSquare)
+                            const rowDiff = newSquare.whiteCoordinates.row - oldSquare.whiteCoordinates.row
+                            if(move.capturedPiece.color === 'black' && rowDiff === -1){
+                                return isSquareSafe = false
+                            }else if(move.capturedPiece.color === 'white' && rowDiff === 1){
+                                return isSquareSafe = false
+                            }
                         }
                 }
             }

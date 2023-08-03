@@ -105,15 +105,15 @@ export default class CastlesType {
             switch(square){
                 case 'a8': return CastlesType.create('q')
                 case 'h8': return CastlesType.create('k')
+                default: return null
             }
         }
 
         switch(square){
             case 'a1': return CastlesType.create('Q')
             case 'h1': return CastlesType.create('K')
+            default: return null
         }
-
-        return null
     }
 
 }

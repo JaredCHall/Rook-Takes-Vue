@@ -8,14 +8,6 @@ export default class DoublePawnMove extends ChessMove
 {
 
     constructor(oldSquare: SquareType, newSquare: SquareType, movingPiece: Piece) {
-
-        if(movingPiece.type !== 'pawn'){
-            throw new Error('requires pawn')
-        }
-        if([4,5].indexOf(new Square(newSquare).rank) === -1){
-            throw new Error('Double pawn moves must end on the 4th or 5th rank')
-        }
-
         super(oldSquare, newSquare, movingPiece, null)
     }
 

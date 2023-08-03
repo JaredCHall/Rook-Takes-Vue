@@ -42,6 +42,14 @@ describe('MoveArbiter', () => {
         expect(arbiter.fenNumber).toEqual(fenNumber)
         expect(arbiter.squares64).toEqual(squares64)
 
+        // not allowed to capture a king
+        expect(arbiter.isMoveLegal(new ChessMove(
+            'g4',
+            'f2',
+            new Piece('knight','white'),
+            new Piece('king','white')
+        ))).toBe(false)
+
         expect(arbiter.isMoveLegal(new ChessMove(
             'e2',
             'b5',
@@ -163,6 +171,42 @@ describe('MoveArbiter', () => {
         expect(arbiter.getLegalMoves('d8')).not.toHaveLength(0)
         expect(arbiter.getLegalMoves('f8')).not.toHaveLength(0)
         expect(arbiter.getLegalMoves('g8')).not.toHaveLength(0)
+
+    })
+
+    it('it makes a move', () => {
+        let arbiter
+        arbiter = getTestMoveArbiter('rn2k2r/ppp2ppp/5n2/2b5/4P1Nq/5P1P/PPP1B1P1/RNBQK2R w KQkq - 0 1')
+
+        const madeMove = arbiter.makeMove(new ChessMove(
+            'g4',
+            'f6',
+            new Piece('knight','white'),
+            new Piece('knight','black')
+        ))
+
+        expect(madeMove.fenAfter.piecePlacements).toEqual('rn2k2r/ppp2ppp/5N2/2b5/4P2q/5P1P/PPP1B1P1/RNBQK2R')
+        expect(madeMove.fenAfter.sideToMove).toEqual('black')
+        expect(madeMove.halfStepIndex).toEqual(1)
+        expect(arbiter.fenNumber.piecePlacements).toEqual('rn2k2r/ppp2ppp/5N2/2b5/4P2q/5P1P/PPP1B1P1/RNBQK2R')
+        expect(arbiter.fenNumber.sideToMove).toEqual('black')
+        expect(madeMove.halfStepIndex).toEqual(1)
+    })
+
+    it('it unmakes a move', () => {
+        let arbiter
+        arbiter = getTestMoveArbiter('rn2k2r/ppp2ppp/5N2/2b5/4P2q/5P1P/PPP1B1P1/RNBQK2R b KQkq - 0 1')
+
+        const fenBefore = new FenNumber('rn2k2r/ppp2ppp/5n2/2b5/4P1Nq/5P1P/PPP1B1P1/RNBQK2R w KQkq - 0 1');
+        arbiter.unMakeMove(new ChessMove(
+            'g4',
+            'f6',
+            new Piece('knight','white'),
+            new Piece('knight','black')
+        ), fenBefore)
+
+        expect(arbiter.fenNumber).toEqual(fenBefore)
+        expect(arbiter.squares64.get('f6').piece).toEqual(new Piece('knight','black'))
 
     })
 

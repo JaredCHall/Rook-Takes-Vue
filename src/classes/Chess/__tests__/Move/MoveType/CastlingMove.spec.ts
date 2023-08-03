@@ -50,4 +50,35 @@ describe('CastlingMove', () => {
         ])
     })
 
+    it('it clones itself', () => {
+        const king = new Piece('king','white')
+        const rook = new Piece('rook','white')
+        const move = new CastlingMove('e1','c1',king, rook, 'Q')
+
+        const clone = move.clone()
+        expect(clone.movingPiece).toEqual(king)
+        expect(clone.movingPiece).not.toBe(king)
+        expect(clone.rook).toEqual(rook)
+        expect(clone.rook).not.toBe(rook)
+        expect(clone.oldSquare).toEqual(move.oldSquare)
+        expect(clone.newSquare).toEqual(move.newSquare)
+        expect(clone.castlesType).toEqual(move.castlesType)
+        expect(clone.capturedPiece).toBeNull()
+
+    })
+
+    it('it static creates itself', () => {
+        expect(CastlingMove.create('K').castlesType.type).toEqual('K')
+        expect(CastlingMove.create('Q').castlesType.type).toEqual('Q')
+        expect(CastlingMove.create('k').castlesType.type).toEqual('k')
+        expect(CastlingMove.create('q').castlesType.type).toEqual('q')
+    })
+
+    it('it gets algebraic notation', () => {
+        expect(CastlingMove.create('K').toAlgebraicNotation()).toEqual('O-O')
+        expect(CastlingMove.create('Q').toAlgebraicNotation()).toEqual('O-O-O')
+        expect(CastlingMove.create('k').toAlgebraicNotation()).toEqual('O-O')
+        expect(CastlingMove.create('q').toAlgebraicNotation()).toEqual('O-O-O')
+    })
+
 })

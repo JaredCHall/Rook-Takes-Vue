@@ -30,11 +30,13 @@ export default class Chessboard
 
     moveHistory: MoveHistory
 
+    moveIndex: number = 0 // index of the currently displayed move
+
     constructor(fen: string) {
         this.fenNumber = new FenNumber(fen)
         this.squares64 = new Squares64(this.fenNumber)
         this.moveArbiter = new MoveArbiter(new MoveEngine(new Squares144(this.fenNumber)))
-        this.moveHistory = new MoveHistory()
+        this.moveHistory = new MoveHistory(this.fenNumber.clone())
     }
 
     get moveEngine(): MoveEngine {
@@ -51,18 +53,30 @@ export default class Chessboard
         return this.moveArbiter.getLegalMoves(squareType)
     }
 
+    displayMadeMove(halfStepIndex: number){
+        const madeMode = this.moveHistory.get(halfStepIndex)
+        // TODO: Might be more efficient to call methods to update these instead of re-creating?
+        this.fenNumber = madeMode.fenAfter.clone()
+        this.squares64 = new Squares64(this.fenNumber)
+        this.moveArbiter = new MoveArbiter(new MoveEngine(new Squares144(this.fenNumber)))
+        this.moveIndex = halfStepIndex
+    }
+
+
     makeMove(move: ChessMove): void {
         const madeMove = this.moveArbiter.makeMove(move)
         this.fenNumber = madeMove.fenAfter.clone()
         this.squares64.makeMove(madeMove.move)
         this.moveHistory.add(madeMove)
-
+        this.moveIndex = madeMove.halfStepIndex
     }
 
     undoLastMove(): void {
+        const fenBefore = this.moveHistory.getFenBefore(this.moveIndex)
         const lastMove = this.moveHistory.pop()
-        this.moveArbiter.unMakeMove(lastMove.move)
+        this.moveArbiter.unMakeMove(lastMove.move, fenBefore)
         this.fenNumber = lastMove.fenAfter.clone()
+        this.moveIndex = lastMove.halfStepIndex
     }
 
 

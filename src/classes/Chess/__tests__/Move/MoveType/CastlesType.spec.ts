@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import CastlesType from "@/classes/Chess/Move/MoveType/CastlesType";
+import Piece from "@/classes/Chess/Piece";
 
 
 describe('CastlesType', () => {
@@ -93,5 +94,21 @@ describe('CastlesType', () => {
         expect(castles).toHaveLength(2)
         expect(castles[0].rooksOldSquare).toEqual('h1')
         expect(castles[1].rooksOldSquare).toEqual('a1')
+    })
+
+    it('it gets correct types by rooks square', () => {
+
+        const whiteRook = new Piece('rook','white')
+        const blackRook = new Piece('rook','black')
+
+        expect(CastlesType.fromRooksSquare('a1', whiteRook)).toHaveProperty('type','Q')
+        expect(CastlesType.fromRooksSquare('a1', blackRook)).toBeNull()
+        expect(CastlesType.fromRooksSquare('h1', whiteRook)).toHaveProperty('type','K')
+        expect(CastlesType.fromRooksSquare('h1', blackRook)).toBeNull()
+
+        expect(CastlesType.fromRooksSquare('a8', blackRook)).toHaveProperty('type','q')
+        expect(CastlesType.fromRooksSquare('a8', whiteRook)).toBeNull()
+        expect(CastlesType.fromRooksSquare('h8', blackRook)).toHaveProperty('type','k')
+        expect(CastlesType.fromRooksSquare('h8', whiteRook)).toBeNull()
     })
 })

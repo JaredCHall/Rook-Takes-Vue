@@ -13,14 +13,6 @@ export default class PawnPromotionMove extends ChessMove
     constructor(chessMove: ChessMove, promoteToType: ChessPieceType = 'queen') {
         super(chessMove.oldSquare, chessMove.newSquare, chessMove.movingPiece, chessMove.capturedPiece)
         this.promoteToType = promoteToType
-
-        if(chessMove.movingPiece.type !== 'pawn'){
-            throw new Error('Not a pawn')
-        }
-
-        if(!PawnPromotionMove.squareIsOnFinalRank(this.newSquare, this.movingPiece)){
-            throw new Error('Not on final rank')
-        }
     }
 
     getMoveSteps(): Array<MoveStep> {

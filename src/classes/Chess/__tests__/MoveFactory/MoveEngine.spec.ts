@@ -293,4 +293,37 @@ describe('MoveEngine', () => {
 
     })
 
+    it('it determines if a square is threatened', () => {
+        const squares144 = new Squares144('6k1/pp4pp/8/3PnB2/3p4/8/q4PPP/1N2R1K1 b - - 1 18')
+        const moveEngine = new MoveEngine(squares144)
+
+        // test Square|string parameter
+        expect(moveEngine.isSquareThreatenedBy(squares144.getSquare('e5'),'white')).toBe(true)
+        // can't threaten own piece
+        expect(moveEngine.isSquareThreatenedBy('e5','black')).toBe(false)
+        // pawn threats
+        expect(moveEngine.isSquareThreatenedBy('c5','black')).toBe(false) // can't capture backward
+        expect(moveEngine.isSquareThreatenedBy('c4','white')).toBe(false)
+        expect(moveEngine.isSquareThreatenedBy('e3','black')).toBe(true)
+        // king threats
+        expect(moveEngine.isSquareThreatenedBy('h1','white')).toBe(true)
+        expect(moveEngine.isSquareThreatenedBy('h8','black')).toBe(true)
+        expect(moveEngine.isSquareThreatenedBy('e6','black')).toBe(false)
+        // random selections
+        expect(moveEngine.isSquareThreatenedBy('g3','white')).toBe(true)
+        expect(moveEngine.isSquareThreatenedBy('f1','white')).toBe(true)
+        expect(moveEngine.isSquareThreatenedBy('b5','white')).toBe(false)
+        expect(moveEngine.isSquareThreatenedBy('c3','black')).toBe(true)
+        expect(moveEngine.isSquareThreatenedBy('c3','white')).toBe(true)
+        expect(moveEngine.isSquareThreatenedBy('b5','black')).toBe(false)
+        expect(moveEngine.isSquareThreatenedBy('b1','black')).toBe(true)
+
+    })
+
+    it('it only gets pseudo-legal moves for squares that have a piece',() => {
+        const squares144 = new Squares144('r4rk1/pp3ppp/8/3PnB2/3p4/8/q4PPP/1N2R1K1 b - - 1 18')
+        const moveEngine = new MoveEngine(squares144)
+
+        expect(() => moveEngine.getPseudoLegalMoves('f1')).toThrowError('No piece on square f1')
+    })
 })

@@ -15,12 +15,4 @@ export default class MadeMove {
         this.halfStepIndex = fenAfter.halfStepCounter - 1
         this.fenAfter = fenAfter
     }
-
-    static make(squares144: Squares144, move: ChessMove): MadeMove {
-        return new MadeMove(
-            move,
-            squares144.fenNumber.incrementTurn(move, squares144.squares64)
-        )
-    }
-
 }

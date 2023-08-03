@@ -8,14 +8,6 @@ export default class MoveList {
         return this.moves.length
     }
 
-    get last(): ChessMove|null {
-        if(this.moves.length === 0){
-            return null
-        }
-
-        return this.moves[this.moves.length - 1]
-    }
-
     add(move: ChessMove): void {
         this.moves.push(move)
     }

@@ -31,12 +31,14 @@ export default class MoveArbiter {
     makeMove(move: ChessMove): MadeMove
     {
         this.squares144.makeMove(move)
-        return MadeMove.make(this.squares144, move)
+        this.fenNumber.incrementTurn(move, this.squares64)
+        return new MadeMove(move, this.fenNumber.clone())
     }
 
-    unMakeMove(move: ChessMove): void
+    unMakeMove(move: ChessMove, fenBefore: FenNumber): void
     {
         this.squares144.unMakeMove(move)
+        this.squares144.fenNumber = fenBefore.clone()
     }
 
     isMoveLegal(move: ChessMove): boolean {

@@ -12,17 +12,6 @@ describe('DoublePawnMove', () => {
         expect(move).toHaveProperty('newSquare','e4')
         expect(move.movingPiece).toBe(piece)
         expect(move.capturedPiece).toBeNull()
-
-
-        // test throws
-
-        const knight = new Piece('knight','white')
-        expect(() => {new DoublePawnMove('e2','e1', knight)})
-            .toThrowError('requires pawn')
-
-        expect(() => {new DoublePawnMove('e2','e1', piece)})
-            .toThrowError('Double pawn moves must end on the 4th or 5th rank')
-
     })
 
 

@@ -12,11 +12,6 @@ export default class EnPassantMove extends ChessMove
     constructor(move: ChessMove, capturedPiece: Piece, capturedSquare: SquareType) {
         super(move.oldSquare, move.newSquare, move.movingPiece, capturedPiece)
         this.capturedSquare = capturedSquare
-
-        // sanity check
-        if([6,3].indexOf(new Square(this.newSquare).rank) === -1){
-            throw new Error('EnPassant target must be on the 3rd or 6th rank')
-        }
     }
 
     static getOpponentPawnSquare(move: ChessMove): SquareType

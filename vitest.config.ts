@@ -14,6 +14,7 @@ export default mergeConfig(
         web: [/\.[jt]sx$/]
       },
       coverage :{
+          cleanOnRerun: false,
           reporter: ['text','json','html'],
       }
     }

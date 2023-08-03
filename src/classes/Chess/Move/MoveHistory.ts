@@ -7,16 +7,14 @@ export default class MoveHistory
 {
     moves: MadeMove[] = []
 
+    startFen: FenNumber // Game starting position
+
     get length(): number {
         return this.moves.length
     }
 
-    get last(): MadeMove|null {
-        if(this.moves.length === 0){
-            return null
-        }
-
-        return this.moves[this.moves.length - 1]
+    constructor(startFen: FenNumber) {
+        this.startFen = startFen
     }
 
     add(move: MadeMove): void {
@@ -40,5 +38,12 @@ export default class MoveHistory
         return move
     }
 
+    getFenBefore(halfStepIndex: number)
+    {
+        if(halfStepIndex === 0 || this.length === 0){
+            return this.startFen
+        }
 
+        return this.get(halfStepIndex - 1).fenAfter
+    }
 }

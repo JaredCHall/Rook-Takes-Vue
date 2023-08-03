@@ -4,6 +4,7 @@ import Squares64 from "@/classes/Chess/Board/Squares64";
 import Piece from "@/classes/Chess/Piece";
 import FenNumber from "@/classes/Chess/Board/FenNumber";
 import type ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
+import type MadeMove from "@/classes/Chess/Move/MadeMove";
 
 /**
  * A representation of the 64 squares and all nearby out-of-bounds squares

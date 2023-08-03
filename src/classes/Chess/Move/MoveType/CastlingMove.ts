@@ -56,7 +56,7 @@ export default class CastlingMove extends ChessMove
         )
     }
 
-    clone(): ChessMove {
+    clone(): CastlingMove {
 
         const movingPiece = this.movingPiece.clone()
         const rook = this.rook.clone()
