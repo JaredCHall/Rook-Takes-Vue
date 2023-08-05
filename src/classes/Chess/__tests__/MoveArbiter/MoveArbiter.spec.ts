@@ -143,7 +143,7 @@ describe('MoveArbiter', () => {
 
     })
 
-    it('it determines if there are no legal moves', () => {
+    it('it determines if there are no legal moves from square', () => {
 
         let arbiter
         arbiter = getTestMoveArbiter('rnbqkbnr/pppp1Qpp/2n5/4p3/2B1P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4')
@@ -161,7 +161,7 @@ describe('MoveArbiter', () => {
 
     })
 
-    it('it determines if there are legal moves', () => {
+    it('it determines if there are legal moves from square', () => {
 
         let arbiter
         arbiter = getTestMoveArbiter('rnbqkbnr/pppp2pp/2n5/4p3/4P3/8/PPPP1PPP/RNB1K1NR b KQkq - 0 4')
@@ -170,6 +170,27 @@ describe('MoveArbiter', () => {
         expect(arbiter.getLegalMoves('d8')).not.toHaveLength(0)
         expect(arbiter.getLegalMoves('f8')).not.toHaveLength(0)
         expect(arbiter.getLegalMoves('g8')).not.toHaveLength(0)
+
+    })
+
+    it('it determines if there are no legal moves for player', () => {
+
+        let arbiter
+
+        // smothered mate
+        arbiter = getTestMoveArbiter('6rk/pp3Npp/8/8/8/8/PPP2PPP/RNBQKBNR b KQ - 0 1')
+        expect(arbiter.doesPlayerHaveLegalMoves('black')).toBe(false)
+        expect(arbiter.doesPlayerHaveLegalMoves('white')).toBe(true)
+
+        // almost smothered mate
+        arbiter = getTestMoveArbiter('6rk/pp4pp/6N1/8/8/8/PPP2PPP/RNBQKBNR b KQ - 0 1')
+        expect(arbiter.doesPlayerHaveLegalMoves('black')).toBe(true)
+        expect(arbiter.doesPlayerHaveLegalMoves('white')).toBe(true)
+
+        // stalemate pawn + king endgame
+        arbiter = getTestMoveArbiter('7k/5K1P/6P1/8/8/8/8/8 b - - 0 1')
+        expect(arbiter.doesPlayerHaveLegalMoves('black')).toBe(false)
+        expect(arbiter.doesPlayerHaveLegalMoves('white')).toBe(true)
 
     })
 

@@ -68,9 +68,35 @@ describe('FenNumber', () => {
         const gameOfTheCentury = new FenNumber('1Q6/5pk1/2p3p1/1p2N2p/1b5P/1bn5/2r3P1/2K5 w - - 16 42')
         expect(gameOfTheCentury.toString()).toEqual('1Q6/5pk1/2p3p1/1p2N2p/1b5P/1bn5/2r3P1/2K5 w - - 16 42')
 
-        const operaGame = new FenNumber('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w KQkq e4')
-        expect(operaGame.toString()).toEqual('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w KQkq e4 0 1')
+        const operaGame = new FenNumber('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w KQkq e4 0 1 0 1 -')
+        expect(operaGame.toString(true,true))
+            .toEqual('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w KQkq e4 0 1 0 1 0')
     })
+
+    it('it updates moveResult', () => {
+        const gameOfTheCentury = new FenNumber('1Q6/5pk1/2p3p1/1p2N2p/1b5P/1bn5/2r3P1/2K5 w - - 16 42')
+        gameOfTheCentury.updateMoveResult(true,true)
+        expect(gameOfTheCentury.isCheck).toBe(true)
+        expect(gameOfTheCentury.isMate).toBe(true)
+        expect(gameOfTheCentury.isStalemate).toBe(false)
+
+        gameOfTheCentury.updateMoveResult(true,false)
+        expect(gameOfTheCentury.isCheck).toBe(true)
+        expect(gameOfTheCentury.isMate).toBe(false)
+        expect(gameOfTheCentury.isStalemate).toBe(false)
+
+        gameOfTheCentury.updateMoveResult(false,false)
+        expect(gameOfTheCentury.isCheck).toBe(false)
+        expect(gameOfTheCentury.isMate).toBe(false)
+        expect(gameOfTheCentury.isStalemate).toBe(false)
+
+        gameOfTheCentury.updateMoveResult(false,true)
+        expect(gameOfTheCentury.isCheck).toBe(false)
+        expect(gameOfTheCentury.isMate).toBe(false)
+        expect(gameOfTheCentury.isStalemate).toBe(true)
+
+    })
+
 
     it('it clones itself', () => {
         const evergreenGame = new FenNumber('r2q1rk1/ppp2ppp/2np4/2b1p1B1/2B1P1n1/2NP1N2/PPP2PPP/R2Q1RK1 b kq e4 22 40')

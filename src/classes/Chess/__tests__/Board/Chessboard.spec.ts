@@ -12,6 +12,7 @@ import {Piece} from "@/classes/Chess/Piece";
 import {MadeMove} from "@/classes/Chess/Move/MadeMove";
 import {DoublePawnMove} from "@/classes/Chess/Move/MoveType/DoublePawnMove";
 import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
+import {GameResult} from "@/classes/Chess/Board/GameResult";
 
 describe('ChessBoard', () => {
 
@@ -84,6 +85,55 @@ describe('ChessBoard', () => {
 
     })
 
+    it('it handles setResigns', () => {
+        const board = Chessboard.makeNewGame()
+        let gameResult
+
+        gameResult = board.setResigns('white')
+        expect(board.gameResult).toBe(gameResult)
+        expect(gameResult).toBeInstanceOf(GameResult)
+        expect(gameResult.type).toEqual('Resign')
+        expect(gameResult.winner).toEqual('black')
+
+
+        gameResult = board.setResigns('black')
+        expect(board.gameResult).toBe(gameResult)
+        expect(gameResult).toBeInstanceOf(GameResult)
+        expect(gameResult.type).toEqual('Resign')
+        expect(gameResult.winner).toEqual('white')
+    })
+
+    it('it handles setDraw', () => {
+        const board = Chessboard.makeNewGame()
+        let gameResult
+
+        gameResult = board.setDraw()
+        expect(board.gameResult).toBe(gameResult)
+        expect(gameResult).toBeInstanceOf(GameResult)
+        expect(gameResult.type).toEqual('Draw')
+        expect(gameResult.winner).toBeNull()
+        expect(gameResult.drawType).toEqual('Agreed')
+
+    })
+
+    it('it handles setOutOfTime', () => {
+        const board = Chessboard.makeNewGame()
+        let gameResult
+
+        gameResult = board.setOutOfTime('white')
+        expect(board.gameResult).toBe(gameResult)
+        expect(gameResult).toBeInstanceOf(GameResult)
+        expect(gameResult.type).toEqual('OutOfTime')
+        expect(gameResult.winner).toEqual('black')
+
+        gameResult = board.setOutOfTime('black')
+        expect(board.gameResult).toBe(gameResult)
+        expect(gameResult).toBeInstanceOf(GameResult)
+        expect(gameResult.type).toEqual('OutOfTime')
+        expect(gameResult.winner).toEqual('white')
+    })
+
+
     it('it displays made move from history', () => {
         const board = Chessboard.makeNewGame()
         const whitePawn = new Piece('pawn','white')
@@ -136,6 +186,65 @@ describe('ChessBoard', () => {
 
     })
 
+    it('it determines game result', () => {
+
+        let board
+
+        // checkmate
+        board = new Chessboard('7k/5K2/6PP/8/8/8/8/3R4 w - - 0 1')
+        board.makeMove(new ChessMove('d1','d8', new Piece('rook','white')))
+        expect(board.gameResult).toBeInstanceOf(GameResult)
+        expect(board.gameResult.type).toEqual('Mate')
+        expect(board.gameResult.winner).toEqual('white')
+
+        // stalemate
+        board = new Chessboard('7k/5K2/6P1/7P/8/8/8/8 w - - 0 1')
+        board.makeMove(new ChessMove('h5','h6', new Piece('pawn','white')))
+        expect(board.gameResult).toBeInstanceOf(GameResult)
+        expect(board.gameResult.type).toEqual('Draw')
+        expect(board.gameResult.winner).toBeNull()
+        expect(board.gameResult.drawType).toEqual('Stalemate')
+
+        // 50 move rule
+        board = new Chessboard('7k/5K2/6P1/7P/8/8/8/8 w - - 49 1')
+        board.makeMove(new ChessMove('f7','f6', new Piece('king','white')))
+        expect(board.gameResult).toBeInstanceOf(GameResult)
+        expect(board.gameResult.type).toEqual('Draw')
+        expect(board.gameResult.winner).toBeNull()
+        expect(board.gameResult.drawType).toEqual('50Move')
+
+    })
+
+    it('it determines three-fold repetition', () => {
+        const board = new Chessboard('rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1')
+
+        const whiteKing = new Piece('king','white')
+        const blackKing = new Piece('king','black')
+        const whiteBongClouds = new ChessMove('e1','e2', whiteKing)
+        const whiteReconsiders = new ChessMove('e2','e1', whiteKing)
+        const blackBongClouds = new ChessMove('e8','e7', blackKing)
+        const blackReconsiders = new ChessMove('e7','e8', blackKing)
+
+        board.makeMove(whiteBongClouds)
+        board.makeMove(blackBongClouds) // 1st repetition
+        board.makeMove(whiteReconsiders)
+        board.makeMove(blackReconsiders)
+        board.makeMove(whiteBongClouds)
+        board.makeMove(blackBongClouds) // 2nd repetition
+        board.makeMove(whiteReconsiders)
+        board.makeMove(blackReconsiders)
+        board.makeMove(whiteBongClouds)
+        board.makeMove(blackBongClouds) // 3rd repetition
+
+        console.log(board.moveHistory.repetitionTracker)
+
+        expect(board.gameResult).toBeInstanceOf(GameResult)
+        expect(board.gameResult.type).toEqual('Draw')
+        expect(board.gameResult.winner).toBeNull()
+        expect(board.gameResult.drawType).toEqual('3Fold')
+
+        expect(() => board.makeMove(whiteReconsiders)).toThrowError('Cannot make move. Game is over.')
+    })
 
 
 })

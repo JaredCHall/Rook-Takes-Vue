@@ -108,7 +108,7 @@ export class MoveArbiter {
     }
 
     doesMoveDrawBy50MoveRule(move: MadeMove): boolean {
-        return move.fenAfter.halfStepCounter >= 50
+        return move.fenAfter.halfMoveClock >= 50
     }
 
     #isCastlingMoveLegal(move: CastlingMove): boolean {

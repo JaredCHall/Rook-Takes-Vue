@@ -113,7 +113,7 @@ export class Chessboard
             return this.gameResult = new GameResult('Mate', move.movingColor)
         }
         if(move.fenAfter.isStalemate){
-            return this.gameResult = new GameResult('Stalemate', null)
+            return this.gameResult = new GameResult('Draw', null, 'Stalemate')
         }
 
         if(this.moveArbiter.doesMoveDrawBy3FoldRepetition(this.moveHistory, move)){

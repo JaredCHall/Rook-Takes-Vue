@@ -50,6 +50,7 @@ export class FenNumber {
             this.fullMoveCounter = fen.fullMoveCounter
             this.isCheck = fen.isCheck
             this.isMate = fen.isMate
+            this.isStalemate = fen.isStalemate
 
             return
         }
@@ -60,6 +61,7 @@ export class FenNumber {
         this.sideToMove = (parts[1] ?? 'w') === 'w' ? 'white' : 'black'
         this.isCheck = (parts[6] ?? null) === '1'
         this.isMate = (parts[7] ?? null) === '1'
+        this.isStalemate = (parts[8] ?? null) === '1'
 
 
         if(parts[2] && parts[2] !== '-'){
@@ -251,6 +253,9 @@ export class FenNumber {
         if(opponentHasNoMoves){
             this.isMate = isCheck
             this.isStalemate = !isCheck
+        }else{
+            this.isMate = false
+            this.isStalemate = false
         }
     }
 
@@ -287,8 +292,8 @@ export class FenNumber {
         const parts = [
             this.piecePlacements,
             this.sideToMove.charAt(0),
-            this.castleRights == null ? '-' : this.castleRights,
-            this.enPassantTarget == null ? '-' : this.enPassantTarget,
+            this.castleRights === null ? '-' : this.castleRights,
+            this.enPassantTarget === null ? '-' : this.enPassantTarget,
         ]
         if(includeCounters){
             parts.push(this.halfMoveClock.toString())

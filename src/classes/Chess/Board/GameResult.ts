@@ -3,16 +3,16 @@ import {Color} from "@/classes/Chess/Color";
 
 export class GameResult
 {
-    readonly type: 'Draw'|'Stalemate'|'Mate'|'Resign'|'OutOfTime'
+    readonly type: 'Draw'|'Mate'|'Resign'|'OutOfTime'
 
     readonly winner: null|ColorType
 
-    readonly drawType: null|'3Fold'|'50Move'|'Agreed'
+    readonly drawType: null|'3Fold'|'50Move'|'Agreed'|'Stalemate'
 
     constructor(
-        type: 'Draw'|'Stalemate'|'Mate'|'Resign'|'OutOfTime',
+        type: 'Draw'|'Mate'|'Resign'|'OutOfTime',
         winner: null|ColorType,
-        drawType: null|'3Fold'|'50Move'|'Agreed' = null
+        drawType: null|'3Fold'|'50Move'|'Agreed'|'Stalemate' = null
     ) {
 
         this.type = type

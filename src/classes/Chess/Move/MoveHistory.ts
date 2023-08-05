@@ -19,8 +19,6 @@ export class MoveHistory
         this.repetitionTracker[fenPartial] = 1
     }
 
-
-
     add(move: MadeMove): void {
         this.moves.push(move)
         this.#incrementPositionRepetition(move)

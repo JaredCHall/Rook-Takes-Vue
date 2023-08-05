@@ -15,5 +15,6 @@ describe('MadeMove', () => {
         expect(madeMove.move).toBe(chessMove)
         expect(madeMove.fenAfter).toBe(fenAfter)
         expect(madeMove.halfStepIndex).toEqual(25)
+        expect(madeMove.movingColor).toEqual('black')
     })
 })
