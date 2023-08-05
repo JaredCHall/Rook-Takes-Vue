@@ -39,7 +39,6 @@ describe('Squares64', () =>{
         const squares = new Squares64(new FenNumber('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'))
         expect(squares.squares.e1.piece).toEqual(new Piece('king','white'))
         expect(squares.squares.e8.piece).toEqual(new Piece('king','black'))
-
     })
 
     it('it sets squares', () => {
@@ -51,14 +50,11 @@ describe('Squares64', () =>{
         squares64.set('a8',a8Rook)
         squares64.set('b8', null)
 
-        vi.clearAllMocks()
-
         // a1Rook captures a8Rook
         squares64.set('a8',a1Rook)
         expect(squares64.squares['a8'].piece).toBe(a1Rook)
 
         // Act of god captures a1Rook
-        vi.clearAllMocks()
         squares64.set('a8',null)
         expect(squares64.squares['a8'].piece).toBeNull()
 

@@ -90,12 +90,16 @@ export default class Squares144 {
     isSquareAdjacent(square1: SquareType|Square, square2: SquareType|Square): boolean
     {
 
-        if(square1 === square2){
-            return false
-        }
 
         square1 = square1 instanceof Square ? square1 : this.getSquare(square1)
         square2 = square2 instanceof Square ? square2 : this.getSquare(square2)
+
+        console.log(square1)
+        console.log(square2)
+
+        if(square1 === square2){
+            return false
+        }
 
         const colDiff = Math.abs(square1.whiteCoordinates.column - square2.whiteCoordinates.column)
         const rowDiff = Math.abs(square1.whiteCoordinates.row - square2.whiteCoordinates.row)

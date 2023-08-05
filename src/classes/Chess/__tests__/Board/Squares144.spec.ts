@@ -3,8 +3,7 @@ import Squares144 from "@/classes/Chess/Board/Squares144";
 import FenNumber from "@/classes/Chess/Board/FenNumber";
 import Squares64 from "@/classes/Chess/Board/Squares64";
 import Piece from "@/classes/Chess/Piece";
-
-vi.mock('@/classes/Chess/Board/Squares64')
+import Square from "@/classes/Chess/Square/Square";
 
 describe('Squares144', () => {
 
@@ -79,22 +78,45 @@ describe('Squares144', () => {
         const fenNumber = new FenNumber('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w')
         const squares144 = new Squares144(fenNumber)
 
-        squares144.getSquare('e4')
-        expect(squares144.squares64.get).toHaveBeenCalledWith('e4')
+        expect(squares144.getSquare('e4'))
+            .toBe(squares144.squares64.get('e4'))
 
     })
 
     it('it sets a piece',() => {
-
-        const fenNumber = new FenNumber('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w')
-        const squares144 = new Squares144(fenNumber)
-
-        vi.clearAllMocks()
+        const squares144 = new Squares144('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w')
 
         const king = new Piece('king','white');
         squares144.setPiece('e4',king)
 
-        expect(squares144.squares64.set).toHaveBeenCalledWith('e4',king)
+        expect(squares144.squares64.squares['e4'].piece).toBe(king)
+    })
+
+    it('it determines if a square is adjacent to another', () => {
+        const squares144 = new Squares144('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w')
+
+        // samples
+        expect(squares144.isSquareAdjacent('e3','e4')).toBe(true)
+        expect(squares144.isSquareAdjacent('e3','f4')).toBe(true)
+        expect(squares144.isSquareAdjacent('e3','f3')).toBe(true)
+        expect(squares144.isSquareAdjacent('e3','f2')).toBe(true)
+        expect(squares144.isSquareAdjacent('e3','f1')).toBe(false)
+        expect(squares144.isSquareAdjacent('e3','e2')).toBe(true)
+        expect(squares144.isSquareAdjacent('e3','e1')).toBe(false)
+        expect(squares144.isSquareAdjacent('e3','d2')).toBe(true)
+        expect(squares144.isSquareAdjacent('e3','d3')).toBe(true)
+        expect(squares144.isSquareAdjacent('e3','d4')).toBe(true)
+        expect(squares144.isSquareAdjacent('e3','a3')).toBe(false)
+        expect(squares144.isSquareAdjacent('e3','b8')).toBe(false)
+
+        // test same square edge case
+        expect(squares144.isSquareAdjacent('a1','a1')).toBe(false)
+
+        // test squares passed as objects
+        expect(squares144.isSquareAdjacent(
+            new Square('g3'),
+            new Square('h2')
+        )).toBe(true)
 
     })
 

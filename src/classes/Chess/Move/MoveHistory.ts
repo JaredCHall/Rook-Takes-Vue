@@ -9,22 +9,39 @@ export default class MoveHistory
 
     startFen: FenNumber // Game starting position
 
+    repetitionTracker: {[fenPartial: string]: number} = {} // for enforcing the 3-fold repetition rule
+
     get length(): number {
         return this.moves.length
     }
 
     constructor(startFen: FenNumber) {
         this.startFen = startFen
+        const fenPartial = startFen.toString(false,false)
+        this.repetitionTracker[fenPartial] = 1
     }
 
     add(move: MadeMove): void {
         this.moves.push(move)
+
+        const fenPartial = move.fenAfter.toString(false, false)
+        if(!this.repetitionTracker.hasOwnProperty(fenPartial)){
+            this.repetitionTracker[fenPartial] = 1
+        }else{
+            this.repetitionTracker[fenPartial]++
+        }
+
+        if(this.repetitionTracker[fenPartial] === 3){
+            throw new ThreeFoldRepetitionError()
+        }
+
     }
 
-    get(halfStepIndex: number): MadeMove {
-        const move = this.moves[halfStepIndex] ?? null
+    get(moveIndex: number): MadeMove {
+        const indexActual = moveIndex - 1
+        const move = this.moves[indexActual] ?? null
         if(!move){
-            throw new Error('Move at half step '+halfStepIndex+' does not exist')
+            throw new Error('Move at half step '+moveIndex+' does not exist')
         }
 
         return move
@@ -38,12 +55,13 @@ export default class MoveHistory
         return move
     }
 
-    getFenBefore(halfStepIndex: number)
+    getFenBefore(moveIndex: number)
     {
-        if(halfStepIndex === 0 || this.length === 0){
+        const indexActual = moveIndex - 1
+        if(indexActual <= 0 || this.length === 0){
             return this.startFen
         }
 
-        return this.get(halfStepIndex - 1).fenAfter
+        return this.get(indexActual).fenAfter
     }
 }

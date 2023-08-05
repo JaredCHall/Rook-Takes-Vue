@@ -47,11 +47,11 @@ describe('MoveHistory',()=>{
         list.add(move1)
         list.add(move2)
         list.add(move3)
-        expect(list.get(0)).toEqual(move1)
-        expect(list.get(1)).toEqual(move2)
-        expect(list.get(2)).toEqual(move3)
+        expect(list.get(1)).toEqual(move1)
+        expect(list.get(2)).toEqual(move2)
+        expect(list.get(3)).toEqual(move3)
 
-        expect(() => list.get(3)).toThrowError('Move at half step 3 does not exist')
+        expect(() => list.get(4)).toThrowError('Move at half step 4 does not exist')
 
     })
 
@@ -82,7 +82,7 @@ describe('MoveHistory',()=>{
 
         const startFen = new FenNumber()
         const list = new MoveHistory(startFen)
-        expect(list.getFenBefore(0)).toBe(startFen)
+        expect(list.getFenBefore(1)).toBe(startFen)
         expect(list.getFenBefore(123)).toBe(startFen)
 
         const fenAfter1 = new FenNumber()
@@ -91,7 +91,7 @@ describe('MoveHistory',()=>{
             fenAfter1,
         )
         list.add(move1)
-        expect(list.getFenBefore(0)).toBe(startFen)
+        expect(list.getFenBefore(1)).toBe(startFen)
 
         const fenAfter2 = new FenNumber()
         const move2 = new MadeMove(
@@ -100,11 +100,8 @@ describe('MoveHistory',()=>{
         )
         list.add(move2)
 
-        console.log(list.moves[0])
-        console.log(list.moves[1])
-
-        expect(list.getFenBefore(0)).toBe(startFen)
-        expect(list.getFenBefore(1)).toBe(fenAfter1)
+        expect(list.getFenBefore(1)).toBe(startFen)
+        expect(list.getFenBefore(2)).toBe(fenAfter1)
 
     })
 })

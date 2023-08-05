@@ -45,9 +45,8 @@ export default class Squares64
         }
 
         if(fenNumber instanceof FenNumber){
-            this.#setPiecesFromFenNumber(fenNumber)
+            fenNumber.updateSquares64(this)
         }
-
     }
 
     set(squareType: SquareType, piece: null|Piece): void {
@@ -119,43 +118,4 @@ export default class Squares64
         }
         return clone
     }
-
-    #setPiecesFromFenNumber(fenNumber: FenNumber): void {
-
-        if(fenNumber.piecePlacements === undefined){
-            throw new Error('FenNumber.piecePlacements is undefined')
-        }
-
-        const rows = fenNumber.piecePlacements.split('/').reverse()
-        if (rows.length !== 8) {
-            throw new Error('FEN piece placement must include all eight rows')
-        }
-
-        const columnNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
-        for (let rowNumber = 8; rowNumber > 0; rowNumber--) {
-            const chars = rows[rowNumber - 1].split('')
-            let columnNumber = 1;
-            for (let i = 0; i < chars.length; i++) {
-                const character = chars[i]
-                if (/[1-8]/.test(character)) {
-                    const emptySpaces = parseInt(character)
-                    const lastEmptySpace = columnNumber + emptySpaces - 1
-                    while (columnNumber <= lastEmptySpace) {
-                        columnNumber++
-                    }
-                } else if (/[rbnqkpRBNQKP]/.test(character)) {
-
-                    const squareName = columnNames[columnNumber - 1] + rowNumber.toString()
-                    // @ts-ignore
-                    const piece = FenNumber.makePiece(character)
-                    // @ts-ignore
-                    this.set(squareName, piece)
-                    columnNumber++
-                } else {
-                    throw new Error("Unrecognized position character: " + character)
-                }
-            }
-        }
-    }
-
 }

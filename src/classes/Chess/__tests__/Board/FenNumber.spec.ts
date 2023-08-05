@@ -117,6 +117,15 @@ describe('FenNumber', () => {
         expect(gameFen.halfMoveClock).toEqual(2)
         expect(gameFen.fullMoveCounter).toEqual(3)
 
+        // check position with no castle rights
+        const gameFen2 = new FenNumber('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1')
+        gameFen2.incrementTurn(new DoublePawnMove('e2','e4', new Piece('pawn','white')), squares64)
+        expect(gameFen2.enPassantTarget).toEqual('e3')
+        expect(gameFen2.castleRights).toEqual(null)
+        expect(gameFen2.sideToMove).toEqual('black')
+        expect(gameFen2.halfMoveClock).toEqual(0)
+        expect(gameFen2.fullMoveCounter).toEqual(1)
+
     })
 
     it('it revokes castleRights when incrementing turn', () => {
@@ -127,6 +136,9 @@ describe('FenNumber', () => {
         const getTestFen = () => {
             return new FenNumber('r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1')
         }
+
+        //
+
 
         // white long castles
         expect(getTestFen().incrementTurn(
@@ -228,6 +240,33 @@ describe('FenNumber', () => {
             new Piece('rook','white'),
             new Piece('rook','black'),
         ), squares64).castleRights).toEqual('Kk')
+
+    })
+
+    it('it updates squares64' , () => {
+        const fenNumber = new FenNumber('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
+        const squares64 = new Squares64()
+
+        fenNumber.updateSquares64(squares64)
+
+        expect(squares64.squares.a1.piece).toEqual(new Piece('rook','white'))
+        expect(squares64.squares.a8.piece).toEqual(new Piece('rook','black'))
+        expect(squares64.squares.d1.piece).toEqual(new Piece('queen','white'))
+        expect(squares64.squares.d8.piece).toEqual(new Piece('queen','black'))
+        expect(squares64.squares.a1.piece).toEqual(new Piece('rook','white'))
+        expect(squares64.squares.d4.piece).toBeNull()
+        expect(squares64.squares.d5.piece).toBeNull()
+        expect(squares64.squares.e4.piece).toBeNull()
+        expect(squares64.squares.e5.piece).toBeNull()
+
+        let invalidFen
+        invalidFen = new FenNumber('rnbqkbPPPPPPP/RNBQKBNR w KQkq - 0 1')
+        expect(() => {invalidFen.updateSquares64(new Squares64())})
+            .toThrowError('FEN piece placement must include all eight rows')
+
+        invalidFen = new FenNumber('rnbqkbnr/pppppMpp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
+        expect(() => {invalidFen.updateSquares64(new Squares64())})
+            .toThrowError('Unrecognized position character: M')
 
     })
 

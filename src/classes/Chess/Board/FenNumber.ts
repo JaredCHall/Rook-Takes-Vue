@@ -204,6 +204,46 @@ export default class FenNumber {
 
     }
 
+    updateSquares64(squares64: Squares64): void
+    {
+        const rows = this.piecePlacements.split('/').reverse()
+        if (rows.length !== 8) {
+            throw new Error('FEN piece placement must include all eight rows')
+        }
+
+        const columnNames = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']
+        const setSquare = function(column: number, row: number, piece: null|Piece)
+        {
+            const squareName = columnNames[column - 1] + row.toString()
+            //@ts-ignore
+            squares64.set(squareName, piece)
+        }
+
+        for (let rowNumber = 8; rowNumber > 0; rowNumber--) {
+            const chars = rows[rowNumber - 1].split('')
+            let columnNumber = 1;
+            for (let i = 0; i < chars.length; i++) {
+                const character = chars[i]
+                if (/[1-8]/.test(character)) {
+                    const emptySpaces = parseInt(character)
+                    const lastEmptySpace = columnNumber + emptySpaces - 1
+                    while (columnNumber <= lastEmptySpace) {
+                        setSquare(columnNumber, rowNumber, null)
+                        columnNumber++
+                    }
+                } else if (/[rbnqkpRBNQKP]/.test(character)) {
+                    // @ts-ignore
+                    const piece = FenNumber.makePiece(character)
+                    setSquare(columnNumber, rowNumber, piece)
+                    columnNumber++
+                } else {
+                    throw new Error("Unrecognized position character: " + character)
+                }
+            }
+        }
+    }
+
+
     static makePiece(fenType: ChessPieceType): Piece
     {
 
@@ -231,17 +271,24 @@ export default class FenNumber {
         return char
     }
 
-    toString(): string {
-        return [
+    toString(includeCounters: boolean = true, includeChecks: boolean = true): string {
+
+        const parts = [
             this.piecePlacements,
             this.sideToMove.charAt(0),
             this.castleRights == null ? '-' : this.castleRights,
             this.enPassantTarget == null ? '-' : this.enPassantTarget,
-            this.halfMoveClock,
-            this.fullMoveCounter,
-            this.isCheck ? '1' : '0',
-            this.isMate ? '1' : '0',
-        ].join(' ')
+        ]
+        if(includeCounters){
+            parts.push(this.halfMoveClock.toString())
+            parts.push(this.fullMoveCounter.toString())
+        }
+        if(includeChecks){
+            parts.push(this.isCheck ? '1' : '0')
+            parts.push(this.isMate ? '1' : '0')
+        }
+
+        return parts.join(' ')
     }
 
     clone(): FenNumber {
