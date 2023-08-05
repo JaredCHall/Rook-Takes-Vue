@@ -3,8 +3,8 @@ import { describe, it, expect, vi } from 'vitest'
 import FenNumber from "@/classes/Chess/Board/FenNumber";
 import Squares144 from "@/classes/Chess/Board/Squares144";
 
-import MoveEngine from "@/classes/Chess/MoveFactory/MoveEngine";
-import MoveArbiter from "@/classes/Chess/MoveFactory/MoveArbiter";
+import MoveEngine from "@/classes/Chess/MoveArbiter/MoveEngine";
+import MoveArbiter from "@/classes/Chess/MoveArbiter/MoveArbiter";
 import Squares64 from "@/classes/Chess/Board/Squares64";
 import ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
 import Piece from "@/classes/Chess/Piece";

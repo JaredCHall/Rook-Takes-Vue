@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 
 import Squares144 from "@/classes/Chess/Board/Squares144";
-import MoveEngine from "@/classes/Chess/MoveFactory/MoveEngine";
+import MoveEngine from "@/classes/Chess/MoveArbiter/MoveEngine";
 import Piece from "@/classes/Chess/Piece";
 import DoublePawnMove from "@/classes/Chess/Move/MoveType/DoublePawnMove";
 import PawnPromotionMove from "@/classes/Chess/Move/MoveType/PawnPromotionMove";

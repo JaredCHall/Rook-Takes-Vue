@@ -28,6 +28,8 @@ export default class FenNumber {
 
     isMate: boolean = false
 
+    isStalemate: boolean = false
+
     static readonly pieceTypeDictionary = {
         r: 'rook',
         b: 'bishop',
@@ -243,6 +245,15 @@ export default class FenNumber {
         }
     }
 
+    updateMoveResult(isCheck: boolean, opponentHasNoMoves: boolean)
+    {
+        this.isCheck = isCheck
+        if(opponentHasNoMoves){
+            this.isMate = isCheck
+            this.isStalemate = !isCheck
+        }
+    }
+
 
     static makePiece(fenType: ChessPieceType): Piece
     {
@@ -271,7 +282,7 @@ export default class FenNumber {
         return char
     }
 
-    toString(includeCounters: boolean = true, includeChecks: boolean = true): string {
+    toString(includeCounters: boolean = true, includeMoveResult: boolean = false): string {
 
         const parts = [
             this.piecePlacements,
@@ -283,9 +294,10 @@ export default class FenNumber {
             parts.push(this.halfMoveClock.toString())
             parts.push(this.fullMoveCounter.toString())
         }
-        if(includeChecks){
+        if(includeMoveResult){
             parts.push(this.isCheck ? '1' : '0')
             parts.push(this.isMate ? '1' : '0')
+            parts.push(this.isStalemate ? '1' : '0')
         }
 
         return parts.join(' ')

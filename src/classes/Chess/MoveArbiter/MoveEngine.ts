@@ -361,6 +361,5 @@ export default class MoveEngine {
             }
         })
         return !isSquareSafe;
-
     }
 }

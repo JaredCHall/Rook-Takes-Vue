@@ -1,6 +1,4 @@
-import type ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
 import type FenNumber from "@/classes/Chess/Board/FenNumber";
-import MoveList from "@/classes/Chess/Move/MoveList";
 import type MadeMove from "@/classes/Chess/Move/MadeMove";
 
 export default class MoveHistory
@@ -21,20 +19,11 @@ export default class MoveHistory
         this.repetitionTracker[fenPartial] = 1
     }
 
+
+
     add(move: MadeMove): void {
         this.moves.push(move)
-
-        const fenPartial = move.fenAfter.toString(false, false)
-        if(!this.repetitionTracker.hasOwnProperty(fenPartial)){
-            this.repetitionTracker[fenPartial] = 1
-        }else{
-            this.repetitionTracker[fenPartial]++
-        }
-
-        if(this.repetitionTracker[fenPartial] === 3){
-            throw new ThreeFoldRepetitionError()
-        }
-
+        this.#incrementPositionRepetition(move)
     }
 
     get(moveIndex: number): MadeMove {
@@ -52,16 +41,35 @@ export default class MoveHistory
         if(move === undefined){
             throw new Error('nothing to pop')
         }
+        this.#decrementPositionRepetition(move)
         return move
     }
 
     getFenBefore(moveIndex: number)
     {
         const indexActual = moveIndex - 1
-        if(indexActual <= 0 || this.length === 0){
+        if(indexActual <= 0 || this.length === 0) {
             return this.startFen
         }
-
         return this.get(indexActual).fenAfter
+    }
+
+    getPositionRepetitions(move: MadeMove): number
+    {
+        const fenPartial = move.fenAfter.toString(false, false)
+        return this.repetitionTracker[fenPartial]
+    }
+
+    #incrementPositionRepetition(move: MadeMove){
+        const fenPartial = move.fenAfter.toString(false, false)
+        if(!this.repetitionTracker.hasOwnProperty(fenPartial)){
+            this.repetitionTracker[fenPartial] = 1
+        }else{
+            this.repetitionTracker[fenPartial]++
+        }
+    }
+    #decrementPositionRepetition(move: MadeMove) {
+        const fenPartial = move.fenAfter.toString(false, false)
+        this.repetitionTracker[fenPartial]--;
     }
 }

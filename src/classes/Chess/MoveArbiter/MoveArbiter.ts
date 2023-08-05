@@ -1,12 +1,13 @@
 import type ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
 import type {ColorType} from "@/classes/Chess/Color";
 import {Color} from "@/classes/Chess/Color";
-import MoveEngine from "@/classes/Chess/MoveFactory/MoveEngine";
+import MoveEngine from "@/classes/Chess/MoveArbiter/MoveEngine";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import MoveList from "@/classes/Chess/Move/MoveList";
 import CastlingMove from "@/classes/Chess/Move/MoveType/CastlingMove";
 import FenNumber from "@/classes/Chess/Board/FenNumber";
 import MadeMove from "@/classes/Chess/Move/MadeMove";
+import MoveHistory from "@/classes/Chess/Move/MoveHistory";
 
 export default class MoveArbiter {
 
@@ -32,6 +33,12 @@ export default class MoveArbiter {
     {
         this.squares144.makeMove(move)
         this.fenNumber.incrementTurn(move, this.squares64)
+
+        const movingColor = move.movingPiece.color
+        const enemyColor = Color.getOpposite(movingColor)
+        const isCheck = this.moveEngine.isSquareThreatenedBy(this.getKingSquare(enemyColor), movingColor)
+        this.fenNumber.updateMoveResult(isCheck, !this.doesPlayerHaveLegalMoves(enemyColor))
+
         return new MadeMove(move, this.fenNumber.clone())
     }
 
@@ -64,16 +71,6 @@ export default class MoveArbiter {
         return isMoveLegal
     }
 
-    #isCastlingMoveLegal(move: CastlingMove): boolean {
-        for(const i in move.castlesType.squaresThatMustBeSafe){
-            const square = move.castlesType.squaresThatMustBeSafe[i]
-            if(this.moveEngine.isSquareThreatenedBy(square, Color.getOpposite(move.movingPiece.color))){
-                return false
-            }
-        }
-        return true
-    }
-
     getLegalMoves(squareName: SquareType): MoveList
     {
         const moves = this.moveEngine.getPseudoLegalMoves(squareName, this.fenNumber.enPassantTarget, this.fenNumber.castleRights)
@@ -92,6 +89,36 @@ export default class MoveArbiter {
 
         //@ts-ignore
         return this.squares64.getKingSquare(color).name
+    }
+
+    doesPlayerHaveLegalMoves(color: ColorType): boolean
+    {
+        const squares = this.squares64.getPieceSquares(color)
+        for(const i in squares){
+            const square = squares[i]
+            if(this.getLegalMoves(square.name).length > 0){
+                return true
+            }
+        }
+        return false
+    }
+
+    doesMoveDrawBy3FoldRepetition(moveHistory: MoveHistory, move: MadeMove): boolean {
+        return moveHistory.getPositionRepetitions(move) >= 3
+    }
+
+    doesMoveDrawBy50MoveRule(move: MadeMove): boolean {
+        return move.fenAfter.halfStepCounter >= 50
+    }
+
+    #isCastlingMoveLegal(move: CastlingMove): boolean {
+        for(const i in move.castlesType.squaresThatMustBeSafe){
+            const square = move.castlesType.squaresThatMustBeSafe[i]
+            if(this.moveEngine.isSquareThreatenedBy(square, Color.getOpposite(move.movingPiece.color))){
+                return false
+            }
+        }
+        return true
     }
 
 }

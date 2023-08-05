@@ -3,11 +3,15 @@ import type {SquareType} from "@/classes/Chess/Square/Square";
 import Squares144 from "@/classes/Chess/Board/Squares144";
 import FenNumber from "@/classes/Chess/Board/FenNumber";
 import Squares64 from "@/classes/Chess/Board/Squares64";
-import MoveArbiter from "@/classes/Chess/MoveFactory/MoveArbiter";
-import MoveEngine from "@/classes/Chess/MoveFactory/MoveEngine";
+import MoveArbiter from "@/classes/Chess/MoveArbiter/MoveArbiter";
+import MoveEngine from "@/classes/Chess/MoveArbiter/MoveEngine";
 import MoveHistory from "@/classes/Chess/Move/MoveHistory";
 import type MoveList from "@/classes/Chess/Move/MoveList";
 import type ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
+import {GameResult} from "@/classes/Chess/Board/GameResult";
+import type MadeMove from "@/classes/Chess/Move/MadeMove";
+import type {ColorType} from "@/classes/Chess/Color";
+import {Color} from "@/classes/Chess/Color";
 
 export default class Chessboard
 {
@@ -31,6 +35,8 @@ export default class Chessboard
     moveHistory: MoveHistory
 
     moveIndex: number = 0 // index of the currently displayed move
+
+    gameResult: null|GameResult = null
 
     constructor(fen: string) {
         this.fenNumber = new FenNumber(fen)
@@ -65,11 +71,17 @@ export default class Chessboard
 
 
     makeMove(move: ChessMove): void {
+
+        if(this.gameResult){
+            throw new Error('Cannot make move. Game is over.')
+        }
+
         const madeMove = this.moveArbiter.makeMove(move)
         this.fenNumber = madeMove.fenAfter.clone()
         this.squares64.makeMove(madeMove.move)
         this.moveHistory.add(madeMove)
         this.moveIndex = madeMove.halfStepIndex
+        this.#determineGameResult(madeMove)
     }
 
     undoLastMove(): void {
@@ -80,5 +92,38 @@ export default class Chessboard
         this.moveIndex--
     }
 
+    setResigns(color: ColorType)
+    {
+        return this.gameResult = new GameResult('Resign', Color.getOpposite(color))
+    }
+
+    setDraw()
+    {
+        return this.gameResult = new GameResult('Draw', null, 'Agreed')
+    }
+
+    setOutOfTime(color: ColorType)
+    {
+        return this.gameResult = new GameResult('OutOfTime', Color.getOpposite(color))
+    }
+
+    #determineGameResult(move: MadeMove)
+    {
+        if(move.fenAfter.isMate){
+            return this.gameResult = new GameResult('Mate', move.movingColor)
+        }
+        if(move.fenAfter.isStalemate){
+            return this.gameResult = new GameResult('Stalemate', null)
+        }
+
+        if(this.moveArbiter.doesMoveDrawBy3FoldRepetition(this.moveHistory, move)){
+            return this.gameResult = new GameResult('Draw',null, '3Fold');
+        }
+        if(this.moveArbiter.doesMoveDrawBy50MoveRule(move)){
+            return this.gameResult = new GameResult('Draw',null, '50Move');
+        }
+
+        return null
+    }
 
 }
