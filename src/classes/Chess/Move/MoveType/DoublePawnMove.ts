@@ -1,10 +1,9 @@
-
-import ChessMove from "./ChessMove";
-import type Piece from "@/classes/Chess/Piece";
+import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
+import {Square} from "@/classes/Chess/Square/Square";
+import type {Piece} from "@/classes/Chess/Piece";
 import type {SquareType} from "@/classes/Chess/Square/Square";
-import Square from "@/classes/Chess/Square/Square";
 
-export default class DoublePawnMove extends ChessMove
+export class DoublePawnMove extends ChessMove
 {
 
     constructor(oldSquare: SquareType, newSquare: SquareType, movingPiece: Piece) {

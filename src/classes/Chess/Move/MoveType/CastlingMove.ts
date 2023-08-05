@@ -1,10 +1,10 @@
-import ChessMove from "./ChessMove";
-import MoveStep from "../MoveStep";
-import Piece from "@/classes/Chess/Piece";
+import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
+import {MoveStep} from "@/classes/Chess/Move/MoveStep";
+import {Piece} from "@/classes/Chess/Piece";
+import {CastlesType} from "@/classes/Chess/Move/MoveType/CastlesType";
 import type {SquareType} from "@/classes/Chess/Square/Square";
-import CastlesType from "@/classes/Chess/Move/MoveType/CastlesType";
 
-export default class CastlingMove extends ChessMove
+export class CastlingMove extends ChessMove
 {
     rook: Piece
 

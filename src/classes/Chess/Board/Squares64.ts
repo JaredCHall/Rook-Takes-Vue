@@ -1,15 +1,15 @@
 import type {SquareType} from "@/classes/Chess/Square/Square";
-import Piece from "@/classes/Chess/Piece";
+import {Piece} from "@/classes/Chess/Piece";
 import type {ChessPieceType} from "@/classes/Chess/Piece";
-import Square from "@/classes/Chess/Square/Square";
+import {Square} from "@/classes/Chess/Square/Square";
 import type {ColorType} from "@/classes/Chess/Color";
-import FenNumber from "@/classes/Chess/Board/FenNumber";
-import ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
+import {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 
 /**
  * A representation of the 64 squares
  */
-export default class Squares64
+export class Squares64
 {
     static readonly squaresOrder: SquareType[] = [
         'a8', 'b8', 'c8', 'd8', 'e8', 'f8', 'g8', 'h8',

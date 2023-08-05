@@ -1,8 +1,8 @@
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import type {ColorType} from "@/classes/Chess/Color";
-import type Piece from "@/classes/Chess/Piece";
+import type {Piece} from "@/classes/Chess/Piece";
 
-export default class CastlesType {
+export class CastlesType {
     readonly rooksOldSquare: SquareType
     readonly rooksNewSquare: SquareType
     readonly kingsOldSquare: SquareType

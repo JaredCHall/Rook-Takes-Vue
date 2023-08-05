@@ -1,8 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
-import MoveHistory from "@/classes/Chess/Move/MoveHistory";
-import MadeMove from "@/classes/Chess/Move/MadeMove";
-import FenNumber from "@/classes/Chess/Board/FenNumber";
-import ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
+import {MoveHistory} from "@/classes/Chess/Move/MoveHistory";
+import {MadeMove} from "@/classes/Chess/Move/MadeMove";
+import {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 
 vi.mock( "@/classes/Chess/Board/FenNumber")
 vi.mock("@/classes/Chess/Move/MoveType/ChessMove")

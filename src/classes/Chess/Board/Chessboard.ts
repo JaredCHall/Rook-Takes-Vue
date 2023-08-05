@@ -1,19 +1,19 @@
-import Square from "@/classes/Chess/Square/Square";
+import {Square} from "@/classes/Chess/Square/Square";
 import type {SquareType} from "@/classes/Chess/Square/Square";
-import Squares144 from "@/classes/Chess/Board/Squares144";
-import FenNumber from "@/classes/Chess/Board/FenNumber";
-import Squares64 from "@/classes/Chess/Board/Squares64";
-import MoveArbiter from "@/classes/Chess/MoveArbiter/MoveArbiter";
-import MoveEngine from "@/classes/Chess/MoveArbiter/MoveEngine";
-import MoveHistory from "@/classes/Chess/Move/MoveHistory";
-import type MoveList from "@/classes/Chess/Move/MoveList";
-import type ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
+import {Squares144} from "@/classes/Chess/Board/Squares144";
+import {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import {Squares64} from "@/classes/Chess/Board/Squares64";
+import {MoveArbiter} from "@/classes/Chess/MoveArbiter/MoveArbiter";
+import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
+import {MoveHistory} from "@/classes/Chess/Move/MoveHistory";
+import type {MoveList} from "@/classes/Chess/Move/MoveList";
+import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import {GameResult} from "@/classes/Chess/Board/GameResult";
-import type MadeMove from "@/classes/Chess/Move/MadeMove";
+import type {MadeMove} from "@/classes/Chess/Move/MadeMove";
 import type {ColorType} from "@/classes/Chess/Color";
 import {Color} from "@/classes/Chess/Color";
 
-export default class Chessboard
+export class Chessboard
 {
 
     static makeNewGame(): Chessboard

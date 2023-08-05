@@ -1,13 +1,12 @@
-
-import MoveStep from "@/classes/Chess/Move/MoveStep";
-import type Piece from "@/classes/Chess/Piece";
+import {MoveStep} from "@/classes/Chess/Move/MoveStep";
+import type {Piece} from "@/classes/Chess/Piece";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 
 
 /**
  * This represents any full chess move
  */
-export default class ChessMove {
+export class ChessMove {
 
     oldSquare: SquareType
 

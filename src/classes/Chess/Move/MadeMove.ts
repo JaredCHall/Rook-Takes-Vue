@@ -1,9 +1,9 @@
-import type ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
-import type FenNumber from "@/classes/Chess/Board/FenNumber";
-import type Squares144 from "@/classes/Chess/Board/Squares144";
+import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
+import type {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import type {Squares144} from "@/classes/Chess/Board/Squares144";
 import type {ColorType} from "@/classes/Chess/Color";
 
-export default class MadeMove {
+export class MadeMove {
 
     readonly move: ChessMove
 

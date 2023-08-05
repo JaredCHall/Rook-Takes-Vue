@@ -1,8 +1,8 @@
 import {Color, type ColorType} from "@/classes/Chess/Color";
-import SquareCoordinates from "@/classes/Chess/Square/SquareCoordinates";
-import type Piece from "@/classes/Chess/Piece";
-import Squares144 from "@/classes/Chess/Board/Squares144";
-import Squares64 from "@/classes/Chess/Board/Squares64";
+import {SquareCoordinates} from "@/classes/Chess/Square/SquareCoordinates";
+import {Squares144} from "@/classes/Chess/Board/Squares144";
+import {Squares64} from "@/classes/Chess/Board/Squares64";
+import type {Piece} from "@/classes/Chess/Piece";
 
 export type SquareType = 'a1'|'a2'|'a3'|'a4'|'a5'|'a6'|'a7'|'a8'|
     'b1'|'b2'|'b3'|'b4'|'b5'|'b6'|'b7'|'b8'|
@@ -15,7 +15,7 @@ export type SquareType = 'a1'|'a2'|'a3'|'a4'|'a5'|'a6'|'a7'|'a8'|
 
 export interface SquaresList {[squareType: string]: true}
 
-export default class Square {
+export class Square {
 
     static getCoordinates(squareName: SquareType) {
         const index = Squares64.squaresOrder.indexOf(squareName);

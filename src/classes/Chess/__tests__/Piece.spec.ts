@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import Piece from "../Piece";
+import {Piece} from "@/classes/Chess/Piece";
 
 describe('Piece', () => {
   it('it constructs itself', () => {

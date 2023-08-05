@@ -1,10 +1,11 @@
-import ChessMove from "./ChessMove";
-import MoveStep from "../MoveStep";
-import type Piece from "@/classes/Chess/Piece";
+import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
+import {MoveStep} from "@/classes/Chess/Move/MoveStep";
+import {Square} from "@/classes/Chess/Square/Square";
+import type {Piece} from "@/classes/Chess/Piece";
 import type {SquareType} from "@/classes/Chess/Square/Square";
-import Square from "@/classes/Chess/Square/Square";
 
-export default class EnPassantMove extends ChessMove
+
+export class EnPassantMove extends ChessMove
 {
 
     capturedSquare: SquareType

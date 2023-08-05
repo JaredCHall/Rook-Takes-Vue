@@ -1,6 +1,6 @@
-import ChessMove from "./MoveType/ChessMove";
+import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 
-export default class MoveList {
+export class MoveList {
 
     moves: ChessMove[] = []
 

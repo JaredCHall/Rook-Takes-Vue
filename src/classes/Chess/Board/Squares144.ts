@@ -1,10 +1,9 @@
 import type {SquareType} from "@/classes/Chess/Square/Square";
-import Square from "@/classes/Chess/Square/Square";
-import Squares64 from "@/classes/Chess/Board/Squares64";
-import Piece from "@/classes/Chess/Piece";
-import FenNumber from "@/classes/Chess/Board/FenNumber";
-import type ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
-import type MadeMove from "@/classes/Chess/Move/MadeMove";
+import {Square} from "@/classes/Chess/Square/Square";
+import {Squares64} from "@/classes/Chess/Board/Squares64";
+import {Piece} from "@/classes/Chess/Piece";
+import {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 
 /**
  * A representation of the 64 squares and all nearby out-of-bounds squares
@@ -12,7 +11,7 @@ import type MadeMove from "@/classes/Chess/Move/MadeMove";
  *      The first level of out-of-bounds squares is necessary for ray tracing.
  *      The second level is necessary for knight moves.
  */
-export default class Squares144 {
+export class Squares144 {
 
     static readonly boardBoundary: (0|1)[] = [
         0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,

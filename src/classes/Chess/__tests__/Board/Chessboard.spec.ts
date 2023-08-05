@@ -1,17 +1,17 @@
 import { describe, it, expect, vi } from 'vitest'
 
-import Chessboard from "@/classes/Chess/Board/Chessboard";
-import FenNumber from "@/classes/Chess/Board/FenNumber";
-import Squares64 from "@/classes/Chess/Board/Squares64";
-import MoveArbiter from "@/classes/Chess/MoveArbiter/MoveArbiter";
-import MoveHistory from "@/classes/Chess/Move/MoveHistory";
-import Square from "@/classes/Chess/Square/Square";
-import MoveList from "@/classes/Chess/Move/MoveList";
-import ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
-import Piece from "@/classes/Chess/Piece";
-import MadeMove from "@/classes/Chess/Move/MadeMove";
-import DoublePawnMove from "@/classes/Chess/Move/MoveType/DoublePawnMove";
-import MoveEngine from "@/classes/Chess/MoveArbiter/MoveEngine";
+import {Chessboard} from "@/classes/Chess/Board/Chessboard";
+import {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import {Squares64} from "@/classes/Chess/Board/Squares64";
+import {MoveArbiter} from "@/classes/Chess/MoveArbiter/MoveArbiter";
+import {MoveHistory} from "@/classes/Chess/Move/MoveHistory";
+import {Square} from "@/classes/Chess/Square/Square";
+import {MoveList} from "@/classes/Chess/Move/MoveList";
+import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
+import {Piece} from "@/classes/Chess/Piece";
+import {MadeMove} from "@/classes/Chess/Move/MadeMove";
+import {DoublePawnMove} from "@/classes/Chess/Move/MoveType/DoublePawnMove";
+import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
 
 describe('ChessBoard', () => {
 

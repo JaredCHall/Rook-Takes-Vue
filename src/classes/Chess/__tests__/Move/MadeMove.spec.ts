@@ -1,10 +1,9 @@
 import { describe, it, expect, vi } from 'vitest'
 
-import FenNumber from "@/classes/Chess/Board/FenNumber";
-import MadeMove from "@/classes/Chess/Move/MadeMove";
-import Squares144 from "@/classes/Chess/Board/Squares144";
-import Piece from "@/classes/Chess/Piece";
-import ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
+import {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import {MadeMove} from "@/classes/Chess/Move/MadeMove";
+import {Piece} from "@/classes/Chess/Piece";
+import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 
 describe('MadeMove', () => {
     it('it constructs itself', () => {

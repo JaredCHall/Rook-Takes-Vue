@@ -1,15 +1,15 @@
-import type ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
-import type {ColorType} from "@/classes/Chess/Color";
+import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
+import {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import {MoveHistory} from "@/classes/Chess/Move/MoveHistory";
 import {Color} from "@/classes/Chess/Color";
-import MoveEngine from "@/classes/Chess/MoveArbiter/MoveEngine";
+import {MoveList} from "@/classes/Chess/Move/MoveList";
+import {MadeMove} from "@/classes/Chess/Move/MadeMove";
+import {CastlingMove} from "@/classes/Chess/Move/MoveType/CastlingMove";
 import type {SquareType} from "@/classes/Chess/Square/Square";
-import MoveList from "@/classes/Chess/Move/MoveList";
-import CastlingMove from "@/classes/Chess/Move/MoveType/CastlingMove";
-import FenNumber from "@/classes/Chess/Board/FenNumber";
-import MadeMove from "@/classes/Chess/Move/MadeMove";
-import MoveHistory from "@/classes/Chess/Move/MoveHistory";
+import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
+import type {ColorType} from "@/classes/Chess/Color";
 
-export default class MoveArbiter {
+export class MoveArbiter {
 
     moveEngine: MoveEngine
 

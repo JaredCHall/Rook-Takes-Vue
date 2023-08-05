@@ -1,7 +1,7 @@
-import type FenNumber from "@/classes/Chess/Board/FenNumber";
-import type MadeMove from "@/classes/Chess/Move/MadeMove";
+import type {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import type {MadeMove} from "@/classes/Chess/Move/MadeMove";
 
-export default class MoveHistory
+export class MoveHistory
 {
     moves: MadeMove[] = []
 

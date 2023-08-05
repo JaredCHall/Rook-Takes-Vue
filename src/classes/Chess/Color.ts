@@ -1,5 +1,4 @@
 
-
 export type ColorType = 'white'|'black'
 
 export class Color

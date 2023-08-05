@@ -1,7 +1,7 @@
-import type Piece from "@/classes/Chess/Piece";
+import type {Piece} from "@/classes/Chess/Piece";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 
-export default class MoveStep {
+export class MoveStep {
 
     squareName: SquareType
 

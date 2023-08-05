@@ -1,9 +1,9 @@
 import { describe, it, expect, vi } from 'vitest'
-import Squares144 from "@/classes/Chess/Board/Squares144";
-import FenNumber from "@/classes/Chess/Board/FenNumber";
-import Squares64 from "@/classes/Chess/Board/Squares64";
-import Piece from "@/classes/Chess/Piece";
-import Square from "@/classes/Chess/Square/Square";
+import {Squares144} from "@/classes/Chess/Board/Squares144";
+import {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import {Squares64} from "@/classes/Chess/Board/Squares64";
+import {Piece} from "@/classes/Chess/Piece";
+import {Square} from "@/classes/Chess/Square/Square";
 
 describe('Squares144', () => {
 

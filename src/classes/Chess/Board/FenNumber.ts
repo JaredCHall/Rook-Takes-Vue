@@ -1,13 +1,13 @@
-import Squares64 from "@/classes/Chess/Board/Squares64";
-import Piece from "@/classes/Chess/Piece";
+import {Squares64} from "@/classes/Chess/Board/Squares64";
+import {Piece} from "@/classes/Chess/Piece";
 import type {ChessPieceType} from "@/classes/Chess/Piece";
 import {Color} from "@/classes/Chess/Color";
 import type { SquareType } from "@/classes/Chess/Square/Square";
-import type ChessMove from "@/classes/Chess/Move/MoveType/ChessMove";
-import DoublePawnMove from "@/classes/Chess/Move/MoveType/DoublePawnMove";
-import CastlesType from "@/classes/Chess/Move/MoveType/CastlesType";
+import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
+import {DoublePawnMove} from "@/classes/Chess/Move/MoveType/DoublePawnMove";
+import {CastlesType} from "@/classes/Chess/Move/MoveType/CastlesType";
 
-export default class FenNumber {
+export class FenNumber {
 
     /**
      * piecePlacements is undefined between calls of incrementTurn() and setPiecePositions()

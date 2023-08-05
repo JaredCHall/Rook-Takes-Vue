@@ -1,11 +1,12 @@
-import ChessMove from "./ChessMove";
-import Piece from "@/classes/Chess/Piece";
+import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
+import {MoveStep} from "@/classes/Chess/Move/MoveStep";
+import {Square} from "@/classes/Chess/Square/Square";
+import {Piece} from "@/classes/Chess/Piece";
 import type {ChessPieceType} from "@/classes/Chess/Piece";
-import Square from "@/classes/Chess/Square/Square";
 import type {SquareType} from "@/classes/Chess/Square/Square";
-import MoveStep from "@/classes/Chess/Move/MoveStep";
 
-export default class PawnPromotionMove extends ChessMove
+
+export class PawnPromotionMove extends ChessMove
 {
 
     promoteToType: ChessPieceType

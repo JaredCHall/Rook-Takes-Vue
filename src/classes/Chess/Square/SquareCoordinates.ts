@@ -1,4 +1,4 @@
-export default class SquareCoordinates
+export class SquareCoordinates
 {
     column: number
 
