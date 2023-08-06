@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 
 import {Squares144} from "@/classes/Chess/Board/Squares144";
 import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
@@ -16,7 +16,7 @@ describe('MoveEngine', () => {
         expect(moveEngine.squares144).toBe(squares144)
     })
 
-    it('it gets pawn moves', (color, square, expected) => {
+    it('it gets pawn moves', () => {
 
         const squares144 = new Squares144('1P6/p2p1ppp/4PP2/6P1/2p5/3pp3/P1PP1P1P/5p2');
         const moveEngine = new MoveEngine(squares144)
@@ -288,8 +288,8 @@ describe('MoveEngine', () => {
         expect(moves[6].castlesType.notation).toEqual('O-O-O')
 
         // no castling moves if there are no castle rights
-        expect(moves = moveEngine.getPseudoLegalMoves('e1').moves).toHaveLength(5)
-        expect(moves = moveEngine.getPseudoLegalMoves('e8').moves).toHaveLength(5)
+        expect(moveEngine.getPseudoLegalMoves('e1').moves).toHaveLength(5)
+        expect(moveEngine.getPseudoLegalMoves('e8').moves).toHaveLength(5)
 
     })
 

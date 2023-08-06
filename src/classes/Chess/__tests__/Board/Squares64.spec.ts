@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect } from 'vitest'
 import {Squares64} from "@/classes/Chess/Board/Squares64";
 import {Piece} from "@/classes/Chess/Piece";
 import {Square} from "@/classes/Chess/Square/Square";
