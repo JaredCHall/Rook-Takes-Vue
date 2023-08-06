@@ -350,7 +350,7 @@ export class MoveEngine {
                             // pawns can only capture in certain directions
                             const oldSquare = new Square(move.oldSquare)
                             const newSquare = new Square(move.newSquare)
-                            const rowDiff = newSquare.whiteCoordinates.row - oldSquare.whiteCoordinates.row
+                            const rowDiff = newSquare.coordinatesWhite.row - oldSquare.coordinatesWhite.row
                             if(move.capturedPiece.color === 'black' && rowDiff === -1){
                                 return isSquareSafe = false
                             }else if(move.capturedPiece.color === 'white' && rowDiff === 1){

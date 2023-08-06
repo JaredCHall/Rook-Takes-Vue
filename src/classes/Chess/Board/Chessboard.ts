@@ -39,17 +39,17 @@ export class Chessboard
 
     gameResult: null|GameResult = null
 
-    whitePlayer: Player
+    playerWhite: Player
 
-    blackPlayer: Player
+    playerBlack: Player
 
     constructor(fen: string) {
         this.fenNumber = new FenNumber(fen)
         this.squares64 = new Squares64(this.fenNumber)
         this.moveArbiter = new MoveArbiter(new MoveEngine(new Squares144(this.fenNumber)))
         this.moveHistory = new MoveHistory(this.fenNumber.clone())
-        this.whitePlayer = Player.defaultWhite()
-        this.blackPlayer = Player.defaultBlack()
+        this.playerWhite = Player.defaultWhite()
+        this.playerBlack = Player.defaultBlack()
     }
 
     get moveEngine(): MoveEngine {
@@ -59,10 +59,10 @@ export class Chessboard
 
     setPlayer(player: Player){
         if(player.color === 'white'){
-            this.whitePlayer = player
+            this.playerWhite = player
             return
         }
-        this.blackPlayer = player
+        this.playerBlack = player
     }
 
     getSquare(squareType: SquareType): Square

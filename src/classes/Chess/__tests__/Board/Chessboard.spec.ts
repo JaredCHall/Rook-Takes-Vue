@@ -142,8 +142,8 @@ describe('ChessBoard', () => {
         board.setPlayer(alice)
         board.setPlayer(claire)
 
-        expect(board.whitePlayer).toBe(alice)
-        expect(board.blackPlayer).toBe(claire)
+        expect(board.playerWhite).toBe(alice)
+        expect(board.playerBlack).toBe(claire)
     })
 
 
@@ -248,6 +248,5 @@ describe('ChessBoard', () => {
 
         expect(() => board.makeMove(whiteReconsiders)).toThrowError('Cannot make move. Game is over.')
     })
-
 
 })

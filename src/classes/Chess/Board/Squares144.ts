@@ -95,8 +95,8 @@ export class Squares144 {
             return false
         }
 
-        const colDiff = Math.abs(square1.whiteCoordinates.column - square2.whiteCoordinates.column)
-        const rowDiff = Math.abs(square1.whiteCoordinates.row - square2.whiteCoordinates.row)
+        const colDiff = Math.abs(square1.coordinatesWhite.column - square2.coordinatesWhite.column)
+        const rowDiff = Math.abs(square1.coordinatesWhite.row - square2.coordinatesWhite.row)
 
         return colDiff <= 1 && rowDiff <= 1
 

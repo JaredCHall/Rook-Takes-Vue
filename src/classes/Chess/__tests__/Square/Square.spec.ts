@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import {Square} from "@/classes/Chess/Square/Square";
 import {Piece} from "@/classes/Chess/Piece";
+import {SquareCoordinates} from "@/classes/Chess/Square/SquareCoordinates";
 
 
 describe('Square', () => {
@@ -40,8 +41,8 @@ describe('Square', () => {
         expect(f3).toHaveProperty('file','f')
         expect(f3).toHaveProperty('index144',91)
         expect(f3).toHaveProperty('piece',null)
-        expect(f3).toHaveProperty('whiteCoordinates')
-        expect(f3).toHaveProperty('blackCoordinates')
+        expect(f3.coordinatesWhite).toBeInstanceOf(SquareCoordinates)
+        expect(f3.coordinatesBlack).toBeInstanceOf(SquareCoordinates)
     })
 
     it('it sets piece', () => {

@@ -37,9 +37,9 @@ export class Square {
 
     file: string
 
-    whiteCoordinates: SquareCoordinates
+    coordinatesWhite: SquareCoordinates
 
-    blackCoordinates: SquareCoordinates
+    coordinatesBlack: SquareCoordinates
 
     index144: number
 
@@ -61,8 +61,8 @@ export class Square {
         this.piece = piece
 
         const coordinates = Square.getCoordinates(this.name)
-        this.whiteCoordinates = coordinates.white
-        this.blackCoordinates = coordinates.black
+        this.coordinatesWhite = coordinates.white
+        this.coordinatesBlack = coordinates.black
 
     }
 
