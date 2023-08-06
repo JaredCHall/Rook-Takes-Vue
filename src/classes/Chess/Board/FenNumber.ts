@@ -9,9 +9,6 @@ import {CastlesType} from "@/classes/Chess/Move/MoveType/CastlesType";
 
 export class FenNumber {
 
-    /**
-     * piecePlacements is undefined between calls of incrementTurn() and setPiecePositions()
-     */
     piecePlacements: string
 
     sideToMove: 'white' | 'black' = 'white'

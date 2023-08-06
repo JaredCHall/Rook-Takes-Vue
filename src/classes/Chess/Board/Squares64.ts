@@ -71,10 +71,12 @@ export class Squares64
     {
         const squares: Square[] = []
         this.each((square: Square) => {
-            if(square.piece && square.piece.color === color) {
-                if(!type || type === square.piece.type){
-                    squares.push(square)
-                }
+            if(!square.piece || square.piece.color !== color){
+                return
+            }
+
+            if(!type || type === square.piece.type){
+                squares.push(square)
             }
         })
 

@@ -13,6 +13,21 @@ export class Piece
         this.color = color
     }
 
+    getMaterialValue(): number {
+        switch(this.type){
+            case 'pawn':
+                return 1
+            case 'knight':
+            case 'bishop':
+                return 3
+            case 'rook':
+                return 5
+            case 'queen':
+                return 9
+        }
+        return 0
+    }
+
     clone(): Piece {
         return new Piece(this.type, this.color)
     }

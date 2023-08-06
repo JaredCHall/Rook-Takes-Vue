@@ -13,6 +13,7 @@ import type {MadeMove} from "@/classes/Chess/Move/MadeMove";
 import type {ColorType} from "@/classes/Chess/Color";
 import {Color} from "@/classes/Chess/Color";
 import {Player} from "@/classes/Chess/Player";
+import type {Piece} from "@/classes/Chess/Piece";
 
 export class Chessboard
 {
@@ -43,6 +44,10 @@ export class Chessboard
 
     playerBlack: Player
 
+    materialWhite: number = 0
+
+    materialBlack: number = 0
+
     constructor(fen: string) {
         this.fenNumber = new FenNumber(fen)
         this.squares64 = new Squares64(this.fenNumber)
@@ -50,10 +55,43 @@ export class Chessboard
         this.moveHistory = new MoveHistory(this.fenNumber.clone())
         this.playerWhite = Player.defaultWhite()
         this.playerBlack = Player.defaultBlack()
+        this.calculateMaterial()
     }
 
     get moveEngine(): MoveEngine {
         return this.moveArbiter.moveEngine
+    }
+
+    calculateMaterial(): void {
+        const material = {
+            white: 0,
+            black: 0,
+        }
+        this.squares64.each((square: Square) => {
+            if(!square.piece){
+                return
+            }
+            material[square.piece.color] += square.piece.getMaterialValue()
+        })
+        this.materialWhite = material.white
+        this.materialBlack = material.black
+    }
+
+    minusMaterial(piece: Piece): void
+    {
+        if(piece.color === 'white'){
+            this.materialWhite -= piece.getMaterialValue()
+            return
+        }
+        this.materialBlack -= piece.getMaterialValue()
+    }
+    addMaterial(piece: Piece): void
+    {
+        if(piece.color === 'white'){
+            this.materialWhite += piece.getMaterialValue()
+            return
+        }
+        this.materialBlack += piece.getMaterialValue()
     }
 
 
@@ -97,7 +135,11 @@ export class Chessboard
         this.squares64.makeMove(madeMove.move)
         this.moveHistory.add(madeMove)
         this.moveIndex = madeMove.halfStepIndex
+        if(madeMove.move.capturedPiece){
+            this.minusMaterial(madeMove.move.capturedPiece)
+        }
         this.#determineGameResult(madeMove)
+
     }
 
     undoLastMove(): void {
@@ -106,6 +148,9 @@ export class Chessboard
         this.moveArbiter.unMakeMove(lastMove.move, fenBefore)
         this.fenNumber = fenBefore.clone()
         this.moveIndex--
+        if(lastMove.move.capturedPiece){
+            this.addMaterial(lastMove.move.capturedPiece)
+        }
     }
 
     setResigns(color: ColorType)

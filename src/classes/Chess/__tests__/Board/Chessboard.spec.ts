@@ -23,6 +23,10 @@ describe('ChessBoard', () => {
         expect(board.moveArbiter).toBeInstanceOf(MoveArbiter)
         expect(board.moveHistory).toBeInstanceOf(MoveHistory)
         expect(board.moveEngine).toBeInstanceOf(MoveEngine)
+        expect(board.playerWhite).toBeInstanceOf(Player)
+        expect(board.playerBlack).toBeInstanceOf(Player)
+        expect(board.materialWhite).toEqual(39)
+        expect(board.materialBlack).toEqual(39)
     })
 
     it('it makes a new game', () => {
@@ -33,6 +37,8 @@ describe('ChessBoard', () => {
     it('it makes an empty board', () => {
         const board = Chessboard.makeEmptyBoard()
         expect(board.fenNumber.toString()).toEqual('8/8/8/8/8/8/8/8 w - - 0 1')
+        expect(board.materialWhite).toEqual(0)
+        expect(board.materialBlack).toEqual(0)
     })
 
     it('it gets a square', () => {
@@ -94,7 +100,6 @@ describe('ChessBoard', () => {
         expect(gameResult).toBeInstanceOf(GameResult)
         expect(gameResult.type).toEqual('Resign')
         expect(gameResult.winner).toEqual('black')
-
 
         gameResult = board.setResigns('black')
         expect(board.gameResult).toBe(gameResult)
@@ -246,6 +251,22 @@ describe('ChessBoard', () => {
         expect(board.gameResult.drawType).toEqual('3Fold')
 
         expect(() => board.makeMove(whiteReconsiders)).toThrowError('Cannot make move. Game is over.')
+    })
+
+    it('it calculates player material', () => {
+
+        let board
+        board = new Chessboard('2kr1bnr/ppp1pppp/2n5/5q2/2PP4/4BB2/PP3PPP/RN1QK2R b KQ - 0 8')
+        expect(board.materialWhite).toEqual(35)
+        expect(board.materialBlack).toEqual(35)
+
+        board = new Chessboard('2kr1bnr/ppp1pppp/8/8/2P3q1/4B3/PPQ2PPP/RN3RK1 b - - 1 11')
+        expect(board.materialWhite).toEqual(31)
+        expect(board.materialBlack).toEqual(32)
+
+        board = new Chessboard('3r2r1/5k1p/qpQbp1p1/5pB1/P7/5N1P/5PP1/3R2K1 b - - 4 32')
+        expect(board.materialWhite).toEqual(24)
+        expect(board.materialBlack).toEqual(27)
     })
 
 })
