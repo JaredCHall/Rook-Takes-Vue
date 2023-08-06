@@ -52,22 +52,22 @@ describe('ChessBoard', () => {
 
     it('it makes a move (or 2) and un-does them', () => {
         const board = Chessboard.makeNewGame()
-        const e3 = new ChessMove('e2','e3', new Piece('pawn','white'))
+        const e3 = new ChessMove('e2','e3', Piece.pawnWhite())
         board.makeMove(e3)
 
         expect(board.getSquare('e2').piece).toBeNull()
-        expect(board.getSquare('e3').piece).toEqual(new Piece('pawn','white'))
+        expect(board.getSquare('e3').piece).toEqual(Piece.pawnWhite())
         expect(board.fenNumber.toString()).toEqual('rnbqkbnr/pppppppp/8/8/8/4P3/PPPP1PPP/RNBQKBNR b KQkq - 0 1')
         expect(board.moveIndex).toEqual(1)
         expect(board.moveHistory.moves).toHaveLength(1)
         expect(board.moveHistory.moves[0]).toBeInstanceOf(MadeMove)
         expect(board.moveHistory.moves[0].move).toEqual(e3)
 
-        const e5 = new DoublePawnMove('e7','e5', new Piece('pawn','black'))
+        const e5 = new DoublePawnMove('e7','e5', Piece.pawnBlack())
         board.makeMove(e5)
 
         expect(board.getSquare('e7').piece).toBeNull()
-        expect(board.getSquare('e5').piece).toEqual(new Piece('pawn','black'))
+        expect(board.getSquare('e5').piece).toEqual(Piece.pawnBlack())
         expect(board.fenNumber.toString()).toEqual('rnbqkbnr/pppp1ppp/8/4p3/8/4P3/PPPP1PPP/RNBQKBNR w KQkq e6 0 2')
         expect(board.moveIndex).toEqual(2)
         expect(board.moveHistory.moves).toHaveLength(2)
@@ -77,7 +77,7 @@ describe('ChessBoard', () => {
         board.undoLastMove()
 
         expect(board.getSquare('e2').piece).toBeNull()
-        expect(board.getSquare('e3').piece).toEqual(new Piece('pawn','white'))
+        expect(board.getSquare('e3').piece).toEqual(Piece.pawnWhite())
         expect(board.fenNumber.toString()).toEqual('rnbqkbnr/pppppppp/8/8/8/4P3/PPPP1PPP/RNBQKBNR b KQkq - 0 1')
         expect(board.moveIndex).toEqual(1)
         expect(board.moveHistory.moves).toHaveLength(1)
@@ -150,21 +150,14 @@ describe('ChessBoard', () => {
 
     it('it displays made move from history', () => {
         const board = Chessboard.makeNewGame()
-        const whitePawn = new Piece('pawn','white')
-        const blackPawn = new Piece('pawn', 'black')
-        const blackQueen = new Piece('queen', 'black')
 
-        const e4 = new DoublePawnMove('e2','e4', whitePawn)
-        board.makeMove(e4)
-        const d5 = new DoublePawnMove('d7','d5', blackPawn)
-        board.makeMove(d5)
-        const exd5 = new ChessMove('e4','d5', whitePawn, blackPawn)
-        board.makeMove(exd5)
-        const Qxd5 = new ChessMove('d8','d5', blackQueen, whitePawn)
-        board.makeMove(Qxd5)
+        board.makeMove( new DoublePawnMove('e2','e4', Piece.pawnWhite())) // e4
+        board.makeMove(new DoublePawnMove('d7','d5', Piece.pawnBlack())) // d5
+        board.makeMove(new ChessMove('e4','d5', Piece.pawnWhite(), Piece.pawnBlack())) // exd5
+        board.makeMove(new ChessMove('d8','d5', Piece.queenBlack(), Piece.pawnWhite())) // Qxd5
 
         expect(board.getSquare('e4').piece).toBeNull()
-        expect(board.getSquare('d5').piece).toEqual(blackQueen)
+        expect(board.getSquare('d5').piece).toEqual(Piece.queenBlack())
         expect(board.fenNumber.toString()).toEqual('rnb1kbnr/ppp1pppp/8/3q4/8/8/PPPP1PPP/RNBQKBNR w KQkq - 0 3')
         expect(board.moveIndex).toEqual(4)
         expect(board.moveHistory.moves).toHaveLength(4)
@@ -172,13 +165,13 @@ describe('ChessBoard', () => {
 
         board.displayMadeMove(3)
         expect(board.getSquare('e4').piece).toBeNull()
-        expect(board.getSquare('d5').piece).toEqual(whitePawn)
+        expect(board.getSquare('d5').piece).toEqual(Piece.pawnWhite())
         expect(board.fenNumber.toString()).toEqual('rnbqkbnr/ppp1pppp/8/3P4/8/8/PPPP1PPP/RNBQKBNR b KQkq - 0 2')
         expect(board.moveIndex).toEqual(3)
         expect(board.moveHistory.moves).toHaveLength(4)
 
         board.displayMadeMove(1)
-        expect(board.getSquare('e4').piece).toEqual(whitePawn)
+        expect(board.getSquare('e4').piece).toEqual(Piece.pawnWhite())
         expect(board.getSquare('d5').piece).toBeNull()
         expect(board.fenNumber.toString()).toEqual('rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR b KQkq e3 0 1')
         expect(board.moveIndex).toEqual(1)
@@ -186,7 +179,7 @@ describe('ChessBoard', () => {
 
         board.displayMadeMove(4)
         expect(board.getSquare('e4').piece).toBeNull()
-        expect(board.getSquare('d5').piece).toEqual(blackQueen)
+        expect(board.getSquare('d5').piece).toEqual(Piece.queenBlack())
         expect(board.fenNumber.toString()).toEqual('rnb1kbnr/ppp1pppp/8/3q4/8/8/PPPP1PPP/RNBQKBNR w KQkq - 0 3')
         expect(board.moveIndex).toEqual(4)
         expect(board.moveHistory.moves).toHaveLength(4)
@@ -206,14 +199,14 @@ describe('ChessBoard', () => {
 
         // checkmate
         board = new Chessboard('7k/5K2/6PP/8/8/8/8/3R4 w - - 0 1')
-        board.makeMove(new ChessMove('d1','d8', new Piece('rook','white')))
+        board.makeMove(new ChessMove('d1','d8', Piece.rookWhite()))
         expect(board.gameResult).toBeInstanceOf(GameResult)
         expect(board.gameResult.type).toEqual('Mate')
         expect(board.gameResult.winner).toEqual('white')
 
         // stalemate
         board = new Chessboard('7k/5K2/6P1/7P/8/8/8/8 w - - 0 1')
-        board.makeMove(new ChessMove('h5','h6', new Piece('pawn','white')))
+        board.makeMove(new ChessMove('h5','h6', Piece.pawnWhite()))
         expect(board.gameResult).toBeInstanceOf(GameResult)
         expect(board.gameResult.type).toEqual('Draw')
         expect(board.gameResult.winner).toBeNull()
@@ -221,7 +214,7 @@ describe('ChessBoard', () => {
 
         // 50 move rule
         board = new Chessboard('7k/5K2/6P1/7P/8/8/8/8 w - - 49 1')
-        board.makeMove(new ChessMove('f7','f6', new Piece('king','white')))
+        board.makeMove(new ChessMove('f7','f6', Piece.kingWhite()))
         expect(board.gameResult).toBeInstanceOf(GameResult)
         expect(board.gameResult.type).toEqual('Draw')
         expect(board.gameResult.winner).toBeNull()
@@ -232,12 +225,10 @@ describe('ChessBoard', () => {
     it('it determines three-fold repetition', () => {
         const board = new Chessboard('rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1')
 
-        const whiteKing = new Piece('king','white')
-        const blackKing = new Piece('king','black')
-        const whiteBongClouds = new ChessMove('e1','e2', whiteKing)
-        const whiteReconsiders = new ChessMove('e2','e1', whiteKing)
-        const blackBongClouds = new ChessMove('e8','e7', blackKing)
-        const blackReconsiders = new ChessMove('e7','e8', blackKing)
+        const whiteBongClouds = new ChessMove('e1','e2', Piece.kingWhite())
+        const whiteReconsiders = new ChessMove('e2','e1', Piece.kingWhite())
+        const blackBongClouds = new ChessMove('e8','e7', Piece.kingBlack())
+        const blackReconsiders = new ChessMove('e7','e8', Piece.kingBlack())
 
         board.makeMove(whiteBongClouds)
         board.makeMove(blackBongClouds) // 1st repetition

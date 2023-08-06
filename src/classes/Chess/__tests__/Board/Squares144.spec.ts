@@ -86,7 +86,7 @@ describe('Squares144', () => {
     it('it sets a piece',() => {
         const squares144 = new Squares144('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w')
 
-        const king = new Piece('king','white');
+        const king = Piece.kingWhite();
         squares144.setPiece('e4',king)
 
         expect(squares144.squares64.squares['e4'].piece).toBe(king)

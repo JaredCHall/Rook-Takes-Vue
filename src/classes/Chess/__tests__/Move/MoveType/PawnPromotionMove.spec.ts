@@ -9,7 +9,7 @@ import {MoveStep} from "@/classes/Chess/Move/MoveStep";
 describe('PawnPromotionMove', () => {
     it('it constructs itself', () => {
 
-        const pawn = new Piece('pawn','white')
+        const pawn = Piece.pawnWhite()
         const move = new PawnPromotionMove(new ChessMove('e7','e8',pawn))
 
         expect(move).toHaveProperty('oldSquare','e7')
@@ -33,7 +33,7 @@ describe('PawnPromotionMove', () => {
 
     it('it clones itself', () => {
 
-        const pawn = new Piece('pawn','white')
+        const pawn = Piece.pawnWhite()
         const move = new PawnPromotionMove(new ChessMove('e7','e8',pawn))
         const clone = move.clone()
 
@@ -43,52 +43,52 @@ describe('PawnPromotionMove', () => {
     })
 
     it('it gets move steps', () => {
-        const whitePawn = new Piece('pawn','white')
-        const blackPawn = new Piece('pawn','black')
+        const whitePawn = Piece.pawnWhite()
+        const blackPawn = Piece.pawnBlack()
 
         let move
 
         move = new PawnPromotionMove(new ChessMove('f7','f8',whitePawn),'queen')
         expect(move.getMoveSteps()).toEqual([
             new MoveStep('f7', null),
-            new MoveStep('f8', new Piece('queen','white')),
+            new MoveStep('f8', Piece.queenWhite()),
         ])
 
         move = new PawnPromotionMove(new ChessMove('f7','f8',whitePawn),'knight')
         expect(move.getMoveSteps()).toEqual([
             new MoveStep('f7', null),
-            new MoveStep('f8', new Piece('knight','white')),
+            new MoveStep('f8', Piece.knightWhite()),
         ])
 
         move = new PawnPromotionMove(new ChessMove('c7','d8',blackPawn, whitePawn), 'rook')
         expect(move.getMoveSteps()).toEqual([
             new MoveStep('c7', null),
-            new MoveStep('d8', new Piece('rook','black')),
+            new MoveStep('d8', Piece.rookBlack()),
         ])
     })
 
     it('it gets undo steps', () => {
-        const whitePawn = new Piece('pawn','white')
-        const blackPawn = new Piece('pawn','black')
+        const whitePawn = Piece.pawnWhite()
+        const blackPawn = Piece.pawnBlack()
 
         let move
 
         move = new PawnPromotionMove(new ChessMove('f7','f8',whitePawn),'queen')
         expect(move.getUndoSteps()).toEqual([
             new MoveStep('f8', null),
-            new MoveStep('f7', new Piece('pawn','white')),
+            new MoveStep('f7', Piece.pawnWhite()),
         ])
 
         move = new PawnPromotionMove(new ChessMove('f7','f8',whitePawn),'knight')
         expect(move.getUndoSteps()).toEqual([
             new MoveStep('f8', null),
-            new MoveStep('f7', new Piece('pawn','white')),
+            new MoveStep('f7', Piece.pawnWhite()),
         ])
 
         move = new PawnPromotionMove(new ChessMove('c7','d8',blackPawn, whitePawn), 'rook')
         expect(move.getUndoSteps()).toEqual([
             new MoveStep('d8', null),
-            new MoveStep('c7', new Piece('pawn','black')),
+            new MoveStep('c7', Piece.pawnBlack()),
         ])
     })
 

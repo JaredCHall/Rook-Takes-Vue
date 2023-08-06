@@ -50,7 +50,7 @@ describe('Square', () => {
         const f3 = new Square('f3')
         expect(f3).toHaveProperty('piece',null)
 
-        f3.setPiece(new Piece('knight','white'));
+        f3.setPiece(Piece.knightWhite());
         expect(f3.piece).toBeInstanceOf(Piece)
 
         f3.setPiece(null)
@@ -62,7 +62,7 @@ describe('Square', () => {
         const d3 = new Square('f3')
         expect(d3.getPiece()).toBeNull()
 
-        const h8 = new Square('h8', new Piece('rook','black'))
+        const h8 = new Square('h8', Piece.rookBlack())
         expect(h8.getPiece()).toBeInstanceOf(Piece)
     })
 

@@ -6,7 +6,7 @@ import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 describe('ChessMove', () => {
     it('it constructs itself', () => {
 
-        const piece = new Piece('knight','white')
+        const piece = Piece.knightWhite()
         const move = new ChessMove('f3','f2',piece, null)
 
         expect(move).toHaveProperty('oldSquare','f3')
@@ -16,8 +16,8 @@ describe('ChessMove', () => {
 
     })
     it('it clones itself',() => {
-        const piece = new Piece('knight','white')
-        const piece2 = new Piece('bishop','black')
+        const piece = Piece.knightWhite()
+        const piece2 = Piece.bishopBlack()
         const move = new ChessMove('f3','f2',piece, piece2)
 
         const clone = move.clone()
@@ -35,7 +35,7 @@ describe('ChessMove', () => {
     })
 
     it('it gets move steps', () => {
-        const piece = new Piece('knight','white')
+        const piece = Piece.knightWhite()
         const move = new ChessMove('f3','f2',piece, null)
         const steps = move.getMoveSteps()
 
@@ -48,8 +48,8 @@ describe('ChessMove', () => {
     })
 
     it('it gets capture undo steps', () => {
-        const piece = new Piece('knight','white')
-        const piece2 = new Piece('bishop','black')
+        const piece = Piece.knightWhite()
+        const piece2 = Piece.bishopBlack()
         const move = new ChessMove('f3','f2',piece, piece2)
         const steps = move.getUndoSteps()
 
@@ -62,7 +62,7 @@ describe('ChessMove', () => {
 
 
     it('it gets undo steps', () => {
-        const piece = new Piece('knight','white')
+        const piece = Piece.knightWhite()
         const move = new ChessMove('f3','f2',piece, null)
         const steps = move.getUndoSteps()
 

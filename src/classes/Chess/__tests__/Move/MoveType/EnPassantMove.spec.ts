@@ -7,8 +7,8 @@ import {MoveStep} from "@/classes/Chess/Move/MoveStep";
 describe('EnPassantMove', () => {
     it('it constructs itself', () => {
 
-        const piece = new Piece('pawn','black')
-        const capturedPiece = new Piece('pawn','white')
+        const piece = Piece.pawnBlack()
+        const capturedPiece = Piece.pawnWhite()
         const move = new EnPassantMove(new ChessMove('f4','e3',piece), capturedPiece,'e4')
 
         expect(move.oldSquare).toEqual('f4')
@@ -29,8 +29,8 @@ describe('EnPassantMove', () => {
 
     it('it gets move steps', () => {
 
-        const whitePawn = new Piece('pawn','white')
-        const blackPawn = new Piece('pawn','black')
+        const whitePawn = Piece.pawnWhite()
+        const blackPawn = Piece.pawnBlack()
 
         let move = new EnPassantMove(new ChessMove('f4','e3',blackPawn), whitePawn,'e4')
         expect(move.getMoveSteps()).toEqual([
@@ -50,8 +50,8 @@ describe('EnPassantMove', () => {
 
     it('it gets undo steps', () => {
 
-        const whitePawn = new Piece('pawn','white')
-        const blackPawn = new Piece('pawn','black')
+        const whitePawn = Piece.pawnWhite()
+        const blackPawn = Piece.pawnBlack()
 
         let move = new EnPassantMove(new ChessMove('f4','e3',blackPawn), whitePawn,'e4')
         expect(move.getUndoSteps()).toEqual([

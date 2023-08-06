@@ -5,7 +5,7 @@ import {DoublePawnMove} from "@/classes/Chess/Move/MoveType/DoublePawnMove";
 describe('DoublePawnMove', () => {
     it('it constructs itself', () => {
 
-        const piece = new Piece('pawn','white')
+        const piece = Piece.pawnWhite()
         const move = new DoublePawnMove('e2','e4',piece)
 
         expect(move).toHaveProperty('oldSquare','e2')

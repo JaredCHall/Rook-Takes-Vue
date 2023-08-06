@@ -8,8 +8,8 @@ import {CastlesType} from "@/classes/Chess/Move/MoveType/CastlesType";
 describe('CastlingMove', () => {
     it('it constructs itself', () => {
 
-        const king = new Piece('king','white')
-        const rook = new Piece('rook','white')
+        const king = Piece.kingWhite()
+        const rook = Piece.rookWhite()
         const move = new CastlingMove('e1','c1',king, rook, 'Q')
 
         expect(move).toHaveProperty('oldSquare','e1')
@@ -23,8 +23,8 @@ describe('CastlingMove', () => {
     })
 
     it('it gets move steps', () => {
-        const king = new Piece('king','white')
-        const rook = new Piece('rook','white')
+        const king = Piece.kingWhite()
+        const rook = Piece.rookWhite()
         const move = new CastlingMove('e1','c1',king, rook, 'Q')
 
         const steps = move.getMoveSteps()
@@ -37,8 +37,8 @@ describe('CastlingMove', () => {
     })
 
     it('it gets undo steps', () => {
-        const king = new Piece('king','white')
-        const rook = new Piece('rook','white')
+        const king = Piece.kingWhite()
+        const rook = Piece.rookWhite()
         const move = new CastlingMove('e1','c1',king, rook, 'Q')
 
         const steps = move.getUndoSteps()
@@ -51,8 +51,8 @@ describe('CastlingMove', () => {
     })
 
     it('it clones itself', () => {
-        const king = new Piece('king','white')
-        const rook = new Piece('rook','white')
+        const king = Piece.kingWhite()
+        const rook = Piece.rookWhite()
         const move = new CastlingMove('e1','c1',king, rook, 'Q')
 
         const clone = move.clone()

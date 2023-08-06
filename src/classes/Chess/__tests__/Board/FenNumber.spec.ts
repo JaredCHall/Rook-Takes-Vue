@@ -47,18 +47,18 @@ describe('FenNumber', () => {
     })
 
     it('it gets piece type', () => {
-        expect(FenNumber.makePiece('p')).toEqual(new Piece('pawn','black'))
-        expect(FenNumber.makePiece('P')).toEqual(new Piece('pawn','white'))
-        expect(FenNumber.makePiece('r')).toEqual(new Piece('rook','black'))
-        expect(FenNumber.makePiece('R')).toEqual(new Piece('rook','white'))
-        expect(FenNumber.makePiece('n')).toEqual(new Piece('knight','black'))
-        expect(FenNumber.makePiece('N')).toEqual(new Piece('knight','white'))
-        expect(FenNumber.makePiece('b')).toEqual(new Piece('bishop','black'))
-        expect(FenNumber.makePiece('B')).toEqual(new Piece('bishop','white'))
-        expect(FenNumber.makePiece('q')).toEqual(new Piece('queen','black'))
-        expect(FenNumber.makePiece('Q')).toEqual(new Piece('queen','white'))
-        expect(FenNumber.makePiece('k')).toEqual(new Piece('king','black'))
-        expect(FenNumber.makePiece('K')).toEqual(new Piece('king','white'))
+        expect(FenNumber.makePiece('p')).toEqual(Piece.pawnBlack())
+        expect(FenNumber.makePiece('P')).toEqual(Piece.pawnWhite())
+        expect(FenNumber.makePiece('r')).toEqual(Piece.rookBlack())
+        expect(FenNumber.makePiece('R')).toEqual(Piece.rookWhite())
+        expect(FenNumber.makePiece('n')).toEqual(Piece.knightBlack())
+        expect(FenNumber.makePiece('N')).toEqual(Piece.knightWhite())
+        expect(FenNumber.makePiece('b')).toEqual(Piece.bishopBlack())
+        expect(FenNumber.makePiece('B')).toEqual(Piece.bishopWhite())
+        expect(FenNumber.makePiece('q')).toEqual(Piece.queenBlack())
+        expect(FenNumber.makePiece('Q')).toEqual(Piece.queenWhite())
+        expect(FenNumber.makePiece('k')).toEqual(Piece.kingBlack())
+        expect(FenNumber.makePiece('K')).toEqual(Piece.kingWhite())
 
         expect(() => FenNumber.makePiece('Z')).toThrowError('Invalid piece type')
 
@@ -111,7 +111,7 @@ describe('FenNumber', () => {
         const squares64 = new Squares64(new FenNumber('r2q1rk1/ppp2ppp/2np4/2b1p1B1/2B1P1n1/2NP1N2/PPP2PPP/R2Q1RK1'))
 
         // 1. e4
-        gameFen.incrementTurn(new DoublePawnMove('e2','e4', new Piece('pawn','white')), squares64)
+        gameFen.incrementTurn(new DoublePawnMove('e2','e4', Piece.pawnWhite()), squares64)
         expect(gameFen.piecePlacements).toEqual('r2q1rk1/ppp2ppp/2np4/2b1p1B1/2B1P1n1/2NP1N2/PPP2PPP/R2Q1RK1')
         expect(gameFen.enPassantTarget).toEqual('e3')
         expect(gameFen.castleRights).toEqual('KQkq')
@@ -120,7 +120,7 @@ describe('FenNumber', () => {
         expect(gameFen.fullMoveCounter).toEqual(1)
 
         // 1. ... e5
-        gameFen.incrementTurn(new DoublePawnMove('e7','e5', new Piece('pawn','black')), squares64)
+        gameFen.incrementTurn(new DoublePawnMove('e7','e5', Piece.pawnBlack()), squares64)
         expect(gameFen.enPassantTarget).toEqual('e6')
         expect(gameFen.sideToMove).toEqual('white')
         expect(gameFen.castleRights).toEqual('KQkq')
@@ -128,7 +128,7 @@ describe('FenNumber', () => {
         expect(gameFen.fullMoveCounter).toEqual(2)
 
         // 2. Bb5
-        gameFen.incrementTurn(new ChessMove('f1','b5', new Piece('bishop','white')), squares64)
+        gameFen.incrementTurn(new ChessMove('f1','b5', Piece.bishopWhite()), squares64)
         expect(gameFen.enPassantTarget).toBeNull()
         expect(gameFen.sideToMove).toEqual('black')
         expect(gameFen.castleRights).toEqual('KQkq')
@@ -136,7 +136,7 @@ describe('FenNumber', () => {
         expect(gameFen.fullMoveCounter).toEqual(2)
 
         // 2. ... Bb4
-        gameFen.incrementTurn(new ChessMove('f8','b4', new Piece('bishop','black')), squares64)
+        gameFen.incrementTurn(new ChessMove('f8','b4', Piece.bishopBlack()), squares64)
         expect(gameFen.enPassantTarget).toBeNull()
         expect(gameFen.sideToMove).toEqual('white')
         expect(gameFen.castleRights).toEqual('KQkq')
@@ -145,7 +145,7 @@ describe('FenNumber', () => {
 
         // check position with no castle rights
         const gameFen2 = new FenNumber('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1')
-        gameFen2.incrementTurn(new DoublePawnMove('e2','e4', new Piece('pawn','white')), squares64)
+        gameFen2.incrementTurn(new DoublePawnMove('e2','e4', Piece.pawnWhite()), squares64)
         expect(gameFen2.enPassantTarget).toEqual('e3')
         expect(gameFen2.castleRights).toEqual(null)
         expect(gameFen2.sideToMove).toEqual('black')
@@ -171,8 +171,8 @@ describe('FenNumber', () => {
             new CastlingMove(
                 'e1',
                 'c1',
-                new Piece('king','white'),
-                new Piece('rook','white'),
+                Piece.kingWhite(),
+                Piece.rookWhite(),
                 'Q'
             ), squares64
         ).castleRights).toEqual('kq')
@@ -182,8 +182,8 @@ describe('FenNumber', () => {
             new CastlingMove(
                 'e1',
                 'g1',
-                new Piece('king','white'),
-                new Piece('rook','white'),
+                Piece.kingWhite(),
+                Piece.rookWhite(),
                 'K'
             ), squares64
         ).castleRights).toEqual('kq')
@@ -194,8 +194,8 @@ describe('FenNumber', () => {
             new CastlingMove(
                 'e8',
                 'c8',
-                new Piece('king','black'),
-                new Piece('rook','black'),
+                Piece.kingBlack(),
+                Piece.rookBlack(),
                 'q'
             ), squares64
         ).castleRights).toEqual('KQ')
@@ -204,8 +204,8 @@ describe('FenNumber', () => {
         expect(getTestFen().incrementTurn(new CastlingMove(
             'e8',
             'g8',
-            new Piece('king','black'),
-            new Piece('rook','black'),
+            Piece.kingBlack(),
+            Piece.rookBlack(),
             'k'
         ), squares64).castleRights).toEqual('KQ')
 
@@ -213,58 +213,58 @@ describe('FenNumber', () => {
         expect(getTestFen().incrementTurn(new ChessMove(
             'e1',
             'e2',
-            new Piece('king','white'),
+            Piece.kingWhite(),
         ), squares64).castleRights).toEqual('kq')
 
         // white moves their king-side rook
         expect(getTestFen().incrementTurn(new ChessMove(
             'h1',
             'h2',
-            new Piece('rook','white'),
+            Piece.rookWhite(),
         ), squares64).castleRights).toEqual('Qkq')
 
         // white moves their queen-side rook
         expect(getTestFen().incrementTurn(new ChessMove(
             'a1',
             'b1',
-            new Piece('rook','white'),
+            Piece.rookWhite(),
         ), squares64).castleRights).toEqual('Kkq')
 
         // black moves their king
         expect(getTestFen().incrementTurn(new ChessMove(
             'e8',
             'e7',
-            new Piece('king','black'),
+            Piece.kingBlack(),
         ), squares64).castleRights).toEqual('KQ')
 
         // black moves their king-side rook
         expect(getTestFen().incrementTurn(new ChessMove(
             'h8',
             'h7',
-            new Piece('rook','black'),
+            Piece.rookBlack(),
         ), squares64).castleRights).toEqual('KQq')
 
         // black moves their queen-side rook
         expect(getTestFen().incrementTurn(new ChessMove(
             'a8',
             'a7',
-            new Piece('rook','black'),
+            Piece.rookBlack(),
         ), squares64).castleRights).toEqual('KQk')
 
         // black takes whites h rook
         expect(getTestFen().incrementTurn(new ChessMove(
             'h8',
             'h1',
-            new Piece('rook','black'),
-            new Piece('rook','white'),
+            Piece.rookBlack(),
+            Piece.rookWhite(),
         ), squares64).castleRights).toEqual('Qq')
 
         // white takes blacks a rook
         expect(getTestFen().incrementTurn(new ChessMove(
             'a1',
             'a8',
-            new Piece('rook','white'),
-            new Piece('rook','black'),
+            Piece.rookWhite(),
+            Piece.rookBlack(),
         ), squares64).castleRights).toEqual('Kk')
 
     })
@@ -275,11 +275,11 @@ describe('FenNumber', () => {
 
         fenNumber.updateSquares64(squares64)
 
-        expect(squares64.squares.a1.piece).toEqual(new Piece('rook','white'))
-        expect(squares64.squares.a8.piece).toEqual(new Piece('rook','black'))
-        expect(squares64.squares.d1.piece).toEqual(new Piece('queen','white'))
-        expect(squares64.squares.d8.piece).toEqual(new Piece('queen','black'))
-        expect(squares64.squares.a1.piece).toEqual(new Piece('rook','white'))
+        expect(squares64.squares.a1.piece).toEqual(Piece.rookWhite())
+        expect(squares64.squares.a8.piece).toEqual(Piece.rookBlack())
+        expect(squares64.squares.d1.piece).toEqual(Piece.queenWhite())
+        expect(squares64.squares.d8.piece).toEqual(Piece.queenBlack())
+        expect(squares64.squares.a1.piece).toEqual(Piece.rookWhite())
         expect(squares64.squares.d4.piece).toBeNull()
         expect(squares64.squares.d5.piece).toBeNull()
         expect(squares64.squares.e4.piece).toBeNull()

@@ -37,15 +37,15 @@ describe('Squares64', () =>{
     it('it constructs itself with FenNumber', () => {
 
         const squares = new Squares64(new FenNumber('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'))
-        expect(squares.squares.e1.piece).toEqual(new Piece('king','white'))
-        expect(squares.squares.e8.piece).toEqual(new Piece('king','black'))
+        expect(squares.squares.e1.piece).toEqual(Piece.kingWhite())
+        expect(squares.squares.e8.piece).toEqual(Piece.kingBlack())
     })
 
     it('it sets squares', () => {
 
         const squares64 = new Squares64()
-        const a8Rook = new Piece('rook','black')
-        const a1Rook = new Piece('rook','white')
+        const a8Rook = Piece.rookBlack()
+        const a1Rook = Piece.rookWhite()
 
         squares64.set('a8',a8Rook)
         squares64.set('b8', null)
@@ -115,10 +115,10 @@ describe('Squares64', () =>{
     it('get all pieces of a color/type', () => {
         const squares64 = new Squares64()
 
-        const blackKing = new Piece('king','black')
-        const blackQueen = new Piece('queen','black')
-        const whiteKing = new Piece('king','white')
-        const whiteQueen = new Piece('queen','white')
+        const blackKing = Piece.kingBlack()
+        const blackQueen = Piece.queenBlack()
+        const whiteKing = Piece.kingWhite()
+        const whiteQueen = Piece.queenWhite()
 
         squares64.set('a8',blackKing)
         squares64.set('b8',blackQueen)

@@ -112,13 +112,13 @@ describe('MoveEngine', () => {
         let moves = moveEngine.getPseudoLegalMoves('e4','d3').moves
         expect(moves[1]).toBeInstanceOf(EnPassantMove)
         expect(moves[1].newSquare).toEqual('d3')
-        expect(moves[1].capturedPiece).toEqual(new Piece('pawn','white'))
+        expect(moves[1].capturedPiece).toEqual(Piece.pawnWhite())
         expect(moves[1].capturedSquare).toEqual('d4')
 
         moves = moveEngine.getPseudoLegalMoves('g5', 'f6').moves
         expect(moves[1]).toBeInstanceOf(EnPassantMove)
         expect(moves[1].newSquare).toEqual('f6')
-        expect(moves[1].capturedPiece).toEqual(new Piece('pawn','black'))
+        expect(moves[1].capturedPiece).toEqual(Piece.pawnBlack())
         expect(moves[1].capturedSquare).toEqual('f5')
 
 

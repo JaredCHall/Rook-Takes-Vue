@@ -98,8 +98,8 @@ describe('CastlesType', () => {
 
     it('it gets correct types by rooks square', () => {
 
-        const whiteRook = new Piece('rook','white')
-        const blackRook = new Piece('rook','black')
+        const whiteRook = Piece.rookWhite()
+        const blackRook = Piece.rookBlack()
 
         expect(CastlesType.fromRooksSquare('a1', whiteRook)).toHaveProperty('type','Q')
         expect(CastlesType.fromRooksSquare('a1', blackRook)).toBeNull()

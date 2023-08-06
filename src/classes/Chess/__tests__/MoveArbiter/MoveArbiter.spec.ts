@@ -36,7 +36,7 @@ describe('MoveArbiter', () => {
         expect(arbiter.isMoveLegal(new ChessMove(
             'g4',
             'f2',
-            new Piece('knight','white')
+            Piece.knightWhite()
         ))).toBe(true)
         expect(arbiter.fenNumber).toEqual(fenNumber)
         expect(arbiter.squares64).toEqual(squares64)
@@ -45,33 +45,33 @@ describe('MoveArbiter', () => {
         expect(arbiter.isMoveLegal(new ChessMove(
             'g4',
             'f2',
-            new Piece('knight','white'),
-            new Piece('king','white')
+            Piece.knightWhite(),
+            Piece.kingWhite()
         ))).toBe(false)
 
         expect(arbiter.isMoveLegal(new ChessMove(
             'e2',
             'b5',
-            new Piece('bishop','white')
+            Piece.bishopWhite()
         ))).toBe(false)
 
         expect(arbiter.isMoveLegal(new ChessMove(
             'g2',
             'g3',
-            new Piece('pawn','white')
+            Piece.pawnWhite()
         ))).toBe(true)
 
         expect(arbiter.isMoveLegal(new ChessMove(
             'e1',
             'f1',
-            new Piece('king','white')
+            Piece.kingWhite()
         ))).toBe(true)
 
         expect(arbiter.isMoveLegal(new ChessMove(
             'g4',
             'f6',
-            new Piece('knight','white'),
-            new Piece('knight', 'black')
+            Piece.knightWhite(),
+            Piece.knightBlack()
         ))).toBe(false)
 
     })
@@ -201,8 +201,8 @@ describe('MoveArbiter', () => {
         const madeMove = arbiter.makeMove(new ChessMove(
             'g4',
             'f6',
-            new Piece('knight','white'),
-            new Piece('knight','black')
+            Piece.knightWhite(),
+            Piece.knightBlack()
         ))
 
         expect(madeMove.fenAfter.piecePlacements).toEqual('rn2k2r/ppp2ppp/5N2/2b5/4P2q/5P1P/PPP1B1P1/RNBQK2R')
@@ -221,12 +221,12 @@ describe('MoveArbiter', () => {
         arbiter.unMakeMove(new ChessMove(
             'g4',
             'f6',
-            new Piece('knight','white'),
-            new Piece('knight','black')
+            Piece.knightWhite(),
+            Piece.knightBlack()
         ), fenBefore)
 
         expect(arbiter.fenNumber).toEqual(fenBefore)
-        expect(arbiter.squares64.get('f6').piece).toEqual(new Piece('knight','black'))
+        expect(arbiter.squares64.get('f6').piece).toEqual(Piece.knightBlack())
 
     })
 
