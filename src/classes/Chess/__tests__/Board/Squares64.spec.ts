@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest'
 import {Squares64} from "@/classes/Chess/Board/Squares64";
 import {Piece} from "@/classes/Chess/Piece";
 import {Square} from "@/classes/Chess/Square/Square";
-import {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import {ExtendedFEN} from "@/classes/Chess/Board/ExtendedFEN";
 
 describe('Squares64', () =>{
 
@@ -36,7 +36,7 @@ describe('Squares64', () =>{
 
     it('it constructs itself with FenNumber', () => {
 
-        const squares = new Squares64(new FenNumber('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'))
+        const squares = new Squares64(new ExtendedFEN('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'))
         expect(squares.squares.e1.piece).toEqual(Piece.kingWhite())
         expect(squares.squares.e8.piece).toEqual(Piece.kingBlack())
     })

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-import {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import {ExtendedFEN} from "@/classes/Chess/Board/ExtendedFEN";
 import {Squares144} from "@/classes/Chess/Board/Squares144";
 import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
 import {MoveArbiter} from "@/classes/Chess/MoveArbiter/MoveArbiter";
@@ -24,7 +24,7 @@ describe('MoveArbiter', () => {
         expect(arbiter.squares144).toBe(squares144)
         expect(arbiter.moveEngine).toBe(engine)
         expect(arbiter.squares64).toBeInstanceOf(Squares64)
-        expect(arbiter.fenNumber).toBeInstanceOf(FenNumber)
+        expect(arbiter.fenNumber).toBeInstanceOf(ExtendedFEN)
     })
 
     it('it determines if move is legal', () => {
@@ -217,7 +217,7 @@ describe('MoveArbiter', () => {
         let arbiter
         arbiter = getTestMoveArbiter('rn2k2r/ppp2ppp/5N2/2b5/4P2q/5P1P/PPP1B1P1/RNBQK2R b KQkq - 0 1')
 
-        const fenBefore = new FenNumber('rn2k2r/ppp2ppp/5n2/2b5/4P1Nq/5P1P/PPP1B1P1/RNBQK2R w KQkq - 0 1');
+        const fenBefore = new ExtendedFEN('rn2k2r/ppp2ppp/5n2/2b5/4P1Nq/5P1P/PPP1B1P1/RNBQK2R w KQkq - 0 1');
         arbiter.unMakeMove(new ChessMove(
             'g4',
             'f6',

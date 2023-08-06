@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {Chessboard} from "@/classes/Chess/Board/Chessboard";
-import {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import {ExtendedFEN} from "@/classes/Chess/Board/ExtendedFEN";
 import {Squares64} from "@/classes/Chess/Board/Squares64";
 import {MoveArbiter} from "@/classes/Chess/MoveArbiter/MoveArbiter";
 import {MoveHistory} from "@/classes/Chess/Move/MoveHistory";
@@ -18,7 +18,7 @@ describe('ChessBoard', () => {
 
     it('it constructs itself', () => {
         const board = new Chessboard('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
-        expect(board.fenNumber).toBeInstanceOf(FenNumber)
+        expect(board.fenNumber).toBeInstanceOf(ExtendedFEN)
         expect(board.squares64).toBeInstanceOf(Squares64)
         expect(board.moveArbiter).toBeInstanceOf(MoveArbiter)
         expect(board.moveHistory).toBeInstanceOf(MoveHistory)

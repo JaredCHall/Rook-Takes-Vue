@@ -1,11 +1,11 @@
-import type {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import type {ExtendedFEN} from "@/classes/Chess/Board/ExtendedFEN";
 import type {MadeMove} from "@/classes/Chess/Move/MadeMove";
 
 export class MoveHistory
 {
     moves: MadeMove[] = []
 
-    startFen: FenNumber // Game starting position
+    startFen: ExtendedFEN // Game starting position
 
     repetitionTracker: {[fenPartial: string]: number} = {} // for enforcing the 3-fold repetition rule
 
@@ -13,7 +13,7 @@ export class MoveHistory
         return this.moves.length
     }
 
-    constructor(startFen: FenNumber) {
+    constructor(startFen: ExtendedFEN) {
         this.startFen = startFen
         const fenPartial = startFen.toString(false,false)
         this.repetitionTracker[fenPartial] = 1

@@ -2,7 +2,7 @@ import type {SquareType} from "@/classes/Chess/Square/Square";
 import {Square} from "@/classes/Chess/Square/Square";
 import {Squares64} from "@/classes/Chess/Board/Squares64";
 import {Piece} from "@/classes/Chess/Piece";
-import {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import {ExtendedFEN} from "@/classes/Chess/Board/ExtendedFEN";
 import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 
 /**
@@ -54,12 +54,12 @@ export class Squares144 {
         return Squares144.indexesBySquare[name]
     }
 
-    fenNumber: FenNumber
+    fenNumber: ExtendedFEN
 
     squares64: Squares64
 
-    constructor(fen: FenNumber|string) {
-        this.fenNumber = fen instanceof FenNumber ? fen.clone() : new FenNumber(fen)
+    constructor(fen: ExtendedFEN|string) {
+        this.fenNumber = fen instanceof ExtendedFEN ? fen.clone() : new ExtendedFEN(fen)
         this.squares64 = new Squares64(this.fenNumber)
     }
 

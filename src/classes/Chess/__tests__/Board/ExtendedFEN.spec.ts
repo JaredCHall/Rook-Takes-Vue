@@ -1,16 +1,16 @@
 import { describe, it, expect } from 'vitest'
-import {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import {ExtendedFEN} from "@/classes/Chess/Board/ExtendedFEN";
 import {Piece} from "@/classes/Chess/Piece";
 import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import {DoublePawnMove} from "@/classes/Chess/Move/MoveType/DoublePawnMove";
 import {CastlingMove} from "@/classes/Chess/Move/MoveType/CastlingMove";
 import {Squares64} from "@/classes/Chess/Board/Squares64";
 
-describe('FenNumber', () => {
+describe('ExtendedFEN', () => {
 
     it('it constructs itself', () => {
 
-        const evergreenGame = new FenNumber('r2q1rk1/ppp2ppp/2np4/2b1p1B1/2B1P1n1/2NP1N2/PPP2PPP/R2Q1RK1 b kq e4 22 40')
+        const evergreenGame = new ExtendedFEN('r2q1rk1/ppp2ppp/2np4/2b1p1B1/2B1P1n1/2NP1N2/PPP2PPP/R2Q1RK1 b kq e4 22 40')
 
         expect(evergreenGame).toHaveProperty('piecePlacements','r2q1rk1/ppp2ppp/2np4/2b1p1B1/2B1P1n1/2NP1N2/PPP2PPP/R2Q1RK1')
         expect(evergreenGame).toHaveProperty('sideToMove','black')
@@ -21,7 +21,7 @@ describe('FenNumber', () => {
         expect(evergreenGame).toHaveProperty('isCheck',false)
         expect(evergreenGame).toHaveProperty('isMate',false)
 
-        const operaGame = new FenNumber('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w - - - - 1 1')
+        const operaGame = new ExtendedFEN('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w - - - - 1 1')
 
         expect(operaGame).toHaveProperty('piecePlacements','r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR')
         expect(operaGame).toHaveProperty('sideToMove','white')
@@ -32,7 +32,7 @@ describe('FenNumber', () => {
         expect(operaGame).toHaveProperty('isCheck',true)
         expect(operaGame).toHaveProperty('isMate',true)
 
-        const immortalGame = new FenNumber('rnbqkb1r/pppp1Qpp/2n4n/4P3/2B5/8/PPP2PPP/RNBK1BNR b kq - 0 1')
+        const immortalGame = new ExtendedFEN('rnbqkb1r/pppp1Qpp/2n4n/4P3/2B5/8/PPP2PPP/RNBK1BNR b kq - 0 1')
 
         expect(immortalGame).toHaveProperty('piecePlacements','rnbqkb1r/pppp1Qpp/2n4n/4P3/2B5/8/PPP2PPP/RNBK1BNR')
         expect(immortalGame).toHaveProperty('sideToMove','black')
@@ -46,34 +46,34 @@ describe('FenNumber', () => {
     })
 
     it('it gets piece type', () => {
-        expect(FenNumber.makePiece('p')).toEqual(Piece.pawnBlack())
-        expect(FenNumber.makePiece('P')).toEqual(Piece.pawnWhite())
-        expect(FenNumber.makePiece('r')).toEqual(Piece.rookBlack())
-        expect(FenNumber.makePiece('R')).toEqual(Piece.rookWhite())
-        expect(FenNumber.makePiece('n')).toEqual(Piece.knightBlack())
-        expect(FenNumber.makePiece('N')).toEqual(Piece.knightWhite())
-        expect(FenNumber.makePiece('b')).toEqual(Piece.bishopBlack())
-        expect(FenNumber.makePiece('B')).toEqual(Piece.bishopWhite())
-        expect(FenNumber.makePiece('q')).toEqual(Piece.queenBlack())
-        expect(FenNumber.makePiece('Q')).toEqual(Piece.queenWhite())
-        expect(FenNumber.makePiece('k')).toEqual(Piece.kingBlack())
-        expect(FenNumber.makePiece('K')).toEqual(Piece.kingWhite())
+        expect(ExtendedFEN.makePiece('p')).toEqual(Piece.pawnBlack())
+        expect(ExtendedFEN.makePiece('P')).toEqual(Piece.pawnWhite())
+        expect(ExtendedFEN.makePiece('r')).toEqual(Piece.rookBlack())
+        expect(ExtendedFEN.makePiece('R')).toEqual(Piece.rookWhite())
+        expect(ExtendedFEN.makePiece('n')).toEqual(Piece.knightBlack())
+        expect(ExtendedFEN.makePiece('N')).toEqual(Piece.knightWhite())
+        expect(ExtendedFEN.makePiece('b')).toEqual(Piece.bishopBlack())
+        expect(ExtendedFEN.makePiece('B')).toEqual(Piece.bishopWhite())
+        expect(ExtendedFEN.makePiece('q')).toEqual(Piece.queenBlack())
+        expect(ExtendedFEN.makePiece('Q')).toEqual(Piece.queenWhite())
+        expect(ExtendedFEN.makePiece('k')).toEqual(Piece.kingBlack())
+        expect(ExtendedFEN.makePiece('K')).toEqual(Piece.kingWhite())
 
-        expect(() => FenNumber.makePiece('Z')).toThrowError('Invalid piece type')
+        expect(() => ExtendedFEN.makePiece('Z')).toThrowError('Invalid piece type')
 
     })
 
     it('it stringifies itself', () => {
-        const gameOfTheCentury = new FenNumber('1Q6/5pk1/2p3p1/1p2N2p/1b5P/1bn5/2r3P1/2K5 w - - 16 42')
+        const gameOfTheCentury = new ExtendedFEN('1Q6/5pk1/2p3p1/1p2N2p/1b5P/1bn5/2r3P1/2K5 w - - 16 42')
         expect(gameOfTheCentury.toString()).toEqual('1Q6/5pk1/2p3p1/1p2N2p/1b5P/1bn5/2r3P1/2K5 w - - 16 42')
 
-        const operaGame = new FenNumber('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w KQkq e4 0 1 0 1 -')
+        const operaGame = new ExtendedFEN('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w KQkq e4 0 1 0 1 -')
         expect(operaGame.toString(true,true))
             .toEqual('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w KQkq e4 0 1 0 1 0')
     })
 
     it('it updates moveResult', () => {
-        const gameOfTheCentury = new FenNumber('1Q6/5pk1/2p3p1/1p2N2p/1b5P/1bn5/2r3P1/2K5 w - - 16 42')
+        const gameOfTheCentury = new ExtendedFEN('1Q6/5pk1/2p3p1/1p2N2p/1b5P/1bn5/2r3P1/2K5 w - - 16 42')
         gameOfTheCentury.updateMoveResult(true,true)
         expect(gameOfTheCentury.isCheck).toBe(true)
         expect(gameOfTheCentury.isMate).toBe(true)
@@ -98,7 +98,7 @@ describe('FenNumber', () => {
 
 
     it('it clones itself', () => {
-        const evergreenGame = new FenNumber('r2q1rk1/ppp2ppp/2np4/2b1p1B1/2B1P1n1/2NP1N2/PPP2PPP/R2Q1RK1 b kq e4 22 40')
+        const evergreenGame = new ExtendedFEN('r2q1rk1/ppp2ppp/2np4/2b1p1B1/2B1P1n1/2NP1N2/PPP2PPP/R2Q1RK1 b kq e4 22 40')
         const clone = evergreenGame.clone()
 
         expect(clone).toEqual(evergreenGame)
@@ -106,8 +106,8 @@ describe('FenNumber', () => {
     })
 
     it('it increments turn', () => {
-        const gameFen = new FenNumber('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
-        const squares64 = new Squares64(new FenNumber('r2q1rk1/ppp2ppp/2np4/2b1p1B1/2B1P1n1/2NP1N2/PPP2PPP/R2Q1RK1'))
+        const gameFen = new ExtendedFEN('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
+        const squares64 = new Squares64(new ExtendedFEN('r2q1rk1/ppp2ppp/2np4/2b1p1B1/2B1P1n1/2NP1N2/PPP2PPP/R2Q1RK1'))
 
         // 1. e4
         gameFen.incrementTurn(new DoublePawnMove('e2','e4', Piece.pawnWhite()), squares64)
@@ -143,7 +143,7 @@ describe('FenNumber', () => {
         expect(gameFen.fullMoveCounter).toEqual(3)
 
         // check position with no castle rights
-        const gameFen2 = new FenNumber('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1')
+        const gameFen2 = new ExtendedFEN('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w - - 0 1')
         gameFen2.incrementTurn(new DoublePawnMove('e2','e4', Piece.pawnWhite()), squares64)
         expect(gameFen2.enPassantTarget).toEqual('e3')
         expect(gameFen2.castleRights).toEqual(null)
@@ -155,11 +155,11 @@ describe('FenNumber', () => {
 
     it('it revokes castleRights when incrementing turn', () => {
 
-        const squares64 = new Squares64(new FenNumber('r2q1rk1/ppp2ppp/2np4/2b1p1B1/2B1P1n1/2NP1N2/PPP2PPP/R2Q1RK1'))
+        const squares64 = new Squares64(new ExtendedFEN('r2q1rk1/ppp2ppp/2np4/2b1p1B1/2B1P1n1/2NP1N2/PPP2PPP/R2Q1RK1'))
 
         let gameFen
         const getTestFen = () => {
-            return new FenNumber('r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1')
+            return new ExtendedFEN('r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1')
         }
 
         //
@@ -269,7 +269,7 @@ describe('FenNumber', () => {
     })
 
     it('it updates squares64' , () => {
-        const fenNumber = new FenNumber('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
+        const fenNumber = new ExtendedFEN('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
         const squares64 = new Squares64()
 
         fenNumber.updateSquares64(squares64)
@@ -285,11 +285,11 @@ describe('FenNumber', () => {
         expect(squares64.squares.e5.piece).toBeNull()
 
         let invalidFen
-        invalidFen = new FenNumber('rnbqkbPPPPPPP/RNBQKBNR w KQkq - 0 1')
+        invalidFen = new ExtendedFEN('rnbqkbPPPPPPP/RNBQKBNR w KQkq - 0 1')
         expect(() => {invalidFen.updateSquares64(new Squares64())})
             .toThrowError('FEN piece placement must include all eight rows')
 
-        invalidFen = new FenNumber('rnbqkbnr/pppppMpp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
+        invalidFen = new ExtendedFEN('rnbqkbnr/pppppMpp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
         expect(() => {invalidFen.updateSquares64(new Squares64())})
             .toThrowError('Unrecognized position character: M')
 

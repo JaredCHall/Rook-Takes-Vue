@@ -1,5 +1,5 @@
 import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
-import {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import {ExtendedFEN} from "@/classes/Chess/Board/ExtendedFEN";
 import {MoveHistory} from "@/classes/Chess/Move/MoveHistory";
 import {Color} from "@/classes/Chess/Color";
 import {MoveList} from "@/classes/Chess/Move/MoveList";
@@ -42,7 +42,7 @@ export class MoveArbiter {
         return new MadeMove(move, this.fenNumber.clone())
     }
 
-    unMakeMove(move: ChessMove, fenBefore: FenNumber): void
+    unMakeMove(move: ChessMove, fenBefore: ExtendedFEN): void
     {
         this.squares144.unMakeMove(move)
         this.squares144.fenNumber = fenBefore.clone()

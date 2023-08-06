@@ -1,26 +1,26 @@
 import { describe, it, expect, vi } from 'vitest'
 import {MoveHistory} from "@/classes/Chess/Move/MoveHistory";
 import {MadeMove} from "@/classes/Chess/Move/MadeMove";
-import {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import {ExtendedFEN} from "@/classes/Chess/Board/ExtendedFEN";
 import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 
-vi.mock( "@/classes/Chess/Board/FenNumber")
+vi.mock( "@/classes/Chess/Board/ExtendedFEN")
 vi.mock("@/classes/Chess/Move/MoveType/ChessMove")
 
 describe('MoveHistory',()=>{
 
     const dummyMove = function(){
-        return new MadeMove(new ChessMove(), new FenNumber())
+        return new MadeMove(new ChessMove(), new ExtendedFEN())
     }
 
     it('it constructs itself', () => {
-        const startFen = new FenNumber()
+        const startFen = new ExtendedFEN()
         const list = new MoveHistory(startFen)
         expect(list.startFen).toBe(startFen)
     })
 
     it('it adds new move',() => {
-        const list = new MoveHistory(new FenNumber())
+        const list = new MoveHistory(new ExtendedFEN())
         const item = dummyMove()
         list.add(item)
         expect(list.moves[0]).toBe(item)
@@ -28,7 +28,7 @@ describe('MoveHistory',()=>{
 
     it('it gets length',() => {
 
-        const list = new MoveHistory(new FenNumber())
+        const list = new MoveHistory(new ExtendedFEN())
         expect(list.length).toEqual(0)
 
         list.add(dummyMove())
@@ -37,7 +37,7 @@ describe('MoveHistory',()=>{
     })
 
     it('it gets made move', () => {
-        const list = new MoveHistory(new FenNumber())
+        const list = new MoveHistory(new ExtendedFEN())
         expect(list.length).toEqual(0)
         const move1 = dummyMove()
         const move2 = dummyMove()
@@ -59,7 +59,7 @@ describe('MoveHistory',()=>{
 
 
 
-        const list = new MoveHistory(new FenNumber())
+        const list = new MoveHistory(new ExtendedFEN())
         expect(list.length).toEqual(0)
         const move1 = dummyMove()
         const move2 = dummyMove()
@@ -80,12 +80,12 @@ describe('MoveHistory',()=>{
 
     it('it gets fen before', () => {
 
-        const startFen = new FenNumber()
+        const startFen = new ExtendedFEN()
         const list = new MoveHistory(startFen)
         expect(list.getFenBefore(1)).toBe(startFen)
         expect(list.getFenBefore(123)).toBe(startFen)
 
-        const fenAfter1 = new FenNumber()
+        const fenAfter1 = new ExtendedFEN()
         const move1 = new MadeMove(
             new ChessMove(),
             fenAfter1,
@@ -93,7 +93,7 @@ describe('MoveHistory',()=>{
         list.add(move1)
         expect(list.getFenBefore(1)).toBe(startFen)
 
-        const fenAfter2 = new FenNumber()
+        const fenAfter2 = new ExtendedFEN()
         const move2 = new MadeMove(
             new ChessMove(),
             fenAfter2,

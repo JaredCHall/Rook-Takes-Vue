@@ -1,7 +1,7 @@
 import {Square} from "@/classes/Chess/Square/Square";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import {Squares144} from "@/classes/Chess/Board/Squares144";
-import {FenNumber} from "@/classes/Chess/Board/FenNumber";
+import {ExtendedFEN} from "@/classes/Chess/Board/ExtendedFEN";
 import {Squares64} from "@/classes/Chess/Board/Squares64";
 import {MoveArbiter} from "@/classes/Chess/MoveArbiter/MoveArbiter";
 import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
@@ -28,7 +28,7 @@ export class Chessboard
         return new Chessboard('8/8/8/8/8/8/8/8 w - -')
     }
 
-    fenNumber: FenNumber
+    fenNumber: ExtendedFEN
 
     squares64: Squares64
 
@@ -49,7 +49,7 @@ export class Chessboard
     materialBlack: number = 0
 
     constructor(fen: string) {
-        this.fenNumber = new FenNumber(fen)
+        this.fenNumber = new ExtendedFEN(fen)
         this.squares64 = new Squares64(this.fenNumber)
         this.moveArbiter = new MoveArbiter(new MoveEngine(new Squares144(this.fenNumber)))
         this.moveHistory = new MoveHistory(this.fenNumber.clone())
