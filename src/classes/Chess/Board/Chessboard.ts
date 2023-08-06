@@ -12,6 +12,7 @@ import {GameResult} from "@/classes/Chess/Board/GameResult";
 import type {MadeMove} from "@/classes/Chess/Move/MadeMove";
 import type {ColorType} from "@/classes/Chess/Color";
 import {Color} from "@/classes/Chess/Color";
+import {Player} from "@/classes/Chess/Player";
 
 export class Chessboard
 {
@@ -38,15 +39,30 @@ export class Chessboard
 
     gameResult: null|GameResult = null
 
+    whitePlayer: Player
+
+    blackPlayer: Player
+
     constructor(fen: string) {
         this.fenNumber = new FenNumber(fen)
         this.squares64 = new Squares64(this.fenNumber)
         this.moveArbiter = new MoveArbiter(new MoveEngine(new Squares144(this.fenNumber)))
         this.moveHistory = new MoveHistory(this.fenNumber.clone())
+        this.whitePlayer = Player.defaultWhite()
+        this.blackPlayer = Player.defaultBlack()
     }
 
     get moveEngine(): MoveEngine {
         return this.moveArbiter.moveEngine
+    }
+
+
+    setPlayer(player: Player){
+        if(player.color === 'white'){
+            this.whitePlayer = player
+            return
+        }
+        this.blackPlayer = player
     }
 
     getSquare(squareType: SquareType): Square

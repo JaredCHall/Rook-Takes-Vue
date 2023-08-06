@@ -13,6 +13,7 @@ import {MadeMove} from "@/classes/Chess/Move/MadeMove";
 import {DoublePawnMove} from "@/classes/Chess/Move/MoveType/DoublePawnMove";
 import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
 import {GameResult} from "@/classes/Chess/Board/GameResult";
+import {Player} from "@/classes/Chess/Player";
 
 describe('ChessBoard', () => {
 
@@ -133,6 +134,19 @@ describe('ChessBoard', () => {
         expect(gameResult.winner).toEqual('white')
     })
 
+    it('it handles setPlayer', () => {
+        const board = Chessboard.makeNewGame()
+        const alice = new Player('white','Alice')
+        const claire = new Player('black','Claire')
+
+        board.setPlayer(alice)
+        board.setPlayer(claire)
+
+        expect(board.whitePlayer).toBe(alice)
+        expect(board.blackPlayer).toBe(claire)
+    })
+
+
 
     it('it displays made move from history', () => {
         const board = Chessboard.makeNewGame()
@@ -235,8 +249,6 @@ describe('ChessBoard', () => {
         board.makeMove(blackReconsiders)
         board.makeMove(whiteBongClouds)
         board.makeMove(blackBongClouds) // 3rd repetition
-
-        console.log(board.moveHistory.repetitionTracker)
 
         expect(board.gameResult).toBeInstanceOf(GameResult)
         expect(board.gameResult.type).toEqual('Draw')

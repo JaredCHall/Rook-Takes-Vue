@@ -17,4 +17,53 @@ export class Piece
         return new Piece(this.type, this.color)
     }
 
+    static pawnWhite(): Piece
+    {
+        return new Piece('pawn','white')
+    }
+    static pawnBlack(): Piece
+    {
+        return new Piece('pawn','black')
+    }
+
+    static rookWhite(): Piece {
+        return new Piece('rook', 'white');
+    }
+
+    static rookBlack(): Piece {
+        return new Piece('rook', 'black');
+    }
+
+    static knightWhite(): Piece {
+        return new Piece('knight', 'white');
+    }
+
+    static knightBlack(): Piece {
+        return new Piece('knight', 'black');
+    }
+
+    static bishopWhite(): Piece {
+        return new Piece('bishop', 'white');
+    }
+
+    static bishopBlack(): Piece {
+        return new Piece('bishop', 'black');
+    }
+
+    static queenWhite(): Piece {
+        return new Piece('queen', 'white');
+    }
+
+    static queenBlack(): Piece {
+        return new Piece('queen', 'black');
+    }
+
+    static kingWhite(): Piece {
+        return new Piece('king', 'white');
+    }
+
+    static kingBlack(): Piece {
+        return new Piece('king', 'black');
+    }
+
 }
