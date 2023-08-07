@@ -25,8 +25,8 @@ describe('ChessBoard', () => {
         expect(board.moveEngine).toBeInstanceOf(MoveEngine)
         expect(board.playerWhite).toBeInstanceOf(Player)
         expect(board.playerBlack).toBeInstanceOf(Player)
-        expect(board.materialWhite).toEqual(39)
-        expect(board.materialBlack).toEqual(39)
+        expect(board.material.white).toEqual(39)
+        expect(board.material.black).toEqual(39)
     })
 
     it('it makes a new game', () => {
@@ -257,16 +257,16 @@ describe('ChessBoard', () => {
 
         let board
         board = new Chessboard('2kr1bnr/ppp1pppp/2n5/5q2/2PP4/4BB2/PP3PPP/RN1QK2R b KQ - 0 8')
-        expect(board.materialWhite).toEqual(35)
-        expect(board.materialBlack).toEqual(35)
+        expect(board.material.white).toEqual(35)
+        expect(board.material.black).toEqual(35)
 
         board = new Chessboard('2kr1bnr/ppp1pppp/8/8/2P3q1/4B3/PPQ2PPP/RN3RK1 b - - 1 11')
-        expect(board.materialWhite).toEqual(31)
-        expect(board.materialBlack).toEqual(32)
+        expect(board.material.white).toEqual(31)
+        expect(board.material.black).toEqual(32)
 
         board = new Chessboard('3r2r1/5k1p/qpQbp1p1/5pB1/P7/5N1P/5PP1/3R2K1 b - - 4 32')
-        expect(board.materialWhite).toEqual(24)
-        expect(board.materialBlack).toEqual(27)
+        expect(board.material.white).toEqual(24)
+        expect(board.material.black).toEqual(27)
     })
 
 })

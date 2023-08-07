@@ -67,11 +67,18 @@ export class Squares64
         return this.kingSquare[color]
     }
 
-    getPieceSquares(color: ColorType, type: ChessPieceType|null = null): Square[]
+    getPieces(color: ColorType|null = null): Piece[]
+    {
+        // @ts-ignore
+        return this.getPieceSquares(color)
+            .map((square: Square) => square.piece)
+    }
+
+    getPieceSquares(color: ColorType|null = null, type: ChessPieceType|null = null): Square[]
     {
         const squares: Square[] = []
         this.each((square: Square) => {
-            if(!square.piece || square.piece.color !== color){
+            if(!square.piece || (color !== null && square.piece.color !== color)){
                 return
             }
 
