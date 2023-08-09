@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-import {ExtendedFEN} from "@/classes/Chess/Board/ExtendedFEN";
+import {ExtendedFen} from "@/classes/Chess/Board/ExtendedFEN";
 import {Squares144} from "@/classes/Chess/Board/Squares144";
 import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
 import {MoveArbiter} from "@/classes/Chess/MoveArbiter/MoveArbiter";
@@ -24,7 +24,7 @@ describe('MoveArbiter', () => {
         expect(arbiter.squares144).toBe(squares144)
         expect(arbiter.moveEngine).toBe(engine)
         expect(arbiter.squares64).toBeInstanceOf(Squares64)
-        expect(arbiter.fenNumber).toBeInstanceOf(ExtendedFEN)
+        expect(arbiter.fenNumber).toBeInstanceOf(ExtendedFen)
     })
 
     it('it determines if move is legal', () => {
@@ -198,26 +198,24 @@ describe('MoveArbiter', () => {
         let arbiter
         arbiter = getTestMoveArbiter('rn2k2r/ppp2ppp/5n2/2b5/4P1Nq/5P1P/PPP1B1P1/RNBQK2R w KQkq - 0 1')
 
-        const madeMove = arbiter.makeMove(new ChessMove(
+        const fenAfter = arbiter.makeMove(new ChessMove(
             'g4',
             'f6',
             Piece.knightWhite(),
             Piece.knightBlack()
         ))
 
-        expect(madeMove.fenAfter.piecePlacements).toEqual('rn2k2r/ppp2ppp/5N2/2b5/4P2q/5P1P/PPP1B1P1/RNBQK2R')
-        expect(madeMove.fenAfter.sideToMove).toEqual('black')
-        expect(madeMove.halfStepIndex).toEqual(1)
+        expect(fenAfter.piecePlacements).toEqual('rn2k2r/ppp2ppp/5N2/2b5/4P2q/5P1P/PPP1B1P1/RNBQK2R')
+        expect(fenAfter.sideToMove).toEqual('black')
         expect(arbiter.fenNumber.piecePlacements).toEqual('rn2k2r/ppp2ppp/5N2/2b5/4P2q/5P1P/PPP1B1P1/RNBQK2R')
         expect(arbiter.fenNumber.sideToMove).toEqual('black')
-        expect(madeMove.halfStepIndex).toEqual(1)
     })
 
     it('it unmakes a move', () => {
         let arbiter
         arbiter = getTestMoveArbiter('rn2k2r/ppp2ppp/5N2/2b5/4P2q/5P1P/PPP1B1P1/RNBQK2R b KQkq - 0 1')
 
-        const fenBefore = new ExtendedFEN('rn2k2r/ppp2ppp/5n2/2b5/4P1Nq/5P1P/PPP1B1P1/RNBQK2R w KQkq - 0 1');
+        const fenBefore = new ExtendedFen('rn2k2r/ppp2ppp/5n2/2b5/4P1Nq/5P1P/PPP1B1P1/RNBQK2R w KQkq - 0 1');
         arbiter.unMakeMove(new ChessMove(
             'g4',
             'f6',

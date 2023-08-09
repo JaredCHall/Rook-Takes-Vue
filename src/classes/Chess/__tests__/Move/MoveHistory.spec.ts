@@ -1,107 +1,111 @@
 import { describe, it, expect, vi } from 'vitest'
 import {MoveHistory} from "@/classes/Chess/Move/MoveHistory";
 import {MadeMove} from "@/classes/Chess/Move/MadeMove";
-import {ExtendedFEN} from "@/classes/Chess/Board/ExtendedFEN";
+import {ExtendedFen} from "@/classes/Chess/Board/ExtendedFEN";
 import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
+import {GamePosition} from "@/classes/Chess/Board/GamePosition";
 
-vi.mock( "@/classes/Chess/Board/ExtendedFEN")
 vi.mock("@/classes/Chess/Move/MoveType/ChessMove")
+
 
 describe('MoveHistory',()=>{
 
-    const dummyMove = function(){
-        return new MadeMove(new ChessMove(), new ExtendedFEN())
+    const dummyPosition = function(fen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'){
+        return new GamePosition(new ExtendedFen(fen))
     }
 
+    const dummyMove = function(fen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'){
+        return new MadeMove(new ChessMove(), new GamePosition(new ExtendedFen(fen)))
+    }
+
+
     it('it constructs itself', () => {
-        const startFen = new ExtendedFEN()
-        const list = new MoveHistory(startFen)
-        expect(list.startFen).toBe(startFen)
+        const startPosition = dummyPosition()
+        const history = new MoveHistory(startPosition)
+        expect(history.startPosition).toBe(startPosition)
     })
 
     it('it adds new move',() => {
-        const list = new MoveHistory(new ExtendedFEN())
+        const history = new MoveHistory(dummyPosition())
         const item = dummyMove()
-        list.add(item)
-        expect(list.moves[0]).toBe(item)
+        history.add(item)
+        expect(history.moves[0]).toBe(item)
     })
 
     it('it gets length',() => {
 
-        const list = new MoveHistory(new ExtendedFEN())
-        expect(list.length).toEqual(0)
+        const history = new MoveHistory(dummyPosition())
+        expect(history.length).toEqual(0)
 
-        list.add(dummyMove())
-        list.add(dummyMove())
-        expect(list.length).toEqual(2)
+        history.add(dummyMove())
+        history.add(dummyMove())
+        expect(history.length).toEqual(2)
     })
 
     it('it gets made move', () => {
-        const list = new MoveHistory(new ExtendedFEN())
-        expect(list.length).toEqual(0)
+        const history = new MoveHistory(dummyPosition())
+        expect(history.length).toEqual(0)
         const move1 = dummyMove()
         const move2 = dummyMove()
         const move3 = dummyMove()
 
 
-        list.add(move1)
-        list.add(move2)
-        list.add(move3)
-        expect(list.get(1)).toEqual(move1)
-        expect(list.get(2)).toEqual(move2)
-        expect(list.get(3)).toEqual(move3)
+        history.add(move1)
+        history.add(move2)
+        history.add(move3)
+        expect(history.get(1)).toEqual(move1)
+        expect(history.get(2)).toEqual(move2)
+        expect(history.get(3)).toEqual(move3)
 
-        expect(() => list.get(4)).toThrowError('Move at half step 4 does not exist')
+        expect(() => history.get(4)).toThrowError('Move at half step 4 does not exist')
 
     })
 
     it('it pops last move', () => {
 
-
-
-        const list = new MoveHistory(new ExtendedFEN())
-        expect(list.length).toEqual(0)
+        const history = new MoveHistory(dummyPosition())
+        expect(history.length).toEqual(0)
         const move1 = dummyMove()
         const move2 = dummyMove()
         const move3 = dummyMove()
 
-        list.add(move1)
-        list.add(move2)
-        list.add(move3)
-        expect(list.pop()).toEqual(move3)
-        expect(list.pop()).toEqual(move2)
-        expect(list.pop()).toEqual(move1)
+        history.add(move1)
+        history.add(move2)
+        history.add(move3)
+        expect(history.pop()).toEqual(move3)
+        expect(history.pop()).toEqual(move2)
+        expect(history.pop()).toEqual(move1)
 
-        expect(list).toHaveLength(0)
+        expect(history).toHaveLength(0)
 
-        expect(() => {list.pop()}).toThrowError('nothing to pop')
+        expect(() => {history.pop()}).toThrowError('nothing to pop')
 
     })
 
     it('it gets fen before', () => {
 
-        const startFen = new ExtendedFEN()
-        const list = new MoveHistory(startFen)
-        expect(list.getFenBefore(1)).toBe(startFen)
-        expect(list.getFenBefore(123)).toBe(startFen)
+        const startPosition = dummyPosition()
+        const history = new MoveHistory(startPosition)
+        expect(history.getPositionBefore(1)).toBe(startPosition)
+        expect(history.getPositionBefore(123)).toBe(startPosition)
 
-        const fenAfter1 = new ExtendedFEN()
+        const positionAfter1 = dummyPosition()
         const move1 = new MadeMove(
             new ChessMove(),
-            fenAfter1,
+            positionAfter1,
         )
-        list.add(move1)
-        expect(list.getFenBefore(1)).toBe(startFen)
+        history.add(move1)
+        expect(history.getPositionBefore(1)).toEqual(startPosition)
 
-        const fenAfter2 = new ExtendedFEN()
+        const positionAfter2 = dummyPosition()
         const move2 = new MadeMove(
             new ChessMove(),
-            fenAfter2,
+            positionAfter2,
         )
-        list.add(move2)
+        history.add(move2)
 
-        expect(list.getFenBefore(1)).toBe(startFen)
-        expect(list.getFenBefore(2)).toBe(fenAfter1)
+        expect(history.getPositionBefore(1)).toBe(startPosition)
+        expect(history.getPositionBefore(2)).toBe(positionAfter1)
 
     })
 })

@@ -3,7 +3,7 @@ import {Piece} from "@/classes/Chess/Piece";
 import type {ChessPieceType} from "@/classes/Chess/Piece";
 import {Square} from "@/classes/Chess/Square/Square";
 import type {ColorType} from "@/classes/Chess/Color";
-import {ExtendedFEN} from "@/classes/Chess/Board/ExtendedFEN";
+import {ExtendedFen} from "@/classes/Chess/Board/ExtendedFEN";
 import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 
 /**
@@ -38,13 +38,13 @@ export class Squares64
         black: null,
     }
 
-    constructor(fenNumber: ExtendedFEN|null = null) {
+    constructor(fenNumber: ExtendedFen|null = null) {
         for(const i in Squares64.squaresOrder){
             const squareName = Squares64.squaresOrder[i]
             this.squares[squareName] = new Square(squareName, null)
         }
 
-        if(fenNumber instanceof ExtendedFEN){
+        if(fenNumber instanceof ExtendedFen){
             fenNumber.updateSquares64(this)
         }
     }

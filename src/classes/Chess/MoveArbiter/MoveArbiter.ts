@@ -1,5 +1,5 @@
 import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
-import {ExtendedFEN} from "@/classes/Chess/Board/ExtendedFEN";
+import {ExtendedFen} from "@/classes/Chess/Board/ExtendedFEN";
 import {MoveHistory} from "@/classes/Chess/Move/MoveHistory";
 import {Color} from "@/classes/Chess/Color";
 import {MoveList} from "@/classes/Chess/Move/MoveList";
@@ -29,7 +29,7 @@ export class MoveArbiter {
         return this.squares144.fenNumber
     }
 
-    makeMove(move: ChessMove): MadeMove
+    makeMove(move: ChessMove): ExtendedFen
     {
         this.squares144.makeMove(move)
         this.fenNumber.incrementTurn(move, this.squares64)
@@ -39,10 +39,10 @@ export class MoveArbiter {
         const isCheck = this.moveEngine.isSquareThreatenedBy(this.getKingSquare(enemyColor), movingColor)
         this.fenNumber.updateMoveResult(isCheck, !this.doesPlayerHaveLegalMoves(enemyColor))
 
-        return new MadeMove(move, this.fenNumber.clone())
+        return this.fenNumber.clone()
     }
 
-    unMakeMove(move: ChessMove, fenBefore: ExtendedFEN): void
+    unMakeMove(move: ChessMove, fenBefore: ExtendedFen): void
     {
         this.squares144.unMakeMove(move)
         this.squares144.fenNumber = fenBefore.clone()

@@ -7,7 +7,7 @@ import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import {DoublePawnMove} from "@/classes/Chess/Move/MoveType/DoublePawnMove";
 import {CastlesType} from "@/classes/Chess/Move/MoveType/CastlesType";
 
-export class ExtendedFEN {
+export class ExtendedFen {
 
     piecePlacements: string
 
@@ -36,9 +36,9 @@ export class ExtendedFEN {
         p: 'pawn'
     }
 
-    constructor(fen: string|ExtendedFEN) {
+    constructor(fen: string|ExtendedFen) {
 
-        if(fen instanceof ExtendedFEN){
+        if(fen instanceof ExtendedFen){
             this.piecePlacements = fen.piecePlacements
             this.sideToMove = fen.sideToMove
             this.castleRights = fen.castleRights
@@ -87,7 +87,7 @@ export class ExtendedFEN {
     incrementTurn(
         chessMove: ChessMove,
         squares64: Squares64
-    ): ExtendedFEN {
+    ): ExtendedFen {
 
         this.#incrementMoveCounters(chessMove)
 
@@ -188,7 +188,7 @@ export class ExtendedFEN {
                         this.piecePlacements += emptySquares.toString()
                         emptySquares = 0
                     }
-                    this.piecePlacements += ExtendedFEN.getPieceFenType(piece)
+                    this.piecePlacements += ExtendedFen.getPieceFenType(piece)
                 }else{
                     emptySquares++
                 }
@@ -234,7 +234,7 @@ export class ExtendedFEN {
                     }
                 } else if (/[rbnqkpRBNQKP]/.test(character)) {
                     // @ts-ignore
-                    const piece = ExtendedFEN.makePiece(character)
+                    const piece = ExtendedFen.makePiece(character)
                     setSquare(columnNumber, rowNumber, piece)
                     columnNumber++
                 } else {
@@ -264,13 +264,13 @@ export class ExtendedFEN {
 
         //@ts-ignore
         fenType = fenType.toLowerCase()
-        if(!ExtendedFEN.pieceTypeDictionary.hasOwnProperty(fenType)){
+        if(!ExtendedFen.pieceTypeDictionary.hasOwnProperty(fenType)){
             throw new Error(`Invalid piece type: ${fenType}`)
         }
 
         return new Piece(
             //@ts-ignore
-            ExtendedFEN.pieceTypeDictionary[fenType],
+            ExtendedFen.pieceTypeDictionary[fenType],
             color
         )
     }
@@ -305,7 +305,7 @@ export class ExtendedFEN {
         return parts.join(' ')
     }
 
-    clone(): ExtendedFEN {
-        return new ExtendedFEN(this)
+    clone(): ExtendedFen {
+        return new ExtendedFen(this)
     }
 }

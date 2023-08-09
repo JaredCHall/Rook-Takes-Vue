@@ -1,12 +1,10 @@
-import type {ExtendedFEN} from "@/classes/Chess/Board/ExtendedFEN";
+import type {ExtendedFen} from "@/classes/Chess/Board/ExtendedFEN";
 import type {GameClock} from "@/classes/Chess/GameClock/GameClock";
 import type {MaterialScores} from "@/classes/Chess/Board/MaterialScores";
 
-
-
 export class GamePosition
 {
-    readonly extendedFEN: ExtendedFEN
+    readonly extendedFEN: ExtendedFen
 
     readonly materialWhite: number|null = null
     readonly materialBlack: number|null = null
@@ -15,7 +13,7 @@ export class GamePosition
     readonly clockBlack: number|null = null
 
     constructor(
-        extendedFEN: ExtendedFEN,
+        extendedFEN: ExtendedFen,
         materialScores: MaterialScores|null = null,
         gameClock: GameClock|null = null
     ) {

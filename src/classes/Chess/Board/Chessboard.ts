@@ -1,7 +1,7 @@
 import {Square} from "@/classes/Chess/Square/Square";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import {Squares144} from "@/classes/Chess/Board/Squares144";
-import {ExtendedFEN} from "@/classes/Chess/Board/ExtendedFEN";
+import {ExtendedFen} from "@/classes/Chess/Board/ExtendedFEN";
 import {Squares64} from "@/classes/Chess/Board/Squares64";
 import {MoveArbiter} from "@/classes/Chess/MoveArbiter/MoveArbiter";
 import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
@@ -9,13 +9,14 @@ import {MoveHistory} from "@/classes/Chess/Move/MoveHistory";
 import type {MoveList} from "@/classes/Chess/Move/MoveList";
 import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import {GameResult} from "@/classes/Chess/Board/GameResult";
-import type {MadeMove} from "@/classes/Chess/Move/MadeMove";
+import {MadeMove} from "@/classes/Chess/Move/MadeMove";
 import type {ColorType} from "@/classes/Chess/Color";
 import {Color} from "@/classes/Chess/Color";
 import {Player} from "@/classes/Chess/Player";
-import type {Piece} from "@/classes/Chess/Piece";
 import {MaterialScores} from "@/classes/Chess/Board/MaterialScores";
-import {PawnPromotionMove} from "@/classes/Chess/Move/MoveType/PawnPromotionMove";
+import {GamePosition} from "@/classes/Chess/Board/GamePosition";
+import {GameOptions} from "@/classes/Chess/Board/GameOptions";
+import {GameClock} from "@/classes/Chess/GameClock/GameClock";
 
 export class Chessboard
 {
@@ -30,8 +31,6 @@ export class Chessboard
         return new Chessboard('8/8/8/8/8/8/8/8 w - -')
     }
 
-    fenNumber: ExtendedFEN
-
     squares64: Squares64
 
     moveArbiter: MoveArbiter
@@ -40,27 +39,51 @@ export class Chessboard
 
     moveIndex: number = 0 // index of the currently displayed move
 
+    gameOptions: GameOptions
+
+    gamePosition: GamePosition
+
     gameResult: null|GameResult = null
+
+    gameClock: null|GameClock = null
 
     playerWhite: Player
 
     playerBlack: Player
 
-    material: MaterialScores
+    material: null|MaterialScores = null
 
     materialWhite: number = 0
 
     materialBlack: number = 0
 
-    constructor(fen: string) {
-        this.fenNumber = new ExtendedFEN(fen)
-        this.squares64 = new Squares64(this.fenNumber)
-        this.moveArbiter = new MoveArbiter(new MoveEngine(new Squares144(this.fenNumber)))
-        this.moveHistory = new MoveHistory(this.fenNumber.clone())
+    constructor(fen: string, gameOptions: GameOptions|null = null) {
+
+        this.gameOptions = gameOptions ?? new GameOptions()
+
+        const extendedFen = new ExtendedFen(fen)
+        this.squares64 = new Squares64(extendedFen)
+
+
+        if(this.gameOptions.count_material){
+            this.material = MaterialScores.make(this.squares64)
+        }
+        if(this.gameOptions.timer_type) {
+            this.gameClock = GameClock.make(this.gameOptions)
+        }
+        this.gamePosition = new GamePosition(extendedFen, this.material, this.gameClock)
+        this.moveArbiter = new MoveArbiter(new MoveEngine(new Squares144(extendedFen)))
+        this.moveHistory = new MoveHistory(this.gamePosition)
         this.playerWhite = Player.defaultWhite()
         this.playerBlack = Player.defaultBlack()
-        this.material = MaterialScores.make(this.squares64)
+
     }
+
+    get fenNumber(): ExtendedFen
+    {
+        return this.gamePosition.extendedFEN
+    }
+
 
     get moveEngine(): MoveEngine {
         return this.moveArbiter.moveEngine
@@ -86,9 +109,9 @@ export class Chessboard
 
     displayMadeMove(moveIndex: number){
         if(moveIndex === 0){
-            this.fenNumber = this.moveHistory.startFen.clone()
+            this.gamePosition = this.moveHistory.startPosition
         }else{
-            this.fenNumber = this.moveHistory.get(moveIndex).fenAfter.clone()
+            this.gamePosition = this.moveHistory.get(moveIndex).positionAfter
         }
         this.fenNumber.updateSquares64(this.squares64)
         this.moveIndex = moveIndex
@@ -101,23 +124,28 @@ export class Chessboard
             throw new Error('Cannot make move. Game is over.')
         }
 
-        const madeMove = this.moveArbiter.makeMove(move)
-        this.fenNumber = madeMove.fenAfter.clone()
+        const fenAfter = this.moveArbiter.makeMove(move)
+        this.material?.onMove(move)
+
+        this.gamePosition = new GamePosition(fenAfter, this.material, this.gameClock)
+        const madeMove = new MadeMove(move, this.gamePosition)
+
         this.squares64.makeMove(madeMove.move)
         this.moveHistory.add(madeMove)
         this.moveIndex = madeMove.halfStepIndex
-        this.material.onMove(move)
+
         this.#determineGameResult(madeMove)
 
     }
 
     undoLastMove(): void {
-        const fenBefore = this.moveHistory.getFenBefore(this.moveIndex)
+        const positionBefore = this.moveHistory.getPositionBefore(this.moveIndex)
         const lastMove = this.moveHistory.pop()
-        this.moveArbiter.unMakeMove(lastMove.move, fenBefore)
-        this.fenNumber = fenBefore.clone()
+        this.moveArbiter.unMakeMove(lastMove.move, positionBefore.extendedFEN)
+        this.material?.onUnMove(lastMove.move)
+        this.gamePosition = new GamePosition(positionBefore.extendedFEN, this.material, this.gameClock)
         this.moveIndex--
-        this.material.onUnMove(lastMove.move)
+
     }
 
     setResigns(color: ColorType)

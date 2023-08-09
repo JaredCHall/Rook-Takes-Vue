@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {Squares144} from "@/classes/Chess/Board/Squares144";
-import {ExtendedFEN} from "@/classes/Chess/Board/ExtendedFEN";
+import {ExtendedFen} from "@/classes/Chess/Board/ExtendedFEN";
 import {Squares64} from "@/classes/Chess/Board/Squares64";
 import {Piece} from "@/classes/Chess/Piece";
 import {Square} from "@/classes/Chess/Square/Square";
@@ -9,7 +9,7 @@ describe('Squares144', () => {
 
     it('it constructs itself', () => {
 
-        const fenNumber = new ExtendedFEN('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w')
+        const fenNumber = new ExtendedFen('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w')
         const squares144 = new Squares144(fenNumber)
 
         // fenNumber should be cloned
@@ -26,7 +26,7 @@ describe('Squares144', () => {
         const squares144 = new Squares144('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w')
 
         // fenNumber object created
-        expect(squares144.fenNumber).toBeInstanceOf(ExtendedFEN)
+        expect(squares144.fenNumber).toBeInstanceOf(ExtendedFen)
 
         // squares 64 created
         expect(squares144).toHaveProperty('squares64')
@@ -75,7 +75,7 @@ describe('Squares144', () => {
 
     it('it gets a square',() => {
 
-        const fenNumber = new ExtendedFEN('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w')
+        const fenNumber = new ExtendedFen('r1bqkb1r/pppp1p1p/2n2np1/8/3PP3/5Q2/PPP2PPP/RNB1KBNR w')
         const squares144 = new Squares144(fenNumber)
 
         expect(squares144.getSquare('e4'))

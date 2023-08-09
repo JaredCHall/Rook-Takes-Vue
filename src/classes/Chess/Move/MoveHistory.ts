@@ -1,11 +1,11 @@
-import type {ExtendedFEN} from "@/classes/Chess/Board/ExtendedFEN";
+import type {GamePosition} from "@/classes/Chess/Board/GamePosition";
 import type {MadeMove} from "@/classes/Chess/Move/MadeMove";
 
 export class MoveHistory
 {
     moves: MadeMove[] = []
 
-    startFen: ExtendedFEN // Game starting position
+    startPosition: GamePosition // Game starting position
 
     repetitionTracker: {[fenPartial: string]: number} = {} // for enforcing the 3-fold repetition rule
 
@@ -13,9 +13,9 @@ export class MoveHistory
         return this.moves.length
     }
 
-    constructor(startFen: ExtendedFEN) {
-        this.startFen = startFen
-        const fenPartial = startFen.toString(false,false)
+    constructor(startPosition: GamePosition) {
+        this.startPosition = startPosition
+        const fenPartial = startPosition.extendedFEN?.toString(false,false)
         this.repetitionTracker[fenPartial] = 1
     }
 
@@ -43,13 +43,13 @@ export class MoveHistory
         return move
     }
 
-    getFenBefore(moveIndex: number)
+    getPositionBefore(moveIndex: number)
     {
         const indexActual = moveIndex - 1
         if(indexActual <= 0 || this.length === 0) {
-            return this.startFen
+            return this.startPosition
         }
-        return this.get(indexActual).fenAfter
+        return this.get(indexActual).positionAfter
     }
 
     getPositionRepetitions(move: MadeMove): number
