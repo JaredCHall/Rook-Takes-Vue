@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
 
-import {ExtendedFen} from "@/classes/Chess/Board/ExtendedFEN";
-import {Squares144} from "@/classes/Chess/Board/Squares144";
+import {ExtendedFen} from "@/classes/Chess/Position/ExtendedFEN";
+import {Squares144} from "@/classes/Chess/Position/Squares144";
 import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
 import {MoveArbiter} from "@/classes/Chess/MoveArbiter/MoveArbiter";
-import {Squares64} from "@/classes/Chess/Board/Squares64";
+import {Squares64} from "@/classes/Chess/Position/Squares64";
 import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import {Piece} from "@/classes/Chess/Piece";
 import {CastlingMove} from "@/classes/Chess/Move/MoveType/CastlingMove";

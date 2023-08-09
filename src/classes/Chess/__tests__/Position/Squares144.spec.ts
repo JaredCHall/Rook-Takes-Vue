@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import {Squares144} from "@/classes/Chess/Board/Squares144";
-import {ExtendedFen} from "@/classes/Chess/Board/ExtendedFEN";
-import {Squares64} from "@/classes/Chess/Board/Squares64";
+import {Squares144} from "@/classes/Chess/Position/Squares144";
+import {ExtendedFen} from "@/classes/Chess/Position/ExtendedFEN";
+import {Squares64} from "@/classes/Chess/Position/Squares64";
 import {Piece} from "@/classes/Chess/Piece";
 import {Square} from "@/classes/Chess/Square/Square";
 

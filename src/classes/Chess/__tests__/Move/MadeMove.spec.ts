@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
 
-import {ExtendedFen} from "@/classes/Chess/Board/ExtendedFEN";
+import {ExtendedFen} from "@/classes/Chess/Position/ExtendedFEN";
 import {MadeMove} from "@/classes/Chess/Move/MadeMove";
 import {Piece} from "@/classes/Chess/Piece";
 import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
-import {GamePosition} from "@/classes/Chess/Board/GamePosition";
+import {GamePosition} from "@/classes/Chess/Position/GamePosition";
 
 describe('MadeMove', () => {
     it('it constructs itself', () => {

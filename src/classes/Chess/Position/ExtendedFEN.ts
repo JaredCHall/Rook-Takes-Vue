@@ -1,4 +1,4 @@
-import {Squares64} from "@/classes/Chess/Board/Squares64";
+import {Squares64} from "@/classes/Chess/Position/Squares64";
 import {Piece} from "@/classes/Chess/Piece";
 import type {ChessPieceType} from "@/classes/Chess/Piece";
 import {Color} from "@/classes/Chess/Color";

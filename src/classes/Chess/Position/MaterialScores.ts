@@ -1,5 +1,5 @@
 import type {Piece} from "@/classes/Chess/Piece";
-import type {Squares64} from "@/classes/Chess/Board/Squares64";
+import type {Squares64} from "@/classes/Chess/Position/Squares64";
 import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import {PawnPromotionMove} from "@/classes/Chess/Move/MoveType/PawnPromotionMove";
 

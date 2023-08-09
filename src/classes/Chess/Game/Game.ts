@@ -1,34 +1,34 @@
 import {Square} from "@/classes/Chess/Square/Square";
 import type {SquareType} from "@/classes/Chess/Square/Square";
-import {Squares144} from "@/classes/Chess/Board/Squares144";
-import {ExtendedFen} from "@/classes/Chess/Board/ExtendedFEN";
-import {Squares64} from "@/classes/Chess/Board/Squares64";
+import {Squares144} from "@/classes/Chess/Position/Squares144";
+import {ExtendedFen} from "@/classes/Chess/Position/ExtendedFEN";
+import {Squares64} from "@/classes/Chess/Position/Squares64";
 import {MoveArbiter} from "@/classes/Chess/MoveArbiter/MoveArbiter";
 import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
 import {MoveHistory} from "@/classes/Chess/Move/MoveHistory";
 import type {MoveList} from "@/classes/Chess/Move/MoveList";
 import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
-import {GameResult} from "@/classes/Chess/Board/GameResult";
+import {GameResult} from "@/classes/Chess/Game/GameResult";
 import {MadeMove} from "@/classes/Chess/Move/MadeMove";
 import type {ColorType} from "@/classes/Chess/Color";
 import {Color} from "@/classes/Chess/Color";
 import {Player} from "@/classes/Chess/Player";
-import {MaterialScores} from "@/classes/Chess/Board/MaterialScores";
-import {GamePosition} from "@/classes/Chess/Board/GamePosition";
-import {GameOptions} from "@/classes/Chess/Board/GameOptions";
+import {MaterialScores} from "@/classes/Chess/Position/MaterialScores";
+import {GamePosition} from "@/classes/Chess/Position/GamePosition";
+import {GameOptions} from "@/classes/Chess/Game/GameOptions";
 import {GameClock} from "@/classes/Chess/GameClock/GameClock";
 
-export class Chessboard
+export class Game
 {
 
-    static makeNewGame(): Chessboard
+    static makeNewGame(): Game
     {
-        return new Chessboard('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
+        return new Game('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
     }
 
-    static makeEmptyBoard(): Chessboard
+    static makeEmptyBoard(): Game
     {
-        return new Chessboard('8/8/8/8/8/8/8/8 w - -')
+        return new Game('8/8/8/8/8/8/8/8 w - -')
     }
 
     squares64: Squares64

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest'
-import {Chessboard} from "@/classes/Chess/Board/Chessboard";
-import {ExtendedFen} from "@/classes/Chess/Board/ExtendedFEN";
-import {Squares64} from "@/classes/Chess/Board/Squares64";
+import {Game} from "@/classes/Chess/Game/Game";
+import {ExtendedFen} from "@/classes/Chess/Position/ExtendedFEN";
+import {Squares64} from "@/classes/Chess/Position/Squares64";
 import {MoveArbiter} from "@/classes/Chess/MoveArbiter/MoveArbiter";
 import {MoveHistory} from "@/classes/Chess/Move/MoveHistory";
 import {Square} from "@/classes/Chess/Square/Square";
@@ -11,13 +11,13 @@ import {Piece} from "@/classes/Chess/Piece";
 import {MadeMove} from "@/classes/Chess/Move/MadeMove";
 import {DoublePawnMove} from "@/classes/Chess/Move/MoveType/DoublePawnMove";
 import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
-import {GameResult} from "@/classes/Chess/Board/GameResult";
+import {GameResult} from "@/classes/Chess/Game/GameResult";
 import {Player} from "@/classes/Chess/Player";
 
-describe('ChessBoard', () => {
+describe('Game', () => {
 
     it('it constructs itself', () => {
-        const board = new Chessboard('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
+        const board = new Game('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
         expect(board.fenNumber).toBeInstanceOf(ExtendedFen)
         expect(board.squares64).toBeInstanceOf(Squares64)
         expect(board.moveArbiter).toBeInstanceOf(MoveArbiter)
@@ -30,33 +30,33 @@ describe('ChessBoard', () => {
     })
 
     it('it makes a new game', () => {
-        const board = Chessboard.makeNewGame()
+        const board = Game.makeNewGame()
         expect(board.fenNumber.toString()).toEqual('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
     })
 
     it('it makes an empty board', () => {
-        const board = Chessboard.makeEmptyBoard()
+        const board = Game.makeEmptyBoard()
         expect(board.fenNumber.toString()).toEqual('8/8/8/8/8/8/8/8 w - - 0 1')
         expect(board.materialWhite).toEqual(0)
         expect(board.materialBlack).toEqual(0)
     })
 
     it('it gets a square', () => {
-        const board = Chessboard.makeNewGame()
+        const board = Game.makeNewGame()
         const square = board.getSquare('e4')
         expect(square).toBeInstanceOf(Square)
         expect(square.name).toEqual('e4')
     })
 
     it('it gets moves', () => {
-        const board = Chessboard.makeNewGame()
+        const board = Game.makeNewGame()
         const moves = board.getMoves('e2')
         expect(moves).toBeInstanceOf(MoveList)
         expect(moves).toHaveLength(2)
     })
 
     it('it makes a move (or 2) and un-does them', () => {
-        const board = Chessboard.makeNewGame()
+        const board = Game.makeNewGame()
         const e3 = new ChessMove('e2','e3', Piece.pawnWhite())
         board.makeMove(e3)
 
@@ -92,7 +92,7 @@ describe('ChessBoard', () => {
     })
 
     it('it handles setResigns', () => {
-        const board = Chessboard.makeNewGame()
+        const board = Game.makeNewGame()
         let gameResult
 
         gameResult = board.setResigns('white')
@@ -109,7 +109,7 @@ describe('ChessBoard', () => {
     })
 
     it('it handles setDraw', () => {
-        const board = Chessboard.makeNewGame()
+        const board = Game.makeNewGame()
         let gameResult
 
         gameResult = board.setDraw()
@@ -122,7 +122,7 @@ describe('ChessBoard', () => {
     })
 
     it('it handles setOutOfTime', () => {
-        const board = Chessboard.makeNewGame()
+        const board = Game.makeNewGame()
         let gameResult
 
         gameResult = board.setOutOfTime('white')
@@ -139,7 +139,7 @@ describe('ChessBoard', () => {
     })
 
     it('it handles setPlayer', () => {
-        const board = Chessboard.makeNewGame()
+        const board = Game.makeNewGame()
         const alice = new Player('white','Alice')
         const claire = new Player('black','Claire')
 
@@ -153,7 +153,7 @@ describe('ChessBoard', () => {
 
 
     it('it displays made move from history', () => {
-        const board = Chessboard.makeNewGame()
+        const board = Game.makeNewGame()
 
         board.makeMove( new DoublePawnMove('e2','e4', Piece.pawnWhite())) // e4
         board.makeMove(new DoublePawnMove('d7','d5', Piece.pawnBlack())) // d5
@@ -202,14 +202,14 @@ describe('ChessBoard', () => {
         let board
 
         // checkmate
-        board = new Chessboard('7k/5K2/6PP/8/8/8/8/3R4 w - - 0 1')
+        board = new Game('7k/5K2/6PP/8/8/8/8/3R4 w - - 0 1')
         board.makeMove(new ChessMove('d1','d8', Piece.rookWhite()))
         expect(board.gameResult).toBeInstanceOf(GameResult)
         expect(board.gameResult.type).toEqual('Mate')
         expect(board.gameResult.winner).toEqual('white')
 
         // stalemate
-        board = new Chessboard('7k/5K2/6P1/7P/8/8/8/8 w - - 0 1')
+        board = new Game('7k/5K2/6P1/7P/8/8/8/8 w - - 0 1')
         board.makeMove(new ChessMove('h5','h6', Piece.pawnWhite()))
         expect(board.gameResult).toBeInstanceOf(GameResult)
         expect(board.gameResult.type).toEqual('Draw')
@@ -217,7 +217,7 @@ describe('ChessBoard', () => {
         expect(board.gameResult.drawType).toEqual('Stalemate')
 
         // 50 move rule
-        board = new Chessboard('7k/5K2/6P1/7P/8/8/8/8 w - - 49 1')
+        board = new Game('7k/5K2/6P1/7P/8/8/8/8 w - - 49 1')
         board.makeMove(new ChessMove('f7','f6', Piece.kingWhite()))
         expect(board.gameResult).toBeInstanceOf(GameResult)
         expect(board.gameResult.type).toEqual('Draw')
@@ -227,7 +227,7 @@ describe('ChessBoard', () => {
     })
 
     it('it determines three-fold repetition', () => {
-        const board = new Chessboard('rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1')
+        const board = new Game('rnbqkbnr/pppp1ppp/8/4p3/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1')
 
         const whiteBongClouds = new ChessMove('e1','e2', Piece.kingWhite())
         const whiteReconsiders = new ChessMove('e2','e1', Piece.kingWhite())
@@ -256,15 +256,15 @@ describe('ChessBoard', () => {
     it('it calculates player material', () => {
 
         let board
-        board = new Chessboard('2kr1bnr/ppp1pppp/2n5/5q2/2PP4/4BB2/PP3PPP/RN1QK2R b KQ - 0 8')
+        board = new Game('2kr1bnr/ppp1pppp/2n5/5q2/2PP4/4BB2/PP3PPP/RN1QK2R b KQ - 0 8')
         expect(board.material.white).toEqual(35)
         expect(board.material.black).toEqual(35)
 
-        board = new Chessboard('2kr1bnr/ppp1pppp/8/8/2P3q1/4B3/PPQ2PPP/RN3RK1 b - - 1 11')
+        board = new Game('2kr1bnr/ppp1pppp/8/8/2P3q1/4B3/PPQ2PPP/RN3RK1 b - - 1 11')
         expect(board.material.white).toEqual(31)
         expect(board.material.black).toEqual(32)
 
-        board = new Chessboard('3r2r1/5k1p/qpQbp1p1/5pB1/P7/5N1P/5PP1/3R2K1 b - - 4 32')
+        board = new Game('3r2r1/5k1p/qpQbp1p1/5pB1/P7/5N1P/5PP1/3R2K1 b - - 4 32')
         expect(board.material.white).toEqual(24)
         expect(board.material.black).toEqual(27)
     })

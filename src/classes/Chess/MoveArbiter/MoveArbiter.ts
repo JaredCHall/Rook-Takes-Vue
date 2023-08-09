@@ -1,5 +1,5 @@
 import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
-import {ExtendedFen} from "@/classes/Chess/Board/ExtendedFEN";
+import {ExtendedFen} from "@/classes/Chess/Position/ExtendedFEN";
 import {MoveHistory} from "@/classes/Chess/Move/MoveHistory";
 import {Color} from "@/classes/Chess/Color";
 import {MoveList} from "@/classes/Chess/Move/MoveList";

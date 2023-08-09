@@ -1,4 +1,4 @@
-import type {GamePosition} from "@/classes/Chess/Board/GamePosition";
+import type {GamePosition} from "@/classes/Chess/Position/GamePosition";
 import type {MadeMove} from "@/classes/Chess/Move/MadeMove";
 
 export class MoveHistory

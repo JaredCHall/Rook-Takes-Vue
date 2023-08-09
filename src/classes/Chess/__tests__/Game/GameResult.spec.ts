@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import {GameResult} from "@/classes/Chess/Board/GameResult";
+import {GameResult} from "@/classes/Chess/Game/GameResult";
 
 describe('GameResult',() => {
 

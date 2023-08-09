@@ -1,8 +1,8 @@
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import {Square} from "@/classes/Chess/Square/Square";
-import {Squares64} from "@/classes/Chess/Board/Squares64";
+import {Squares64} from "@/classes/Chess/Position/Squares64";
 import {Piece} from "@/classes/Chess/Piece";
-import {ExtendedFen} from "@/classes/Chess/Board/ExtendedFEN";
+import {ExtendedFen} from "@/classes/Chess/Position/ExtendedFEN";
 import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 
 /**

@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import {ExtendedFen} from "@/classes/Chess/Board/ExtendedFEN";
+import {ExtendedFen} from "@/classes/Chess/Position/ExtendedFEN";
 import {Piece} from "@/classes/Chess/Piece";
 import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import {DoublePawnMove} from "@/classes/Chess/Move/MoveType/DoublePawnMove";
 import {CastlingMove} from "@/classes/Chess/Move/MoveType/CastlingMove";
-import {Squares64} from "@/classes/Chess/Board/Squares64";
+import {Squares64} from "@/classes/Chess/Position/Squares64";
 
 describe('ExtendedFEN', () => {
 

@@ -1,5 +1,5 @@
 import {Piece} from "@/classes/Chess/Piece";
-import {Squares144} from "@/classes/Chess/Board/Squares144";
+import {Squares144} from "@/classes/Chess/Position/Squares144";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import {Square} from "@/classes/Chess/Square/Square";
 import {MoveList} from "@/classes/Chess/Move/MoveList";
@@ -10,7 +10,7 @@ import {PawnPromotionMove} from "@/classes/Chess/Move/MoveType/PawnPromotionMove
 import {CastlingMove} from "@/classes/Chess/Move/MoveType/CastlingMove";
 import {CastlesType} from "@/classes/Chess/Move/MoveType/CastlesType";
 import type {ColorType} from "@/classes/Chess/Color";
-import type {Squares64} from "@/classes/Chess/Board/Squares64";
+import type {Squares64} from "@/classes/Chess/Position/Squares64";
 import {Color} from "@/classes/Chess/Color";
 
 export class MoveEngine {

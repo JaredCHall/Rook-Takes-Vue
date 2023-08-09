@@ -1,8 +1,7 @@
-import type {ColorType} from "@/classes/Chess/Color";
 import {BasicTimer} from "@/classes/Chess/GameClock/BasicTimer";
 import {IncrementTimer} from "@/classes/Chess/GameClock/IncrementTimer";
 import {DelayTimer} from "@/classes/Chess/GameClock/DelayTimer";
-import type {GameOptions} from "@/classes/Chess/Board/GameOptions";
+import type {GameOptions} from "@/classes/Chess/Game/GameOptions";
 
 // TODO: support changing timerType mid-game if there are different timing phases
 // TODO: support withIncrement AND withDelay???

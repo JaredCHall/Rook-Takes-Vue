@@ -1,8 +1,7 @@
 import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
-import type {ExtendedFen} from "@/classes/Chess/Board/ExtendedFEN";
-import type {Squares144} from "@/classes/Chess/Board/Squares144";
+import type {ExtendedFen} from "@/classes/Chess/Position/ExtendedFEN";
 import type {ColorType} from "@/classes/Chess/Color";
-import type {GamePosition} from "@/classes/Chess/Board/GamePosition";
+import type {GamePosition} from "@/classes/Chess/Position/GamePosition";
 
 export class MadeMove {
 

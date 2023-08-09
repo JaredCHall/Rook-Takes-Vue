@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-import {Squares144} from "@/classes/Chess/Board/Squares144";
+import {Squares144} from "@/classes/Chess/Position/Squares144";
 import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
 import {Piece} from "@/classes/Chess/Piece";
 import {DoublePawnMove} from "@/classes/Chess/Move/MoveType/DoublePawnMove";

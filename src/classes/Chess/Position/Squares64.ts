@@ -3,7 +3,7 @@ import {Piece} from "@/classes/Chess/Piece";
 import type {ChessPieceType} from "@/classes/Chess/Piece";
 import {Square} from "@/classes/Chess/Square/Square";
 import type {ColorType} from "@/classes/Chess/Color";
-import {ExtendedFen} from "@/classes/Chess/Board/ExtendedFEN";
+import {ExtendedFen} from "@/classes/Chess/Position/ExtendedFEN";
 import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 
 /**
