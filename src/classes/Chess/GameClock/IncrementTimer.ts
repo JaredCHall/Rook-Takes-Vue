@@ -1,4 +1,5 @@
 import {BasicTimer} from "@/classes/Chess/GameClock/BasicTimer";
+import {Assert} from "@/classes/Assert";
 
 export class IncrementTimer extends BasicTimer
 {
@@ -6,11 +7,14 @@ export class IncrementTimer extends BasicTimer
 
     constructor(timeLimit: number, increment: number) {
         super(timeLimit);
+        Assert.isNumber(increment,'increment')
         this.increment = increment
     }
 
     stop() {
-        this.timeRemaining += this.increment
+        if(this.timeRemaining > 0) {
+            this.timeRemaining += this.increment
+        }
         super.stop();
     }
 

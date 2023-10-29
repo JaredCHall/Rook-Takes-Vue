@@ -1,3 +1,4 @@
+import {Assert} from "@/classes/Assert";
 
 export class BasicTimer
 {
@@ -7,27 +8,34 @@ export class BasicTimer
 
     intervalId: number|null = null
 
-    startTimestamp: number|null = null // timestamp of the last time the timer was started (to stay sync'ed with system clock)
+    turnStartTimestamp: number|null = null // timestamp of the last time the timer was started (to stay sync'ed with system clock)
 
-    constructor(timeLimit: number) {
+    turnStartTimeRemaining: number // seconds remaining at start of current turn
+
+    constructor(timeLimit: number)
+    {
+        Assert.isNumber(timeLimit,'timeLimit')
         this.timeLimit = timeLimit
         this.timeRemaining = timeLimit
+        this.turnStartTimeRemaining = timeLimit
     }
 
     outOfTime(): void
     {
+        this.timeRemaining = 0
         this.stop()
     }
 
     start()
     {
-        this.startTimestamp = new Date().getTime()
-        this.intervalId = setInterval(this.decrementTime)
+        this.turnStartTimestamp = new Date().getTime()
+        this.turnStartTimeRemaining = this.timeRemaining
+        this.intervalId = setInterval(() => {this.decrementTime()}, 1000)
     }
 
     decrementTime(): void
     {
-        this.timeRemaining -= this.timeElapsed()
+        this.timeRemaining = this.turnStartTimeRemaining - this.timeElapsed()
         if(this.timeRemaining <= 0){
             this.outOfTime()
         }
@@ -36,20 +44,15 @@ export class BasicTimer
     timeElapsed(): number
     {
         // @ts-ignore
-        return Math.floor(new Date().getTime() - this.startTimestamp / 1000)
+        return Math.floor(((new Date().getTime()) - this.turnStartTimestamp) / 1000)
     }
-
-
 
     stop(): void
     {
-        if(!this.intervalId){
-            return
+        if(this.intervalId){
+            clearInterval(this.intervalId)
+            this.intervalId = null
         }
-
-        clearInterval(this.intervalId)
-        this.intervalId = null
+        this.turnStartTimestamp = null
     }
-
-
 }

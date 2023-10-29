@@ -13,11 +13,17 @@ import {DoublePawnMove} from "@/classes/Chess/Move/MoveType/DoublePawnMove";
 import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
 import {GameResult} from "@/classes/Chess/Game/GameResult";
 import {Player} from "@/classes/Chess/Player";
+import {GameOptions} from "@/classes/Chess/Game/GameOptions";
 
 describe('Game', () => {
 
     it('it constructs itself', () => {
-        const board = new Game('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1')
+
+        const options = new GameOptions()
+        options.timer_type = 'Basic'
+        options.timer_duration = 60 * 15
+
+        const board = new Game('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', options)
         expect(board.fenNumber).toBeInstanceOf(ExtendedFen)
         expect(board.squares64).toBeInstanceOf(Squares64)
         expect(board.moveArbiter).toBeInstanceOf(MoveArbiter)
