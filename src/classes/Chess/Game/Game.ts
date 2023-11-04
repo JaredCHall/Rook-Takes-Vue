@@ -57,6 +57,14 @@ export class Game
 
     materialBlack: number = 0
 
+    eventName: string = 'Casual Game'
+
+    siteName: string = 'Sol System'
+
+    startDate: Date
+
+    eventRound: number = 1
+
     constructor(fen: string, gameOptions: GameOptions|null = null) {
 
         this.gameOptions = gameOptions ?? new GameOptions()
@@ -76,6 +84,7 @@ export class Game
         this.moveHistory = new MoveHistory(this.gamePosition)
         this.playerWhite = Player.defaultWhite()
         this.playerBlack = Player.defaultBlack()
+        this.startDate = new Date
 
     }
 
@@ -87,6 +96,18 @@ export class Game
 
     get moveEngine(): MoveEngine {
         return this.moveArbiter.moveEngine
+    }
+
+    setEventName(name: string) {
+        this.eventName = name
+    }
+
+    setEventRound(round: number){
+        this.eventRound = round
+    }
+
+    setSiteName(name: string) {
+        this.siteName = name
     }
 
     setPlayer(player: Player){
