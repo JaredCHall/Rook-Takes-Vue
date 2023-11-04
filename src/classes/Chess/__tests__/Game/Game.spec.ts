@@ -156,8 +156,6 @@ describe('Game', () => {
         expect(board.playerBlack).toBe(claire)
     })
 
-
-
     it('it displays made move from history', () => {
         const board = Game.makeNewGame()
 

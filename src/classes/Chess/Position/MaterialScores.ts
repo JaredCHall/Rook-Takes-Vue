@@ -1,7 +1,8 @@
-import type {Piece} from "@/classes/Chess/Piece";
 import type {Squares64} from "@/classes/Chess/Position/Squares64";
 import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
+import type {ChessPieceType} from "@/classes/Chess/Piece";
 import {PawnPromotionMove} from "@/classes/Chess/Move/MoveType/PawnPromotionMove";
+import {Piece} from "@/classes/Chess/Piece";
 
 export class MaterialScores
 {
@@ -34,20 +35,25 @@ export class MaterialScores
 
     onMove(move: ChessMove){
         if(move.capturedPiece){
-            this[move.capturedPiece.color] += move.capturedPiece.getMaterialValue()
+            this[move.capturedPiece.color] -= move.capturedPiece.getMaterialValue()
         }
         if(move instanceof PawnPromotionMove){
-            this[move.movingPiece.color] -= (move.movingPiece.getMaterialValue() - 1)
+            this[move.movingPiece.color] += this.#getPromotedPieceValue(move.promoteToType) - 1
         }
     }
 
     onUnMove(move: ChessMove) {
         if(move.capturedPiece){
-            this[move.capturedPiece.color] -= move.capturedPiece.getMaterialValue()
+            this[move.capturedPiece.color] += move.capturedPiece.getMaterialValue()
         }
         if(move instanceof PawnPromotionMove){
-            this[move.movingPiece.color] += (move.movingPiece.getMaterialValue() - 1)
+            this[move.movingPiece.color] -= this.#getPromotedPieceValue(move.promoteToType) - 1
         }
+    }
+
+    #getPromotedPieceValue(pieceType: ChessPieceType): number
+    {
+        return (new Piece(pieceType,'white')).getMaterialValue()
     }
 
 }

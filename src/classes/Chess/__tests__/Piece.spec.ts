@@ -34,5 +34,25 @@ describe('Piece', () => {
 
     })
 
+    it('calculates correct material values', () => {
+        expect(Piece.pawnWhite().getMaterialValue()).toEqual(1)
+        expect(Piece.pawnBlack().getMaterialValue()).toEqual(1)
+
+        expect(Piece.rookBlack().getMaterialValue()).toEqual(5)
+        expect(Piece.rookWhite().getMaterialValue()).toEqual(5)
+
+        expect(Piece.knightWhite().getMaterialValue()).toEqual(3)
+        expect(Piece.knightBlack().getMaterialValue()).toEqual(3)
+
+        expect(Piece.bishopWhite().getMaterialValue()).toEqual(3)
+        expect(Piece.bishopBlack().getMaterialValue()).toEqual(3)
+
+        expect(Piece.queenWhite().getMaterialValue()).toEqual(9)
+        expect(Piece.queenBlack().getMaterialValue()).toEqual(9)
+
+        expect(Piece.kingWhite().getMaterialValue()).toEqual(0)
+        expect(Piece.kingBlack().getMaterialValue()).toEqual(0)
+    })
+
 
 })
