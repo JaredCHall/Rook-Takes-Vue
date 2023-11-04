@@ -33,6 +33,8 @@ describe('Game', () => {
         expect(board.playerBlack).toBeInstanceOf(Player)
         expect(board.material.white).toEqual(39)
         expect(board.material.black).toEqual(39)
+        expect(board.gameClock.timerBlack.timeRemaining).toEqual(900)
+        expect(board.gameClock.timerWhite.timeRemaining).toEqual(900)
     })
 
     it('it makes a new game', () => {

@@ -23,7 +23,7 @@ describe('BasicTimer', () => {
     })
 
     it('constructs itself', () => {
-        const timer = new BasicTimer(600)
+        let timer = new BasicTimer(600)
         expect(timer.timeRemaining).toEqual(600)
         expect(timer.timeLimit).toEqual(600)
         expect(timer.turnStartTimeRemaining).toEqual(600)
@@ -70,4 +70,12 @@ describe('BasicTimer', () => {
         expect(timer.intervalId).toBeNull()
     })
 
+    it('it calls timeOutCallback when set on time out', () => {
+        const mockFn = vi.fn()
+        const timer = new BasicTimer(600)
+        timer.setTimeoutCallback(mockFn)
+        timer.start()
+        advanceTime(600)
+        expect(mockFn).toHaveBeenCalledOnce()
+    })
 })

@@ -3,9 +3,9 @@ import {IncrementTimer} from "@/classes/Chess/GameClock/IncrementTimer";
 import {DelayTimer} from "@/classes/Chess/GameClock/DelayTimer";
 import type {GameOptions} from "@/classes/Chess/Game/GameOptions";
 import {Assert} from "@/classes/Assert";
+import type {Game} from "@/classes/Chess/Game/Game";
 
 // TODO: support changing timerType mid-game if there are different timing phases
-// TODO: support withIncrement AND withDelay???
 export class GameClock
 {
 
@@ -13,18 +13,30 @@ export class GameClock
 
     timerBlack: BasicTimer
 
-    constructor(timerWhite: BasicTimer, timerBlack: BasicTimer) {
+    game: Game|null
+
+    constructor(timerWhite: BasicTimer, timerBlack: BasicTimer, game: Game|null = null) {
 
         Assert.isDefined(timerWhite,'timerWhite')
         Assert.isDefined(timerBlack, 'timerBlack')
 
         this.timerWhite = timerWhite
         this.timerBlack = timerBlack
+        this.game = game
+
+        if(game){
+            this.timerWhite.setTimeoutCallback(() => {
+                game.setOutOfTime('white')
+            })
+            this.timerBlack.setTimeoutCallback(() => {
+                game.setOutOfTime('black')
+            })
+        }
     }
 
 
     //@ts-ignore
-    static make(gameOptions: GameOptions): GameClock
+    static make(gameOptions: GameOptions, game: Game|null = null): GameClock
     {
 
         Assert.notNull(gameOptions.timer_duration, 'gameOptions.timer_duration')
@@ -35,7 +47,8 @@ export class GameClock
                 //@ts-ignore
                 new BasicTimer(gameOptions.timer_duration), // white
                 //@ts-ignore
-                new BasicTimer(gameOptions.timer_duration) // black
+                new BasicTimer(gameOptions.timer_duration), // black
+                game
             )
         }
 
@@ -48,6 +61,7 @@ export class GameClock
                 new IncrementTimer(gameOptions.timer_duration, gameOptions.timer_increment),
                 //@ts-ignore
                 new IncrementTimer(gameOptions.timer_duration, gameOptions.timer_increment),
+                game
             );
 
         }
@@ -60,6 +74,7 @@ export class GameClock
                 new DelayTimer(gameOptions.timer_duration, gameOptions.timer_delay),
                 //@ts-ignore
                 new DelayTimer(gameOptions.timer_duration, gameOptions.timer_delay),
+                game
             );
         }
     }

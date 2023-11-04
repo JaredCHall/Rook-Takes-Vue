@@ -82,4 +82,13 @@ describe('IncrementTimer', () => {
         expect(timer.intervalId).toBeNull()
     })
 
+    it('it calls timeOutCallback when set on time out', () => {
+        const mockFn = vi.fn()
+        const timer = new IncrementTimer(600, 5)
+        timer.setTimeoutCallback(mockFn)
+        timer.start()
+        advanceTime(600)
+        expect(mockFn).toHaveBeenCalledOnce()
+    })
+
 })

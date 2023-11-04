@@ -1,28 +1,36 @@
-import { describe, it, expect} from 'vitest'
+import { describe, it, expect, vi} from 'vitest'
 import {GameClock} from "@/classes/Chess/GameClock/GameClock";
 import {BasicTimer} from "@/classes/Chess/GameClock/BasicTimer";
 import {GameOptions} from "@/classes/Chess/Game/GameOptions";
 import {DelayTimer} from "@/classes/Chess/GameClock/DelayTimer";
 import {IncrementTimer} from "@/classes/Chess/GameClock/IncrementTimer";
 
+
+
 describe('GameClock', () => {
 
     it('constructs itself', () => {
 
+        // errors
         expect(() => {new GameClock()})
             .toThrowError('timerWhite must be defined.')
         expect(() => {new GameClock(new BasicTimer(600))})
             .toThrowError('timerBlack must be defined.')
 
-        const clock = new GameClock(
+        // no game argument
+        let clock = new GameClock(
             new BasicTimer(600),
             new BasicTimer(1200)
         )
-
         expect(clock.timerBlack).toBeInstanceOf(BasicTimer)
         expect(clock.timerBlack.timeRemaining).toEqual(1200)
         expect(clock.timerWhite).toBeInstanceOf(BasicTimer)
         expect(clock.timerWhite.timeRemaining).toEqual(600)
+
+        // with game argument
+        const game = {}
+        clock = new GameClock(new BasicTimer(600),new BasicTimer(600), game)
+        expect(clock.game).toBe(game)
 
     })
 
@@ -98,4 +106,21 @@ describe('GameClock', () => {
 
     })
 
+    it('it calls outOfTime correctly' , () => {
+        const options = new GameOptions()
+        options.timer_type = 'Increment'
+        options.timer_duration = 300
+        options.timer_increment = 5
+
+        const game = {
+            setOutOfTime: vi.fn()
+        }
+        const clock = GameClock.make(options, game)
+
+        clock.timerWhite.outOfTime()
+        clock.timerBlack.outOfTime()
+
+        expect(game.setOutOfTime).toHaveBeenNthCalledWith(1, 'white')
+        expect(game.setOutOfTime).toHaveBeenNthCalledWith(2, 'black')
+    })
 })

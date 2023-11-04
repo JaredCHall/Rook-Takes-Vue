@@ -12,18 +12,27 @@ export class BasicTimer
 
     turnStartTimeRemaining: number // seconds remaining at start of current turn
 
+    onTimeOutCallback: () => void = () => {}
+
     constructor(timeLimit: number)
     {
         Assert.isNumber(timeLimit,'timeLimit')
         this.timeLimit = timeLimit
         this.timeRemaining = timeLimit
         this.turnStartTimeRemaining = timeLimit
+
+    }
+
+    setTimeoutCallback(onTimeOutCallback: () => void)
+    {
+        this.onTimeOutCallback = onTimeOutCallback
     }
 
     outOfTime(): void
     {
         this.timeRemaining = 0
         this.stop()
+        this.onTimeOutCallback()
     }
 
     start()

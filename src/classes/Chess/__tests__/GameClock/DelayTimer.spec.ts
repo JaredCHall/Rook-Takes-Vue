@@ -78,4 +78,13 @@ describe('DelayTimer', () => {
         expect(timer.intervalId).toBeNull()
     })
 
+    it('it calls timeOutCallback when set on time out', () => {
+        const mockFn = vi.fn()
+        const timer = new DelayTimer(600, 5)
+        timer.setTimeoutCallback(mockFn)
+        timer.start()
+        advanceTime(605)
+        expect(mockFn).toHaveBeenCalledOnce()
+    })
+
 })
