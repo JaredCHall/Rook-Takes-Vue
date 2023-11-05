@@ -11,8 +11,11 @@ export class MadeMove {
 
     readonly halfStepIndex: number
 
-    constructor(move: ChessMove, positionAfter: GamePosition) {
+    readonly notation: string
+
+    constructor(move: ChessMove, algebraicNotation: string, positionAfter: GamePosition) {
         this.move = move
+        this.notation = algebraicNotation
         this.positionAfter = positionAfter
         this.halfStepIndex = positionAfter.extendedFEN.halfStepCounter - 1
     }

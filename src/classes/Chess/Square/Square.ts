@@ -75,4 +75,14 @@ export class Square {
     {
         return this.piece
     }
+
+    static getFileAndRank(squareName: SquareType)
+    {
+        const square = new Square(squareName)
+
+        return [
+            square.file,
+            square.rank.toString()
+        ]
+    }
 }

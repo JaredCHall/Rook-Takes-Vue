@@ -32,7 +32,8 @@ export class PgnFile
         file.#addHeaderLine('BlackElo', game.playerBlack.elo?.toString() ?? '?')
 
         // Body (moves)
-        //TODO: add PGN body by walking through the game.moveHistory object
+        file.content += '\n\n'
+        file.content += file.#formatMoveList(game.moveHistory)
 
         return file
     }
@@ -40,11 +41,17 @@ export class PgnFile
     #formatMoveList(moveHistory: MoveHistory): string
     {
         let moveText = ''
+        let fenBefore = moveHistory.startPosition.extendedFEN
         moveHistory.moves.forEach((move: MadeMove) => {
             if(move.movingColor == 'white'){
-                moveText += ((move.halfStepIndex + 1) * 2).toString()
+                moveText += fenBefore.fullMoveCounter.toString() + '.'
             }
-            moveText += ' ' // TODO: Algebriac notation???
+            moveText += ' '
+            moveText += move.notation
+            if(move.movingColor == 'black'){
+                moveText += '\n'
+            }
+            fenBefore = move.fenAfter
         })
 
         return moveText

@@ -15,7 +15,7 @@ describe('MoveHistory',()=>{
     }
 
     const dummyMove = function(fen: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1'){
-        return new MadeMove(new ChessMove(), new GamePosition(new ExtendedFen(fen)))
+        return new MadeMove(new ChessMove(), '', new GamePosition(new ExtendedFen(fen)))
     }
 
 
@@ -92,6 +92,7 @@ describe('MoveHistory',()=>{
         const positionAfter1 = dummyPosition()
         const move1 = new MadeMove(
             new ChessMove(),
+            '',
             positionAfter1,
         )
         history.add(move1)
@@ -100,6 +101,7 @@ describe('MoveHistory',()=>{
         const positionAfter2 = dummyPosition()
         const move2 = new MadeMove(
             new ChessMove(),
+            '',
             positionAfter2,
         )
         history.add(move2)

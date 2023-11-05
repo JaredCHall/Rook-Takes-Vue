@@ -17,6 +17,8 @@ import {MaterialScores} from "@/classes/Chess/Position/MaterialScores";
 import {GamePosition} from "@/classes/Chess/Position/GamePosition";
 import {GameOptions} from "@/classes/Chess/Game/GameOptions";
 import {GameClock} from "@/classes/Chess/GameClock/GameClock";
+import {MoveDisambiguator} from "@/classes/Chess/MoveArbiter/MoveDisambiguator";
+import {AlgebraicNotationFormatter} from "@/classes/Chess/PgnFile/AlgebraicNotationFormatter";
 
 export class Game
 {
@@ -145,12 +147,17 @@ export class Game
             throw new Error('Cannot make move. Game is over.')
         }
 
+        // calculate while moveEngine is in pre-move condition
+        // needed for algebraic notation
+        const moveDisambiguation = (new MoveDisambiguator(this.moveArbiter, move)).getDisambiguationString()
+
+        // make the move
         const fenAfter = this.moveArbiter.makeMove(move)
-        this.material?.onMove(move)
-
+        this.material?.onMove(move) // update material scores
         this.gamePosition = new GamePosition(fenAfter, this.material, this.gameClock)
-        const madeMove = new MadeMove(move, this.gamePosition)
-
+        // standard algebraic notation
+        const algebraicNotation  = (new AlgebraicNotationFormatter(move, fenAfter, moveDisambiguation)).format()
+        const madeMove = new MadeMove(move, algebraicNotation, this.gamePosition)
         this.squares64.makeMove(madeMove.move)
         this.moveHistory.add(madeMove)
         this.moveIndex = madeMove.halfStepIndex
