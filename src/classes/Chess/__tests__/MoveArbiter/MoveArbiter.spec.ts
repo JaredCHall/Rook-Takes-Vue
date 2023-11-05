@@ -198,7 +198,7 @@ describe('MoveArbiter', () => {
         let arbiter
         arbiter = getTestMoveArbiter('rn2k2r/ppp2ppp/5n2/2b5/4P1Nq/5P1P/PPP1B1P1/RNBQK2R w KQkq - 0 1')
 
-        const fenAfter = arbiter.makeMove(new ChessMove(
+        const [moveNotation, fenAfter] = arbiter.makeMove(new ChessMove(
             'g4',
             'f6',
             Piece.knightWhite(),

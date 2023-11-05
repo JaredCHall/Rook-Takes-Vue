@@ -147,17 +147,13 @@ export class Game
             throw new Error('Cannot make move. Game is over.')
         }
 
-        // calculate while moveEngine is in pre-move condition
-        // needed for algebraic notation
-        const moveDisambiguation = (new MoveDisambiguator(this.moveArbiter, move)).getDisambiguationString()
-
         // make the move
-        const fenAfter = this.moveArbiter.makeMove(move)
-        this.material?.onMove(move) // update material scores
+        const [moveNotation, fenAfter] = this.moveArbiter.makeMove(move)
+        // update material scores and game position
+        this.material?.onMove(move)
         this.gamePosition = new GamePosition(fenAfter, this.material, this.gameClock)
-        // standard algebraic notation
-        const algebraicNotation  = (new AlgebraicNotationFormatter(move, fenAfter, moveDisambiguation)).format()
-        const madeMove = new MadeMove(move, algebraicNotation, this.gamePosition)
+        // update move history
+        const madeMove = new MadeMove(move, moveNotation, this.gamePosition)
         this.squares64.makeMove(madeMove.move)
         this.moveHistory.add(madeMove)
         this.moveIndex = madeMove.halfStepIndex

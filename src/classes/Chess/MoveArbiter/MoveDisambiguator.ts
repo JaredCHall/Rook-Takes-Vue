@@ -18,7 +18,18 @@ export class MoveDisambiguator {
     {
         const movingPiece = this.move.movingPiece
         const startSquare = this.move.oldSquare
+        const targetSquare = this.move.newSquare
         const [startFile, startRank] = Square.getFileAndRank(startSquare)
+
+
+        if(movingPiece.type === 'pawn'){
+            if(this.move.capturedPiece){
+                // pawn moves are always disambiguated when captures
+                return startFile;
+            }
+            // never disambiguated otherwise
+            return '';
+        }
 
         // get all squares containing the same type of piece of the same color
         const samePieceSquares = this.moveArbiter.squares64.getPieceSquares(
@@ -38,12 +49,15 @@ export class MoveDisambiguator {
         let isFileAmbiguous = false
         let isRankAmbiguous = false
 
+        console.log(samePieceSquares)
+
         // calculate moves for each piece and check if they attack the same square as startingSquare
         samePieceSquares.forEach((square: Square) => {
 
             const possibleMoves = this.moveArbiter.getLegalMoves(square.name)
+            console.log(possibleMoves)
             possibleMoves.moves.forEach((possibleMove: ChessMove) => {
-                if(possibleMove.newSquare === startSquare){
+                if(possibleMove.newSquare === targetSquare){
                     const [file, rank] = Square.getFileAndRank(possibleMove.oldSquare)
 
                     if(rank === startRank){
@@ -56,6 +70,9 @@ export class MoveDisambiguator {
             })
         })
 
+        console.log('ambiguous rank: ' + (isRankAmbiguous ? '1' : '0'))
+        console.log('ambiguous file: ' + (isFileAmbiguous ? '1' : '0'))
+
         if(!isRankAmbiguous && !isFileAmbiguous){
             return ''
         }
@@ -65,7 +82,7 @@ export class MoveDisambiguator {
         }
 
         if(!isRankAmbiguous){
-            return startRank
+            return startRank.toString()
         }
 
         return startSquare

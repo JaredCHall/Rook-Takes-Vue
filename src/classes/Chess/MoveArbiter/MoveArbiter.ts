@@ -8,6 +8,8 @@ import {CastlingMove} from "@/classes/Chess/Move/MoveType/CastlingMove";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import type {ColorType} from "@/classes/Chess/Color";
+import {MoveDisambiguator} from "@/classes/Chess/MoveArbiter/MoveDisambiguator";
+import {AlgebraicNotationFormatter} from "@/classes/Chess/PgnFile/AlgebraicNotationFormatter";
 
 export class MoveArbiter {
 
@@ -29,17 +31,25 @@ export class MoveArbiter {
         return this.squares144.fenNumber
     }
 
-    makeMove(move: ChessMove): ExtendedFen
+    makeMove(move: ChessMove): [moveNotation: string, fenAfter: ExtendedFen]
     {
+
+        // calculate pre-move, needed for algebraic notation
+        const moveDisambiguation = (new MoveDisambiguator(this, move)).getDisambiguationString()
+
         this.squares144.makeMove(move)
         this.fenNumber.incrementTurn(move, this.squares64)
 
         const movingColor = move.movingPiece.color
         const enemyColor = Color.getOpposite(movingColor)
-        const isCheck = this.moveEngine.isSquareThreatenedBy(this.getKingSquare(enemyColor), movingColor)
+        const kingSquare = this.getKingSquare(enemyColor)
+        const isCheck = !kingSquare ? false : this.moveEngine.isSquareThreatenedBy(kingSquare, movingColor)
         this.fenNumber.updateMoveResult(isCheck, !this.doesPlayerHaveLegalMoves(enemyColor))
 
-        return this.fenNumber.clone()
+        const fenAfter = this.fenNumber.clone()
+        const moveNotation  = (new AlgebraicNotationFormatter(move, fenAfter, moveDisambiguation)).format()
+
+        return [moveNotation, fenAfter]
     }
 
     unMakeMove(move: ChessMove, fenBefore: ExtendedFen): void
@@ -63,7 +73,11 @@ export class MoveArbiter {
         if(move instanceof CastlingMove){
             isMoveLegal = this.#isCastlingMoveLegal(move)
         }else{
-            isMoveLegal = !this.moveEngine.isSquareThreatenedBy(this.getKingSquare(movingColor), enemyColor)
+            const kingSquare = this.getKingSquare(movingColor)
+            // when there is a king - a move is not legal if it puts the moving color's king in check
+            // if there is no king (some hypothetical puzzle), this is check is skipped
+            isMoveLegal = !kingSquare ? true : !this.moveEngine.isSquareThreatenedBy(kingSquare, enemyColor)
+
         }
 
         this.squares144.unMakeMove(move)
@@ -83,12 +97,12 @@ export class MoveArbiter {
         return legalMoves
     }
 
-    getKingSquare(color: ColorType|null): SquareType
+    getKingSquare(color: ColorType|null): SquareType|null
     {
         color ??= this.fenNumber.sideToMove
 
         //@ts-ignore
-        return this.squares64.getKingSquare(color).name
+        return this.squares64.getKingSquare(color)?.name
     }
 
     doesPlayerHaveLegalMoves(color: ColorType): boolean
