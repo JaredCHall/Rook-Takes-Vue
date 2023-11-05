@@ -9,8 +9,8 @@ export class PgnFile
 
     content: string
 
-    constructor(fileContent: string = '') {
-        this.content = fileContent
+    constructor() {
+        this.content = ''
     }
 
     static make(game: Game): PgnFile
@@ -32,7 +32,7 @@ export class PgnFile
         file.#addHeaderLine('BlackElo', game.playerBlack.elo?.toString() ?? '?')
 
         // Body (moves)
-        file.content += '\n\n'
+        file.content += '\n'
         file.content += file.#formatMoveList(game.moveHistory)
 
         return file

@@ -7,7 +7,7 @@ import {MoveArbiter} from "@/classes/Chess/MoveArbiter/MoveArbiter";
 import {MoveEngine} from "@/classes/Chess/MoveArbiter/MoveEngine";
 import {MoveHistory} from "@/classes/Chess/Move/MoveHistory";
 import type {MoveList} from "@/classes/Chess/Move/MoveList";
-import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
+import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import {GameResult} from "@/classes/Chess/Game/GameResult";
 import {MadeMove} from "@/classes/Chess/Move/MadeMove";
 import type {ColorType} from "@/classes/Chess/Color";
@@ -17,6 +17,7 @@ import {MaterialScores} from "@/classes/Chess/Position/MaterialScores";
 import {GamePosition} from "@/classes/Chess/Position/GamePosition";
 import {GameOptions} from "@/classes/Chess/Game/GameOptions";
 import {GameClock} from "@/classes/Chess/GameClock/GameClock";
+import {MoveInput} from "@/classes/Chess/Move/MoveInput";
 
 export class Game
 {
@@ -138,8 +139,12 @@ export class Game
         this.moveIndex = moveIndex
     }
 
+    makeMove(move: ChessMove|string): void {
 
-    makeMove(move: ChessMove): void {
+        if(typeof move === 'string'){
+            const input = new MoveInput(move)
+            move = input.createMove(this.moveArbiter)
+        }
 
         if(this.gameResult){
             throw new Error('Cannot make move. Game is over.')
