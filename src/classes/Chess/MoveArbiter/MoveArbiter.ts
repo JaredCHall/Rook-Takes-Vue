@@ -9,7 +9,7 @@ import type {SquareType} from "@/classes/Chess/Square/Square";
 import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import type {ColorType} from "@/classes/Chess/Color";
 import {MoveDisambiguator} from "@/classes/Chess/MoveArbiter/MoveDisambiguator";
-import {AlgebraicNotationFormatter} from "@/classes/Chess/PgnFile/AlgebraicNotationFormatter";
+import {MoveNotary} from "@/classes/Chess/MoveArbiter/MoveNotary";
 
 export class MoveArbiter {
 
@@ -47,7 +47,7 @@ export class MoveArbiter {
         this.fenNumber.updateMoveResult(isCheck, !this.doesPlayerHaveLegalMoves(enemyColor))
 
         const fenAfter = this.fenNumber.clone()
-        const moveNotation  = (new AlgebraicNotationFormatter(move, fenAfter, moveDisambiguation)).format()
+        const moveNotation  = (new MoveNotary(move, fenAfter, moveDisambiguation)).format()
 
         return [moveNotation, fenAfter]
     }

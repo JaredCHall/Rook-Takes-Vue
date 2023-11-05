@@ -1,9 +1,11 @@
 import {CastlingMove} from "@/classes/Chess/Move/MoveType/CastlingMove";
-import type {Piece} from "@/classes/Chess/Piece";
+import {Piece} from "@/classes/Chess/Piece";
+import type {ChessPieceType} from "@/classes/Chess/Piece";
 import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import type {ExtendedFen} from "@/classes/Chess/Position/ExtendedFEN";
+import {PawnPromotionMove} from "@/classes/Chess/Move/MoveType/PawnPromotionMove";
 
-export class AlgebraicNotationFormatter {
+export class MoveNotary {
 
     move: ChessMove
 
@@ -20,28 +22,40 @@ export class AlgebraicNotationFormatter {
     format(): string
     {
         if(this.move instanceof CastlingMove){
-            return this.#formatCastlingMove(this.move)
+            return this.#formatCastlingMove(this.move) + this.#formatCheckAndMate(this.fenAfter)
         }
 
         const isPawn = this.move.movingPiece.type === 'pawn'
         let moveNotation = isPawn ? '' : this.#formatPieceType(this.move.movingPiece)
 
-        if(isPawn && this.move.capturedPiece){
-            moveNotation += this.move.oldSquare.split('')[0]
-        }else{
-            moveNotation += this.moveDisambiguation
-        }
-
+        moveNotation += this.moveDisambiguation
         moveNotation += this.move.capturedPiece ? 'x' : ''
         moveNotation += this.move.newSquare
-
-        if(this.fenAfter.isMate){
-            moveNotation += '#'
-        }else if(this.fenAfter.isCheck){
-            moveNotation += '+'
+        if(this.move instanceof PawnPromotionMove){
+            moveNotation += this.#formatPawnPromotion(this.move.promoteToType)
         }
+        moveNotation += this.#formatCheckAndMate(this.fenAfter)
 
         return moveNotation
+    }
+
+    #formatCheckAndMate(fenAfter: ExtendedFen)
+    {
+        if(fenAfter.isMate){
+            return '#'
+        }
+        if(fenAfter.isCheck){
+            return '+'
+        }
+        return ''
+    }
+
+    #formatPawnPromotion(pieceType: ChessPieceType): string
+    {
+        const promotionPieceType = this.#formatPieceType(
+            new Piece(pieceType, 'white')
+        )
+        return `=${promotionPieceType}`
     }
 
     #formatPieceType(piece: Piece): string

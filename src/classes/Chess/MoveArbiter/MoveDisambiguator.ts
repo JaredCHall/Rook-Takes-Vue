@@ -49,13 +49,10 @@ export class MoveDisambiguator {
         let isFileAmbiguous = false
         let isRankAmbiguous = false
 
-        console.log(samePieceSquares)
-
         // calculate moves for each piece and check if they attack the same square as startingSquare
         samePieceSquares.forEach((square: Square) => {
 
             const possibleMoves = this.moveArbiter.getLegalMoves(square.name)
-            console.log(possibleMoves)
             possibleMoves.moves.forEach((possibleMove: ChessMove) => {
                 if(possibleMove.newSquare === targetSquare){
                     const [file, rank] = Square.getFileAndRank(possibleMove.oldSquare)
@@ -69,9 +66,6 @@ export class MoveDisambiguator {
                 }
             })
         })
-
-        console.log('ambiguous rank: ' + (isRankAmbiguous ? '1' : '0'))
-        console.log('ambiguous file: ' + (isFileAmbiguous ? '1' : '0'))
 
         if(!isRankAmbiguous && !isFileAmbiguous){
             return ''

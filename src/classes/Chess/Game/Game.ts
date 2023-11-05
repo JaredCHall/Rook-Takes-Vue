@@ -17,8 +17,6 @@ import {MaterialScores} from "@/classes/Chess/Position/MaterialScores";
 import {GamePosition} from "@/classes/Chess/Position/GamePosition";
 import {GameOptions} from "@/classes/Chess/Game/GameOptions";
 import {GameClock} from "@/classes/Chess/GameClock/GameClock";
-import {MoveDisambiguator} from "@/classes/Chess/MoveArbiter/MoveDisambiguator";
-import {AlgebraicNotationFormatter} from "@/classes/Chess/PgnFile/AlgebraicNotationFormatter";
 
 export class Game
 {
