@@ -1,4 +1,5 @@
 import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
+import type {SquareType} from "@/classes/Chess/Square/Square";
 
 export class MoveList {
 
@@ -6,6 +7,14 @@ export class MoveList {
 
     get length(): number {
         return this.moves.length
+    }
+
+    has(moveTargetSquare: SquareType): boolean
+    {
+        const matches = this.moves.filter((move: ChessMove) => {
+            return move.newSquare === moveTargetSquare
+        })
+        return matches.length > 0
     }
 
     first(): ChessMove
@@ -36,5 +45,6 @@ export class MoveList {
         this.moves = this.moves.filter((move: ChessMove) => {
             return callback(move)
         })
+        return this
     }
 }

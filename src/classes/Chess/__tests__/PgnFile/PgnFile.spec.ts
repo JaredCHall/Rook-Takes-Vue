@@ -49,5 +49,44 @@ describe('PgnFile' , () => {
 
     })
 
+    it('it creates PGN file of a Scholars Mate using SAN for moves' , () => {
+
+        const game = Game.makeNewGame()
+
+        game.makeMove('e4')
+        game.makeMove('e5')
+
+        game.makeMove('Nc3')
+        game.makeMove('Qf6')
+
+        game.makeMove('Bc4')
+        game.makeMove('Bc5')
+
+        game.makeMove('d3')
+        game.makeMove('Qxf2')
+
+        const file = PgnFile.make(game)
+
+        expect(file.content).toEqual(`[Event "Casual Game"]
+[Site "Sol System"]
+[Date "2023.11.05"]
+[Round "1"]
+[Result "0-1"]
+[Termination "Normal"]
+[White "White"]
+[Black "Black"]
+[WhiteElo "?"]
+[BlackElo "?"]
+
+1. e4 e5
+2. Nc3 Qf6
+3. Bc4 Bc5
+4. d3 Qxf2#
+`)
+
+
+
+    })
+
 
 })
