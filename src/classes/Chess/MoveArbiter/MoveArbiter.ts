@@ -9,7 +9,7 @@ import type {SquareType} from "@/classes/Chess/Square/Square";
 import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import type {ColorType} from "@/classes/Chess/Color";
 import {MoveDisambiguator} from "@/classes/Chess/MoveArbiter/MoveDisambiguator";
-import {MoveNotary} from "@/classes/Chess/MoveArbiter/MoveNotary";
+import {MoveNotary} from "@/classes/Chess/MoveNotary/MoveNotary";
 
 export class MoveArbiter {
 
@@ -34,8 +34,8 @@ export class MoveArbiter {
     makeMove(move: ChessMove): [moveNotation: string, fenAfter: ExtendedFen]
     {
 
-        // calculate pre-move, needed for algebraic notation
-        const moveDisambiguation = (new MoveDisambiguator(this, move)).getDisambiguationString()
+        const moveNotary = new MoveNotary(this)
+        const disambiguation = moveNotary.getDisambiguation(move)
 
         this.squares144.makeMove(move)
         this.fenNumber.incrementTurn(move, this.squares64)
@@ -47,9 +47,9 @@ export class MoveArbiter {
         this.fenNumber.updateMoveResult(isCheck, !this.doesPlayerHaveLegalMoves(enemyColor))
 
         const fenAfter = this.fenNumber.clone()
-        const moveNotation  = (new MoveNotary(move, fenAfter, moveDisambiguation)).format()
+        const sanNotation  = moveNotary.getSanNotation(move, disambiguation)
 
-        return [moveNotation, fenAfter]
+        return [sanNotation.serialize(), fenAfter]
     }
 
     unMakeMove(move: ChessMove, fenBefore: ExtendedFen): void

@@ -51,22 +51,37 @@ export class MoveInput {
 
     #fromSquareNames(moveArbiter: MoveArbiter, input: string): ChessMove
     {
-        const [oldSquare, newSquare] = input.split(' ')
+        const [oldSquare, newSquare, promoteType] = input.split(' ')
+
+        if(promoteType && null === promoteType.match(/^(=)?([QBNR])$/)) {
+            throw new Error(`Invalid promotion type. 3rd Argument must be 'Q','R','B' or 'N'. Given: ${promoteType}`)
+        }
 
         //@ts-ignore
         const possibleMoves = moveArbiter.getLegalMoves(oldSquare)
         possibleMoves.filter((possibleMove: ChessMove) => possibleMove.newSquare === newSquare)
         if(possibleMoves.length > 0){
-            return possibleMoves.first()
+            const move = possibleMoves.first()
+            return this.#setMovePromotionType(move, promoteType)
         }
 
         throw new Error(`Invalid Move. ${oldSquare} ${newSquare} is not possible.`)
     }
 
 
+    #setMovePromotionType(move: ChessMove, promotionType: string|null): ChessMove
+    {
+        if(move instanceof PawnPromotionMove && promotionType) {
+            move.promoteToType = this.#getPieceFromNotationType(promotionType, 'black').type
+        }
+        return move
+    }
 
     #fromAlgebraicNotation(moveArbiter: MoveArbiter, input: string): ChessMove
     {
+
+
+
         const sideToMove = moveArbiter.fenNumber.sideToMove
         if(null !== input.match(/^O-O-O|O-O$/)){
             let castlesType = input === 'O-O-O' ? 'q' : 'k'
@@ -101,9 +116,7 @@ export class MoveInput {
                 const moves = moveArbiter.getLegalMoves(square.name)
                 moves.each((move: ChessMove) => {
                     if(move.newSquare === newSquare){
-                        if(move instanceof PawnPromotionMove && promotionType) {
-                            move.promoteToType = this.#getPieceFromNotationType(promotionType, sideToMove).type
-                        }
+                        move = this.#setMovePromotionType(move, promotionType)
                         possibleMoves.push(move)
                     }
                 })
