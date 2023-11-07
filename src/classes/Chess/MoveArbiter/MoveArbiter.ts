@@ -8,15 +8,20 @@ import {CastlingMove} from "@/classes/Chess/Move/MoveType/CastlingMove";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import type {ColorType} from "@/classes/Chess/Color";
-import {MoveDisambiguator} from "@/classes/Chess/MoveArbiter/MoveDisambiguator";
 import {MoveNotary} from "@/classes/Chess/MoveNotary/MoveNotary";
+import {Squares144} from "@/classes/Chess/Position/Squares144";
+import {SanNotation} from "@/classes/Chess/MoveNotary/SanNotation";
+import {CoordinateNotation} from "@/classes/Chess/MoveNotary/CoordinateNotation";
 
 export class MoveArbiter {
 
     moveEngine: MoveEngine
 
+    moveNotary: MoveNotary
+
     constructor(moveEngine: MoveEngine) {
         this.moveEngine = moveEngine
+        this.moveNotary = new MoveNotary(this)
     }
 
     get squares144() {
@@ -31,11 +36,21 @@ export class MoveArbiter {
         return this.squares144.fenNumber
     }
 
+    static fromFen(fen: ExtendedFen|string): MoveArbiter
+    {
+        return new MoveArbiter(new MoveEngine(new Squares144(fen)))
+    }
+
+    createMove(notation: SanNotation|CoordinateNotation): ChessMove
+    {
+        return this.moveNotary.createMove(notation)
+    }
+
+
     makeMove(move: ChessMove): [moveNotation: string, fenAfter: ExtendedFen]
     {
 
-        const moveNotary = new MoveNotary(this)
-        const disambiguation = moveNotary.getDisambiguation(move)
+        const disambiguation = this.moveNotary.getDisambiguation(move)
 
         this.squares144.makeMove(move)
         this.fenNumber.incrementTurn(move, this.squares64)
@@ -47,7 +62,7 @@ export class MoveArbiter {
         this.fenNumber.updateMoveResult(isCheck, !this.doesPlayerHaveLegalMoves(enemyColor))
 
         const fenAfter = this.fenNumber.clone()
-        const sanNotation  = moveNotary.getSanNotation(move, disambiguation)
+        const sanNotation  = this.moveNotary.getSanNotation(move, disambiguation)
 
         return [sanNotation.serialize(), fenAfter]
     }

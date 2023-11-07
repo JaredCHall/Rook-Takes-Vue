@@ -1,14 +1,10 @@
 import {CastlingMove} from "@/classes/Chess/Move/MoveType/CastlingMove";
-import {Piece} from "@/classes/Chess/Piece";
-import type {ChessPieceType} from "@/classes/Chess/Piece";
 import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
-import type {ExtendedFen} from "@/classes/Chess/Position/ExtendedFEN";
 import {PawnPromotionMove} from "@/classes/Chess/Move/MoveType/PawnPromotionMove";
 import type {MoveArbiter} from "@/classes/Chess/MoveArbiter/MoveArbiter";
 import {SanNotation} from "@/classes/Chess/MoveNotary/SanNotation";
-import type {ColorType} from "@/classes/Chess/Color";
 import {Square} from "@/classes/Chess/Square/Square";
-import {MoveDisambiguator} from "@/classes/Chess/MoveArbiter/MoveDisambiguator";
+import {CoordinateNotation} from "@/classes/Chess/MoveNotary/CoordinateNotation";
 
 export class MoveNotary {
 
@@ -18,10 +14,10 @@ export class MoveNotary {
         this.moveArbiter = moveArbiter
     }
 
-    createMove(notation: string)
+
+    createFromSanNotation(notation: SanNotation): ChessMove
     {
-        const sanNotation = SanNotation.fromInput(notation, this.moveArbiter.fenNumber.sideToMove)
-        const piece = sanNotation.movingPiece
+        const piece = notation.movingPiece
         const moveArbiter = this.moveArbiter
 
         let possibleMoves: Array<ChessMove> = [];
@@ -31,15 +27,14 @@ export class MoveNotary {
             .filter((square: Square) => {
                 const moves = moveArbiter.getLegalMoves(square.name)
                 moves.each((move: ChessMove) => {
-                    if(move.newSquare === sanNotation.newSquare){
-                        if(move instanceof PawnPromotionMove && sanNotation.promotionType) {
-                            move.promoteToType = sanNotation.promotionType
+                    if(move.newSquare === notation.newSquare){
+                        if(move instanceof PawnPromotionMove && notation.promoteToType) {
+                            move.promoteToType = notation.promoteToType
                         }
                         possibleMoves.push(move)
                     }
                 })
-                // @ts-ignore
-                return moves.has(sanNotation.newSquare)
+                return moves.has(notation.newSquare)
             })
 
         if(possibleMoves.length === 0){
@@ -53,14 +48,14 @@ export class MoveNotary {
         possibleMoves = possibleMoves.filter((move: ChessMove) => {
             const [candidateStartFile, candidateStartRank] = Square.getFileAndRank(move.oldSquare)
 
-            const matchesFile = sanNotation.startFile && (sanNotation.startFile === candidateStartFile)
-            const matchesRank = sanNotation.startRank && (sanNotation.startRank === candidateStartRank)
+            const matchesFile = notation.startFile && (notation.startFile === candidateStartFile)
+            const matchesRank = notation.startRank && (notation.startRank === candidateStartRank)
 
-            if(sanNotation.startFile && !sanNotation.startRank) {
+            if(notation.startFile && !notation.startRank) {
                 return matchesFile
-            }else if(sanNotation.startRank && !sanNotation.startFile) {
+            }else if(notation.startRank && !notation.startFile) {
                 return matchesRank
-            }else if(sanNotation.startFile && sanNotation.startRank){
+            }else if(notation.startFile && notation.startRank){
                 return matchesFile && matchesRank
             }
         })
@@ -74,11 +69,40 @@ export class MoveNotary {
         }
 
         throw new Error('Move is ambiguous.')
+    }
 
+    createMoveFromCoordinateNotation(notation: CoordinateNotation): ChessMove
+    {
+        const possibleMoves = this.moveArbiter
+            .getLegalMoves(notation.oldSquare)
+            .filter((possibleMove: ChessMove) => possibleMove.newSquare === notation.newSquare)
+        if(possibleMoves.length > 0){
+            const move = possibleMoves.first()
+            if(move instanceof PawnPromotionMove && notation.promoteToType){
+                move.promoteToType = notation.promoteToType
+            }
+            return move
+        }
+
+        throw new Error(`Invalid Move. ${notation.oldSquare} ${notation.newSquare} is not possible.`)
+    }
+
+
+    createMove(notation: SanNotation|CoordinateNotation)
+    {
+        if(notation instanceof SanNotation){
+            return this.createFromSanNotation(notation)
+        }
+
+        return this.createMoveFromCoordinateNotation(notation)
     }
 
     getDisambiguation(move: ChessMove): string
     {
+        if(move.movingPiece.color !== this.moveArbiter.fenNumber.sideToMove){
+            throw new Error(`method must be called before move is made`)
+        }
+
         const movingPiece = move.movingPiece
         const startSquare = move.oldSquare
         const targetSquare = move.newSquare
@@ -148,13 +172,16 @@ export class MoveNotary {
     // call after arbiter has made move for correct CheckMate token
     getSanNotation(move: ChessMove, disambiguation: string): SanNotation
     {
+        if(move.movingPiece.color === this.moveArbiter.fenNumber.sideToMove){
+            throw new Error(`method must be called after move is made`)
+        }
+
         if(move instanceof CastlingMove){
             return new SanNotation(
-                move.movingPiece.type,
-                move.movingPiece.color,
+                move.movingPiece,
                 false,
-                move.castlesType.notation,
-                null,
+                move.castlesType.kingsNewSquare,
+                move.castlesType,
                 null,
                 null,
                 null,
@@ -162,17 +189,13 @@ export class MoveNotary {
             )
         }
 
-        const type = move.movingPiece.type
-        const color = move.movingPiece.color
         const isCapture = !!move.capturedPiece
         const promotionType = move instanceof PawnPromotionMove ? move.promoteToType : null
-
         const startFile = disambiguation && disambiguation.length > 0 ? disambiguation.charAt(0) : null
         const startRank = disambiguation && disambiguation.length == 2 ? parseInt(disambiguation.charAt(1)) : null
 
         return new SanNotation(
-            type,
-            color,
+            move.movingPiece,
             isCapture,
             move.newSquare,
             null,
@@ -183,7 +206,7 @@ export class MoveNotary {
         )
     }
 
-    #formatCheckMakeToken()
+    #formatCheckMakeToken(): '#'|'+'|null
     {
         if(this.moveArbiter.fenNumber.isMate){
             return '#'
@@ -191,7 +214,7 @@ export class MoveNotary {
         if(this.moveArbiter.fenNumber.isCheck){
             return '+'
         }
-        return ''
+        return null
     }
 
 }

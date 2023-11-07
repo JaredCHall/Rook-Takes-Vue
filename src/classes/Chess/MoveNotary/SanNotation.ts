@@ -1,7 +1,7 @@
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import {Piece, type ChessPieceType} from "@/classes/Chess/Piece";
 import {Square} from "@/classes/Chess/Square/Square";
-import type {CastlesType} from "@/classes/Chess/Move/MoveType/CastlesType";
+import {CastlesType} from "@/classes/Chess/Move/MoveType/CastlesType";
 import {CastlingMove} from "@/classes/Chess/Move/MoveType/CastlingMove";
 import type {ColorType} from "@/classes/Chess/Color";
 import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
@@ -17,96 +17,58 @@ export class SanNotation {
 
     readonly movingPiece: Piece
 
-    readonly promotionType: ChessPieceType|null
+    readonly promoteToType: ChessPieceType|null
 
+    // for disambiguation on file
     readonly startFile: string|null
 
+    // for disambiguation on rank
     readonly startRank: number|null
 
     readonly checkMateToken: '#'|'+'|null
 
     constructor(
-        movingPieceType: string,
-        movingPieceColor: string,
+        movingPiece: Piece,
         isCapture: boolean,
-        newSquare: string|null,
-        castlesType: string|CastlesType|null = null,
-        promotionType: string|null = null,
+        newSquare: SquareType, // nullable for castling moves
+        castlesType: CastlesType|null = null,
+        promotionType: ChessPieceType|null = null,
         startFile: string|null = null,
         startRank: number|null = null,
-        checkMateToken: string|null = null,
+        checkMateToken: '#'|'+'|null = null,
     ) {
 
-        // handle castles type
-        if(typeof castlesType === 'string'){
-            castlesType = castlesType === 'O-O-O' ? 'q' : 'k'
-            if(movingPieceColor === 'white'){
-                castlesType = castlesType.toUpperCase()
-            }
-            //@ts-ignore
-            castlesType = CastlesType.create(castlesType)
-        }
+        this.movingPiece = movingPiece
         this.castlesType = castlesType
-        if(this.castlesType){
-            this.newSquare = this.castlesType.kingsNewSquare
-        }
-
-        //@ts-ignore
-        this.newSquare = newSquare ? (new Square(newSquare)).name : null
-        //@ts-ignore
-        this.movingPiece = new Piece(SanNotation.getPieceType(movingPieceType), movingPieceColor)
+        this.newSquare = newSquare
         this.isCapture = isCapture
-        this.promotionType = promotionType ? SanNotation.getPromotionType(promotionType) : null
+        this.promoteToType = promotionType
         this.startFile = startFile
         this.startRank = startRank
-        //@ts-ignore
         this.checkMateToken = checkMateToken
 
-        if(this.isCapture && this.movingPiece.type === 'pawn'){
-            this.startFile = Square.getFileAndRank(this.newSquare)[0]
+        if(this.isCapture && this.movingPiece.type === 'pawn' && !this.startFile){
+            // file disambiguation is always required for pawn captures
+            throw new Error('File disambiguation is always required for pawn captures')
         }
     }
 
-    serialize(): string
-    {
-        if(this.castlesType){
-            return this.castlesType + (this.checkMateToken ?? '')
-        }
-
-        let notation = ''
-        if(this.movingPiece.type !== 'pawn'){
-            notation += this.#formatPieceType(this.movingPiece)
-        }
-        notation += (this.startFile ?? '')
-            + (this.startRank ?? '')
-            + (this.isCapture ? 'x' : '')
-            + this.newSquare
-            + (this.promotionType ? '='+this.promotionType : '')
-            + (this.checkMateToken ?? '')
-
-        return notation
-    }
-
-
-    #formatPieceType(piece: Piece): string
-    {
-        const char = piece.type === 'knight' ? 'n' : piece.type.charAt(0)
-        return char.toUpperCase()
-    }
     static fromInput(input: string, sideToMove: ColorType) {
 
         let parts = input.match(/^(O-O-O|O-O)([+#])?$/)
         if(parts){
+            //@ts-ignore
+            const castlesType = CastlesType.create(parts[1], sideToMove)
             return new SanNotation(
-                'king',
-                sideToMove,
+                new Piece('king', sideToMove),
                 false,
+                castlesType.kingsNewSquare,
+                castlesType,
                 null,
-                parts[1],
                 null,
                 null,
-                null,
-                parts[2],
+                //@ts-ignore
+                parts[2] || null
             )
         }
 
@@ -114,18 +76,19 @@ export class SanNotation {
         if(parts === null){
             throw new Error('Unreadable SAN notation')
         }
-        const pieceType = parts[1]
+        const pieceType = this.getPieceType(parts[1])
         const startFile = parts[2] || null
-        const startRank = parts[3] ? parseInt(parts[2]) : null
+        const startRank = parts[3] ? parseInt(parts[3]) : null
         const isCapture = !!parts[4]
         const newSquare = parts[5]
-        const promotionType = parts[6] ? parts[6].replace(/=/,'') : null
+        const promotionType = parts[6] ? this.getPromotionType(parts[6].replace(/=/,'')) : null
         const checkMateToken = parts[7] || null
 
         return new SanNotation(
-            pieceType,
-            sideToMove,
+            //@ts-ignore
+            new Piece(pieceType, sideToMove),
             isCapture,
+            //@ts-ignore
             newSquare,
             null,
             promotionType,
@@ -139,10 +102,10 @@ export class SanNotation {
     {
         promotionType = promotionType.replace(/=/,'')
         switch(promotionType){
-            case 'Q': return 'queen'
-            case 'R': return 'rook'
-            case 'N': return 'knight'
-            case 'B': return 'bishop'
+            case 'Q': case 'queen':  return 'queen'
+            case 'R': case 'rook':   return 'rook'
+            case 'N': case 'knight': return 'knight'
+            case 'B': case 'bishop': return 'bishop'
         }
         throw new Error('Invalid promotion type.')
     }
@@ -150,24 +113,39 @@ export class SanNotation {
     static getPieceType(pieceType: string): ChessPieceType
     {
         switch(pieceType){
-            case 'K':
-            case 'king':
-                return 'king'
-            case 'Q':
-            case 'queen':
-                return 'queen'
-            case 'R':
-            case 'rook':
-                return 'rook'
-            case 'N':
-            case 'knight':
-                return 'knight'
-            case 'B':
-            case 'bishop':
-                return 'bishop'
-            default:
-                return 'pawn'
+            case 'K': case 'king':   return 'king'
+            case 'Q': case 'queen':  return 'queen'
+            case 'R': case 'rook':   return 'rook'
+            case 'N': case 'knight': return 'knight'
+            case 'B': case 'bishop': return 'bishop'
+            default: return 'pawn'
         }
+    }
+
+    serialize(): string
+    {
+        if(this.castlesType){
+            return this.castlesType.notation + (this.checkMateToken ?? '')
+        }
+
+        let notation = ''
+        if(this.movingPiece.type !== 'pawn'){
+            notation += this.#formatPieceType(this.movingPiece.type)
+        }
+        notation += (this.startFile ?? '')
+            + (this.startRank ?? '')
+            + (this.isCapture ? 'x' : '')
+            + this.newSquare
+            + (this.promoteToType ? '=' + this.#formatPieceType(this.promoteToType) : '')
+            + (this.checkMateToken ?? '')
+
+        return notation
+    }
+
+    #formatPieceType(pieceType: ChessPieceType): string
+    {
+        const char = pieceType === 'knight' ? 'n' : pieceType.charAt(0)
+        return char.toUpperCase()
     }
 
 }

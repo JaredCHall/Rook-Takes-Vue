@@ -33,7 +33,7 @@ export class CastlesType {
     }
 
 
-    static create(castlesType: 'K'|'Q'|'q'|'k')
+    static create(castlesType: 'K'|'Q'|'q'|'k'|'O-O-O'|'O-O', color: ColorType|null = null): CastlesType
     {
         switch(castlesType){
             case 'Q': return new CastlesType(
@@ -76,6 +76,16 @@ export class CastlesType {
                 'k',
                 'O-O'
             )
+            case 'O-O':
+                if(!color){
+                    throw new Error('must pass color with O-O')
+                }
+                return CastlesType.create(color === 'white' ? 'K' : 'k')
+            case 'O-O-O':
+                if(!color){
+                    throw new Error('must pass color with O-O-O')
+                }
+                return CastlesType.create(color === 'white' ? 'Q' : 'q')
         }
     }
 

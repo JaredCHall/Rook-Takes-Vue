@@ -13,6 +13,9 @@ describe('PgnFile' , () => {
     it('it creates PGN file of a Scholars Mate' , () => {
 
         const game = Game.makeNewGame()
+        game.gameOptions.input_type = 'Coordinate'
+
+        game.setEventDate(new Date(0))
 
         game.makeMove('e2 e4')
         game.makeMove('e7 e5')
@@ -30,7 +33,7 @@ describe('PgnFile' , () => {
 
         expect(file.content).toEqual(`[Event "Casual Game"]
 [Site "Sol System"]
-[Date "2023.11.05"]
+[Date "1969.12.31"]
 [Round "1"]
 [Result "0-1"]
 [Termination "Normal"]
@@ -52,6 +55,7 @@ describe('PgnFile' , () => {
     it('it creates PGN file of a Scholars Mate using SAN for moves' , () => {
 
         const game = Game.makeNewGame()
+        game.setEventDate(new Date(0))
 
         game.makeMove('e4')
         game.makeMove('e5')
@@ -69,7 +73,7 @@ describe('PgnFile' , () => {
 
         expect(file.content).toEqual(`[Event "Casual Game"]
 [Site "Sol System"]
-[Date "2023.11.05"]
+[Date "1969.12.31"]
 [Round "1"]
 [Result "0-1"]
 [Termination "Normal"]

@@ -15,4 +15,6 @@ export class GameOptions {
 
     timer_delay: null|number = null
 
+    input_type: 'SAN'|'Coordinate' = 'SAN'
+
 }
