@@ -117,6 +117,10 @@ export class Game
         this.siteName = name
     }
 
+    setInputType(type: 'SAN'|'Coordinate'): void {
+        this.gameOptions.input_type = type
+    }
+
     setPlayer(player: Player){
         if(player.color === 'white'){
             this.playerWhite = player

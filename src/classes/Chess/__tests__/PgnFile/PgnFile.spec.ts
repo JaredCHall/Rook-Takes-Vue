@@ -13,8 +13,7 @@ describe('PgnFile' , () => {
     it('it creates PGN file of a Scholars Mate' , () => {
 
         const game = Game.makeNewGame()
-        game.gameOptions.input_type = 'Coordinate'
-
+        game.setInputType('Coordinate')
         game.setEventDate(new Date(0))
 
         game.makeMove('e2 e4')
