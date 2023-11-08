@@ -25,7 +25,7 @@ export class SanNotation {
     // for disambiguation on rank
     readonly startRank: number|null
 
-    readonly checkMateToken: '#'|'+'|null
+    checkMateToken: '#'|'+'|null
 
     constructor(
         movingPiece: Piece,
@@ -50,6 +50,17 @@ export class SanNotation {
         if(this.isCapture && this.movingPiece.type === 'pawn' && !this.startFile){
             // file disambiguation is always required for pawn captures
             throw new Error('File disambiguation is always required for pawn captures')
+        }
+    }
+
+    setFenAfter(fenAfter: ExtendedFen): void
+    {
+        if(fenAfter.isMate){
+            this.checkMateToken = '#'
+        }else if(fenAfter.isCheck){
+            this.checkMateToken = '+'
+        }else{
+            this.checkMateToken = null;
         }
     }
 

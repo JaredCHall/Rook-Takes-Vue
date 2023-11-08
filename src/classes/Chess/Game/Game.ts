@@ -17,8 +17,6 @@ import {MaterialScores} from "@/classes/Chess/Position/MaterialScores";
 import {GamePosition} from "@/classes/Chess/Position/GamePosition";
 import {GameOptions} from "@/classes/Chess/Game/GameOptions";
 import {GameClock} from "@/classes/Chess/GameClock/GameClock";
-import {SanNotation} from "@/classes/Chess/MoveNotary/SanNotation";
-import {CoordinateNotation} from "@/classes/Chess/MoveNotary/CoordinateNotation";
 
 export class Game
 {
@@ -152,12 +150,8 @@ export class Game
     makeMove(move: ChessMove|string): void {
 
         if(typeof move === 'string'){
-            const useSAN = this.gameOptions.input_type === 'SAN'
-            const notation = useSAN ?
-                SanNotation.fromInput(move, this.moveArbiter.fenNumber.sideToMove)
-                : CoordinateNotation.fromInput(move)
-
-            move = this.moveArbiter.createMove(notation)
+            const inputType = this.gameOptions.input_type
+            move = this.moveArbiter.moveFactory.fromInput(move, inputType)
         }
 
         if(this.gameResult){

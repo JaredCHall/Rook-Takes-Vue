@@ -2,6 +2,7 @@ import type {SquareType} from "@/classes/Chess/Square/Square";
 import {Square} from "@/classes/Chess/Square/Square";
 import type {ChessPieceType} from "@/classes/Chess/Piece";
 import {SanNotation} from "@/classes/Chess/MoveNotary/SanNotation";
+import type {ExtendedFen} from "@/classes/Chess/Position/ExtendedFEN";
 
 export class CoordinateNotation {
 
@@ -17,6 +18,8 @@ export class CoordinateNotation {
         this.promoteToType = promotionType ? SanNotation.getPromotionType(promotionType) : null
     }
 
+    setFenAfter(fenAfter: ExtendedFen): void {}
+
     static fromInput(input: string)
     {
         const parts = input.match(/^([a-h][1-8])(\s)?([a-h][1-8])(\s)?(=)?([QBNR])?$/)
@@ -31,5 +34,4 @@ export class CoordinateNotation {
         //@ts-ignore
         return new CoordinateNotation(oldSquare, newSquare, promoteType)
     }
-
 }
