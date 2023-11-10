@@ -20,8 +20,8 @@ describe('Game', () => {
     it('it constructs itself', () => {
 
         const options = new GameOptions()
-        options.timer_type = 'Basic'
-        options.timer_duration = 60 * 15
+        options.timerType = 'Basic'
+        options.timerDuration = 60 * 15
 
         const board = new Game('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1', options)
         expect(board.fenNumber).toBeInstanceOf(ExtendedFen)

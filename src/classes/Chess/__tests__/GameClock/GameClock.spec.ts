@@ -40,24 +40,24 @@ describe('GameClock', () => {
         expect(() => {GameClock.make(options)}).toThrowError()
 
         options = new GameOptions()
-        options.timer_type = 'invalid'
+        options.timerType = 'invalid'
         expect(() => {GameClock.make(options)}).toThrowError()
 
         options = new GameOptions()
-        options.timer_type = 'Basic'
-        options.timer_duration = null
+        options.timerType = 'Basic'
+        options.timerDuration = null
         expect(() => {GameClock.make(options)}).toThrowError()
 
         options = new GameOptions()
-        options.timer_type = 'Increment'
-        options.timer_duration = 600
-        options.timer_increment = null
+        options.timerType = 'Increment'
+        options.timerDuration = 600
+        options.timerIncrement = null
         expect(() => {GameClock.make(options)}).toThrowError()
 
         options = new GameOptions()
-        options.timer_type = 'Delay'
-        options.timer_duration = 600
-        options.timer_delay = null
+        options.timerType = 'Delay'
+        options.timerDuration = 600
+        options.timerDelay = null
         expect(() => {GameClock.make(options)}).toThrowError()
 
     })
@@ -65,8 +65,8 @@ describe('GameClock', () => {
     it('makes basic clock from options', () => {
 
         const options = new GameOptions()
-        options.timer_type = 'Basic'
-        options.timer_duration = 300
+        options.timerType = 'Basic'
+        options.timerDuration = 300
 
         const clock = GameClock.make(options)
         expect(clock.timerBlack).toBeInstanceOf(BasicTimer)
@@ -79,9 +79,9 @@ describe('GameClock', () => {
     it('makes delay clock from options', () => {
 
         const options = new GameOptions()
-        options.timer_type = 'Delay'
-        options.timer_duration = 300
-        options.timer_delay = 3
+        options.timerType = 'Delay'
+        options.timerDuration = 300
+        options.timerDelay = 3
 
         const clock = GameClock.make(options)
         expect(clock.timerBlack).toBeInstanceOf(DelayTimer)
@@ -94,9 +94,9 @@ describe('GameClock', () => {
     it('makes increment clock from options', () => {
 
         const options = new GameOptions()
-        options.timer_type = 'Increment'
-        options.timer_duration = 300
-        options.timer_increment = 5
+        options.timerType = 'Increment'
+        options.timerDuration = 300
+        options.timerIncrement = 5
 
         const clock = GameClock.make(options)
         expect(clock.timerBlack).toBeInstanceOf(IncrementTimer)
@@ -108,9 +108,9 @@ describe('GameClock', () => {
 
     it('it calls outOfTime correctly' , () => {
         const options = new GameOptions()
-        options.timer_type = 'Increment'
-        options.timer_duration = 300
-        options.timer_increment = 5
+        options.timerType = 'Increment'
+        options.timerDuration = 300
+        options.timerIncrement = 5
 
         const game = {
             setOutOfTime: vi.fn()

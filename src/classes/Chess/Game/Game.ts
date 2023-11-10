@@ -73,10 +73,10 @@ export class Game
         this.squares64 = new Squares64(extendedFen)
 
 
-        if(this.gameOptions.count_material){
+        if(this.gameOptions.countMaterial){
             this.material = MaterialScores.make(this.squares64)
         }
-        if(this.gameOptions.timer_type) {
+        if(this.gameOptions.timerType) {
             this.gameClock = GameClock.make(this.gameOptions)
         }
         this.gamePosition = new GamePosition(extendedFen, this.material, this.gameClock)
@@ -116,7 +116,7 @@ export class Game
     }
 
     setInputType(type: 'SAN'|'Coordinate'): void {
-        this.gameOptions.input_type = type
+        this.gameOptions.inputType = type
     }
 
     setPlayer(player: Player){
@@ -150,7 +150,7 @@ export class Game
     makeMove(move: ChessMove|string): void {
 
         if(typeof move === 'string'){
-            const inputType = this.gameOptions.input_type
+            const inputType = this.gameOptions.inputType
             move = this.moveArbiter.moveFactory.fromInput(move, inputType)
         }
 

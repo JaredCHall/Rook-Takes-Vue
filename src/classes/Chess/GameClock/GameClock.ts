@@ -39,41 +39,41 @@ export class GameClock
     static make(gameOptions: GameOptions, game: Game|null = null): GameClock
     {
 
-        Assert.notNull(gameOptions.timer_duration, 'gameOptions.timer_duration')
-        Assert.isEnum(gameOptions.timer_type, ['Basic','Delay','Increment'], 'gameOptions.timer_type')
+        Assert.notNull(gameOptions.timerDuration, 'gameOptions.timer_duration')
+        Assert.isEnum(gameOptions.timerType, ['Basic','Delay','Increment'], 'gameOptions.timer_type')
 
-        if(gameOptions.timer_type === 'Basic'){
+        if(gameOptions.timerType === 'Basic'){
             return new GameClock(
                 //@ts-ignore
-                new BasicTimer(gameOptions.timer_duration), // white
+                new BasicTimer(gameOptions.timerDuration), // white
                 //@ts-ignore
-                new BasicTimer(gameOptions.timer_duration), // black
+                new BasicTimer(gameOptions.timerDuration), // black
                 game
             )
         }
 
-        if(gameOptions.timer_type === 'Increment'){
-            if(!gameOptions.timer_increment){
+        if(gameOptions.timerType === 'Increment'){
+            if(!gameOptions.timerIncrement){
                 throw new Error('GameConfig must include timer_increment when timer_type is "Increment"')
             }
             return new GameClock(
                 //@ts-ignore
-                new IncrementTimer(gameOptions.timer_duration, gameOptions.timer_increment),
+                new IncrementTimer(gameOptions.timerDuration, gameOptions.timerIncrement),
                 //@ts-ignore
-                new IncrementTimer(gameOptions.timer_duration, gameOptions.timer_increment),
+                new IncrementTimer(gameOptions.timerDuration, gameOptions.timerIncrement),
                 game
             );
 
         }
-        if(gameOptions.timer_type === 'Delay'){
-            if(!gameOptions.timer_delay){
+        if(gameOptions.timerType === 'Delay'){
+            if(!gameOptions.timerDelay){
                 throw new Error('GameConfig must include timer_delay when timer_type is "Delay"')
             }
             return new GameClock(
                 //@ts-ignore
-                new DelayTimer(gameOptions.timer_duration, gameOptions.timer_delay),
+                new DelayTimer(gameOptions.timerDuration, gameOptions.timerDelay),
                 //@ts-ignore
-                new DelayTimer(gameOptions.timer_duration, gameOptions.timer_delay),
+                new DelayTimer(gameOptions.timerDuration, gameOptions.timerDelay),
                 game
             );
         }
