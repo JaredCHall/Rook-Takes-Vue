@@ -11,6 +11,7 @@ import type {ColorType} from "@/classes/Chess/Color";
 import {MoveNotary} from "@/classes/Chess/MoveNotary/MoveNotary";
 import {Squares144} from "@/classes/Chess/Position/Squares144";
 import {MoveFactory} from "@/classes/Chess/MoveNotary/MoveFactory";
+import type {MoveNotation} from "@/classes/Chess/MoveNotary/MoveNotation";
 
 export class MoveArbiter {
 
@@ -45,16 +46,14 @@ export class MoveArbiter {
         return new MoveArbiter(new MoveEngine(new Squares144(fen)))
     }
 
-    makeMove(move: ChessMove): [moveNotation: string, fenAfter: ExtendedFen]
+    makeMove(move: ChessMove, notation: MoveNotation): ExtendedFen
     {
-        const notation = this.moveNotary.getSanNotation(move)
-
         this.squares144.makeMove(move)
         this.#updateFenNumber(move)
 
         notation.setFenAfter(this.fenNumber)
 
-        return [notation.serialize(), this.fenNumber.clone()]
+        return this.fenNumber.clone()
     }
 
     #updateFenNumber(move: ChessMove){

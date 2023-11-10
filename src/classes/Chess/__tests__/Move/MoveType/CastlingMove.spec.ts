@@ -73,11 +73,4 @@ describe('CastlingMove', () => {
         expect(CastlingMove.create('q').castlesType.type).toEqual('q')
     })
 
-    it('it gets algebraic notation', () => {
-        expect(CastlingMove.create('K').toAlgebraicNotation()).toEqual('O-O')
-        expect(CastlingMove.create('Q').toAlgebraicNotation()).toEqual('O-O-O')
-        expect(CastlingMove.create('k').toAlgebraicNotation()).toEqual('O-O')
-        expect(CastlingMove.create('q').toAlgebraicNotation()).toEqual('O-O-O')
-    })
-
 })

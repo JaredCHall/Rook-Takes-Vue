@@ -17,6 +17,9 @@ import {MaterialScores} from "@/classes/Chess/Position/MaterialScores";
 import {GamePosition} from "@/classes/Chess/Position/GamePosition";
 import {GameOptions} from "@/classes/Chess/Game/GameOptions";
 import {GameClock} from "@/classes/Chess/GameClock/GameClock";
+import {MoveNotation} from "@/classes/Chess/MoveNotary/MoveNotation";
+import {CoordinateNotation} from "@/classes/Chess/MoveNotary/CoordinateNotation";
+import {SanNotation} from "@/classes/Chess/MoveNotary/SanNotation";
 
 export class Game
 {
@@ -116,7 +119,7 @@ export class Game
     }
 
     setInputType(type: 'SAN'|'Coordinate'): void {
-        this.gameOptions.inputType = type
+        this.gameOptions.moveNotationType = type
     }
 
     setPlayer(player: Player){
@@ -147,24 +150,43 @@ export class Game
         this.moveIndex = moveIndex
     }
 
-    makeMove(move: ChessMove|string): void {
+    seekMadeMove(moveIndex: number): void
+    {
+        this.gamePosition = this.moveHistory.getPositionBefore(moveIndex)
+        this.fenNumber.updateSquares64(this.squares64)
+        this.moveIndex = moveIndex - 1
+    }
 
-        if(typeof move === 'string'){
-            const inputType = this.gameOptions.inputType
-            move = this.moveArbiter.moveFactory.fromInput(move, inputType)
-        }
+    makeMove(move: ChessMove|string): void {
 
         if(this.gameResult){
             throw new Error('Cannot make move. Game is over.')
         }
 
+        // deal with overloaded argument
+        // we need notation and move objects
+        let notation: SanNotation|CoordinateNotation
+        const notationType = this.gameOptions.moveNotationType
+        if(typeof move === 'string'){
+            notation = this.moveArbiter.moveFactory.makeNotation(move, notationType)
+            move = this.moveArbiter.moveFactory.make(notation)
+        }else{
+            notation = this.moveArbiter.moveNotary.getNotation(move, this.gameOptions.moveNotationType)
+        }
+
         // make the move
-        const [moveNotation, fenAfter] = this.moveArbiter.makeMove(move)
+        const fenAfter = this.moveArbiter.makeMove(move, notation)
         // update material scores and game position
         this.material?.onMove(move)
         this.gamePosition = new GamePosition(fenAfter, this.material, this.gameClock)
         // update move history
-        const madeMove = new MadeMove(move, moveNotation, this.gamePosition)
+        const madeMove = new MadeMove(move, this.gamePosition)
+        if(notationType !== 'SAN'){
+            madeMove.setCoordinateNotation(notation.serialize())
+        }else{
+            madeMove.setSanNotation(notation.serialize())
+        }
+
         this.squares64.makeMove(madeMove.move)
         this.moveHistory.add(madeMove)
         this.moveIndex = madeMove.halfStepIndex

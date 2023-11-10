@@ -17,9 +17,9 @@ export class MoveList {
         return matches.length > 0
     }
 
-    first(): ChessMove
+    first(): ChessMove|null
     {
-        return this.moves[0]
+        return this.moves[0] ?? null
     }
 
     add(move: ChessMove): void {

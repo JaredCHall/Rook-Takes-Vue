@@ -1,7 +1,6 @@
 import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
-import {Square} from "@/classes/Chess/Square/Square";
+import {Square, type SquareType} from "@/classes/Chess/Square/Square";
 import type {Piece} from "@/classes/Chess/Piece";
-import type {SquareType} from "@/classes/Chess/Square/Square";
 
 export class DoublePawnMove extends ChessMove
 {

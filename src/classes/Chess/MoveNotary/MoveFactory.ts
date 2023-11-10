@@ -4,6 +4,7 @@ import {CoordinateNotation} from "@/classes/Chess/MoveNotary/CoordinateNotation"
 import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import {Square} from "@/classes/Chess/Square/Square";
 import {PawnPromotionMove} from "@/classes/Chess/Move/MoveType/PawnPromotionMove";
+import type {MoveNotation} from "@/classes/Chess/MoveNotary/MoveNotation";
 
 export class MoveFactory {
 
@@ -13,45 +14,48 @@ export class MoveFactory {
         this.moveArbiter = moveArbiter
     }
 
-    fromInput(input: string, inputType: 'SAN'|'Coordinate'): ChessMove
+    makeNotation(input: string, inputType: 'SAN'|'Coordinate')
     {
         switch(inputType){
-            case 'SAN': return this.make(SanNotation.fromInput(input, this.moveArbiter.fenNumber.sideToMove))
-            case 'Coordinate': return this.make(CoordinateNotation.fromInput(input))
+            case 'SAN': return SanNotation.fromInput(input, this.moveArbiter.fenNumber.sideToMove)
+            case 'Coordinate': return CoordinateNotation.fromInput(input)
         }
 
         throw new Error('Unrecognized input type: must be SAN or Coordinate')
     }
 
+
     make(notation: SanNotation|CoordinateNotation): ChessMove
     {
-        if(notation instanceof SanNotation){
-            return this.#fromSanNotation(notation)
+        const isCoordinate = notation instanceof CoordinateNotation
+        const move = isCoordinate ? this.fromCoordinateNotation(notation)
+            : this.fromSanNotation(notation)
+
+        const promoteToType = notation.getPromoteToType()
+        if(move instanceof PawnPromotionMove && promoteToType) {
+            move.promoteToType = promoteToType
         }
 
-        return this.#fromCoordinateNotation(notation)
+        return move
     }
 
-    #fromSanNotation(notation: SanNotation): ChessMove
+    fromSanNotation(notation: SanNotation): ChessMove
     {
         const piece = notation.movingPiece
         const moveArbiter = this.moveArbiter
 
+        // because we don't know the starting square, we have to inspect the game state
+        // to figure out how to make the move
         let possibleMoves: Array<ChessMove> = [];
-        const candidateSquares = moveArbiter
-            .squares64
+        moveArbiter.squares64
             .getPieceSquares(piece.color, piece.type)
-            .filter((square: Square) => {
-                const moves = moveArbiter.getLegalMoves(square.name)
-                moves.each((move: ChessMove) => {
-                    if(move.newSquare === notation.newSquare){
-                        if(move instanceof PawnPromotionMove && notation.promoteToType) {
-                            move.promoteToType = notation.promoteToType
-                        }
-                        possibleMoves.push(move)
-                    }
-                })
-                return moves.has(notation.newSquare)
+            .forEach((square: Square) => {
+                const samePieceMove = moveArbiter.getLegalMoves(square.name,
+                    (move) => move.newSquare === notation.newSquare
+                ).first()
+                if(samePieceMove){
+                    possibleMoves.push(samePieceMove)
+                }
             })
 
         if(possibleMoves.length === 0){
@@ -62,6 +66,7 @@ export class MoveFactory {
             return possibleMoves[0]
         }
 
+        // apply disambiguation
         possibleMoves = possibleMoves.filter((move: ChessMove) => {
             const [candidateStartFile, candidateStartRank] = Square.getFileAndRank(move.oldSquare)
 
@@ -88,19 +93,17 @@ export class MoveFactory {
         throw new Error('Move is ambiguous.')
     }
 
-    #fromCoordinateNotation(notation: CoordinateNotation): ChessMove
+    fromCoordinateNotation(notation: CoordinateNotation): ChessMove
     {
         const possibleMoves = this.moveArbiter
             .getLegalMoves(notation.oldSquare)
             .filter((possibleMove: ChessMove) => possibleMove.newSquare === notation.newSquare)
-        if(possibleMoves.length > 0){
-            const move = possibleMoves.first()
-            if(move instanceof PawnPromotionMove && notation.promoteToType){
-                move.promoteToType = notation.promoteToType
-            }
-            return move
+
+        const move = possibleMoves.first()
+        if(!move){
+            throw new Error(`Invalid Move. ${notation.oldSquare} ${notation.newSquare} is not possible.`)
         }
 
-        throw new Error(`Invalid Move. ${notation.oldSquare} ${notation.newSquare} is not possible.`)
+        return move
     }
 }

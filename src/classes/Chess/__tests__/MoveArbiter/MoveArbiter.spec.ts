@@ -8,6 +8,7 @@ import {Squares64} from "@/classes/Chess/Position/Squares64";
 import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import {Piece} from "@/classes/Chess/Piece";
 import {CastlingMove} from "@/classes/Chess/Move/MoveType/CastlingMove";
+import {CoordinateNotation} from "@/classes/Chess/MoveNotary/CoordinateNotation";
 
 
 const getTestMoveArbiter = (fen) => {
@@ -198,12 +199,12 @@ describe('MoveArbiter', () => {
         let arbiter
         arbiter = getTestMoveArbiter('rn2k2r/ppp2ppp/5n2/2b5/4P1Nq/5P1P/PPP1B1P1/RNBQK2R w KQkq - 0 1')
 
-        const [moveNotation, fenAfter] = arbiter.makeMove(new ChessMove(
+        const fenAfter = arbiter.makeMove(new ChessMove(
             'g4',
             'f6',
             Piece.knightWhite(),
             Piece.knightBlack()
-        ))
+        ), new CoordinateNotation('g6','f6'))
 
         expect(fenAfter.piecePlacements).toEqual('rn2k2r/ppp2ppp/5N2/2b5/4P2q/5P1P/PPP1B1P1/RNBQK2R')
         expect(fenAfter.sideToMove).toEqual('black')

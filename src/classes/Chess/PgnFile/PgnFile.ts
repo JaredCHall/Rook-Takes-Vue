@@ -1,8 +1,8 @@
 import type {MoveHistory} from "@/classes/Chess/Move/MoveHistory";
 import type {Game} from "@/classes/Chess/Game/Game";
 import type {GameResult} from "@/classes/Chess/Game/GameResult";
-import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import type {MadeMove} from "@/classes/Chess/Move/MadeMove";
+import {MoveArbiter} from "@/classes/Chess/MoveArbiter/MoveArbiter";
 
 export class PgnFile
 {
@@ -15,6 +15,11 @@ export class PgnFile
 
     static make(game: Game): PgnFile
     {
+        // if game was played in coordinate notation, SAN notations will need to be hydrated
+        if(game.gameOptions.moveNotationType === 'Coordinate'){
+            this.hydrateSanNotations(game)
+        }
+
         const file = new PgnFile()
 
         // Header
@@ -38,6 +43,17 @@ export class PgnFile
         return file
     }
 
+    private static hydrateSanNotations(game: Game): void
+    {
+        console.log(game.moveHistory.startPosition.extendedFEN)
+        const arbiter = MoveArbiter.fromFen(game.moveHistory.startPosition.extendedFEN)
+        game.moveHistory.moves.forEach((move: MadeMove) => {
+            const notation = arbiter.moveNotary.getNotation(move.move, 'SAN')
+            arbiter.makeMove(move.move, notation)
+            move.setSanNotation(notation.serialize())
+        })
+    }
+
     #formatMoveList(moveHistory: MoveHistory): string
     {
         let moveText = ''
@@ -47,7 +63,7 @@ export class PgnFile
                 moveText += fenBefore.fullMoveCounter.toString() + '.'
             }
             moveText += ' '
-            moveText += move.notation
+            moveText += move.getNotation('SAN')
             if(move.movingColor == 'black'){
                 moveText += '\n'
             }

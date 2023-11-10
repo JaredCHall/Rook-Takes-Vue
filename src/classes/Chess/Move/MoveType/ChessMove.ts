@@ -2,7 +2,6 @@ import {MoveStep} from "@/classes/Chess/Move/MoveStep";
 import type {Piece} from "@/classes/Chess/Piece";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 
-
 /**
  * This represents any full chess move
  */
@@ -14,7 +13,7 @@ export class ChessMove {
 
     movingPiece: Piece
 
-    capturedPiece: Piece|null
+    capturedPiece: Piece | null
 
     constructor(oldSquare: SquareType, newSquare: SquareType, movingPiece: Piece, capturedPiece: Piece|null = null) {
         this.oldSquare = oldSquare

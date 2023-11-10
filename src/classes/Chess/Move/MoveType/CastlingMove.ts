@@ -1,6 +1,6 @@
-import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import {MoveStep} from "@/classes/Chess/Move/MoveStep";
 import {Piece} from "@/classes/Chess/Piece";
+import {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import {CastlesType} from "@/classes/Chess/Move/MoveType/CastlesType";
 import type {SquareType} from "@/classes/Chess/Square/Square";
 
@@ -29,10 +29,6 @@ export class CastlingMove extends ChessMove
         this.rook = rook
     }
 
-    toAlgebraicNotation(): string {
-        return this.castlesType.notation
-    }
-
     getMoveSteps(): Array<MoveStep> {
         const steps = super.getMoveSteps()
         const rookMoveSteps = this.getRookMove().getMoveSteps()
@@ -57,7 +53,6 @@ export class CastlingMove extends ChessMove
     }
 
     clone(): CastlingMove {
-
         const movingPiece = this.movingPiece.clone()
         const rook = this.rook.clone()
         return new CastlingMove(this.oldSquare, this.newSquare, movingPiece, rook, this.castlesType)

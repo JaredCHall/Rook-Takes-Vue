@@ -1,13 +1,11 @@
 import type {SquareType} from "@/classes/Chess/Square/Square";
 import {Piece, type ChessPieceType} from "@/classes/Chess/Piece";
-import {Square} from "@/classes/Chess/Square/Square";
 import {CastlesType} from "@/classes/Chess/Move/MoveType/CastlesType";
-import {CastlingMove} from "@/classes/Chess/Move/MoveType/CastlingMove";
 import type {ColorType} from "@/classes/Chess/Color";
-import type {ChessMove} from "@/classes/Chess/Move/MoveType/ChessMove";
 import {ExtendedFen} from "@/classes/Chess/Position/ExtendedFEN";
+import {MoveNotation} from "@/classes/Chess/MoveNotary/MoveNotation";
 
-export class SanNotation {
+export class SanNotation extends MoveNotation {
 
     readonly newSquare: SquareType
 
@@ -38,6 +36,8 @@ export class SanNotation {
         checkMateToken: '#'|'+'|null = null,
     ) {
 
+        super()
+
         this.movingPiece = movingPiece
         this.castlesType = castlesType
         this.newSquare = newSquare
@@ -62,6 +62,10 @@ export class SanNotation {
         }else{
             this.checkMateToken = null;
         }
+    }
+
+    getPromoteToType(): ChessPieceType | null {
+        return this.promoteToType;
     }
 
     static fromInput(input: string, sideToMove: ColorType) {
@@ -107,30 +111,6 @@ export class SanNotation {
             startRank,
             checkMateToken
         )
-    }
-
-    static getPromotionType(promotionType: string): ChessPieceType
-    {
-        promotionType = promotionType.replace(/=/,'')
-        switch(promotionType){
-            case 'Q': case 'queen':  return 'queen'
-            case 'R': case 'rook':   return 'rook'
-            case 'N': case 'knight': return 'knight'
-            case 'B': case 'bishop': return 'bishop'
-        }
-        throw new Error('Invalid promotion type.')
-    }
-
-    static getPieceType(pieceType: string): ChessPieceType
-    {
-        switch(pieceType){
-            case 'K': case 'king':   return 'king'
-            case 'Q': case 'queen':  return 'queen'
-            case 'R': case 'rook':   return 'rook'
-            case 'N': case 'knight': return 'knight'
-            case 'B': case 'bishop': return 'bishop'
-            default: return 'pawn'
-        }
     }
 
     serialize(): string
