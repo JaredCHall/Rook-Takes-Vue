@@ -18,62 +18,6 @@ describe('MoveNotary' , () => {
         expect(notary.moveArbiter).toBe(arbiter)
     })
 
-    // it('it errors on disambiguating move out of order' , () => {
-    //     const notary = new MoveNotary(MoveArbiter.fromFen('1n1qk3/1p1p4/8/8/2N3N1/4r3/1P2P2P/4K3 b - - 0 1'))
-    //     const move = new ChessMove('e1', 'd2',Piece.kingWhite())
-    //
-    //     expect(() => {notary.getDisambiguation(move)}).toThrowError(`method must be called before move is made`)
-    // })
-    //
-    // it('it gets no disambiguation on single piece move', () => {
-    //     const notary = new MoveNotary(MoveArbiter.fromFen('1n1qk3/1p1p4/8/8/2N3N1/4r3/1P2P2P/4K3 w - - 0 1'))
-    //     const move = new ChessMove('e1', 'd2',Piece.kingWhite())
-    //
-    //     expect(notary.getDisambiguation(move)).toEqual('')
-    // })
-    //
-    // it('it gets no disambiguation on pawn move', () => {
-    //     const notary = new MoveNotary(MoveArbiter.fromFen('1n1qk3/1p1p4/8/8/2N3N1/4r3/1P2P2P/4K3 w - - 0 1'))
-    //     const move = new ChessMove('b2', 'b3',Piece.pawnWhite())
-    //
-    //     expect(notary.getDisambiguation(move)).toEqual('')
-    // })
-    //
-    // it('it gets file disambiguation on pawn capture', () => {
-    //     const notary = new MoveNotary(MoveArbiter.fromFen('1n1qk3/1pPp4/8/4N3/6N1/4r3/4P2P/4K3 w - - 0 1'))
-    //     const move = new PawnPromotionMove(
-    //         new ChessMove('c7', 'd8',Piece.pawnWhite(), Piece.queenBlack())
-    //     )
-    //
-    //     expect(notary.getDisambiguation(move)).toEqual('c')
-    // })
-    //
-    // //1n1qk3/1pPp4/8/4N3/6N1/4r3/4P2P/4K3 w - - 0 1
-    //
-    // it('it gets disambiguation on file', () => {
-    //
-    //     const notary = new MoveNotary(MoveArbiter.fromFen('1n1qk3/1p1p4/8/8/2N3N1/4r3/1P2P2P/4K3 w - - 0 1'))
-    //     const move = new ChessMove('c4', 'e3',Piece.knightWhite())
-    //
-    //     expect(notary.getDisambiguation(move)).toEqual('c')
-    // })
-    //
-    // it('it gets disambiguation on rank', () => {
-    //
-    //     const notary = new MoveNotary(MoveArbiter.fromFen('1n1qk3/1p1p4/8/8/3B4/4r3/1P1BP2P/4K3 w - - 0 1'))
-    //     const move = new ChessMove('d4', 'e3',Piece.bishopWhite())
-    //
-    //     expect(notary.getDisambiguation(move)).toEqual('4')
-    // })
-    //
-    // it('it gets disambiguation on file and rank', () => {
-    //
-    //     const notary = new MoveNotary(MoveArbiter.fromFen('1n1qk3/1p1p4/8/2Q3Q1/8/4r3/1P2P2P/2Q1K1Q1 w - - 0 1'))
-    //     const move = new ChessMove('c5', 'e3',Piece.queenWhite())
-    //
-    //     expect(notary.getDisambiguation(move)).toEqual('c5')
-    // })
-
     it('it errors on notating move out of order' , () => {
         const move = new ChessMove('e6','e5', Piece.pawnBlack())
         const notary = new MoveNotary(MoveArbiter.fromFen('rnbq1rk1/1p3pbp/p2p1np1/2p1p3/2B1PP1N/2NP4/PPP3PP/R1B1QRK1 w - - 0 10 0 0'))
