@@ -8,13 +8,6 @@ import {MoveArbiter} from "@/classes/Chess/MoveArbiter/MoveArbiter";
 
 describe('MoveNotary' , () => {
 
-    it('constructs itself' , () => {
-        const arbiter = vi.fn()
-
-        const notary = new MoveNotary(arbiter)
-        expect(notary.moveArbiter).toBe(arbiter)
-    })
-
     it('it errors on notating move out of order' , () => {
         const move = new ChessMove('e6','e5', Piece.pawnBlack())
         const notary = new MoveNotary(MoveArbiter.fromFen('rnbq1rk1/1p3pbp/p2p1np1/2p1p3/2B1PP1N/2NP4/PPP3PP/R1B1QRK1 w - - 0 10 0 0'))
@@ -23,7 +16,6 @@ describe('MoveNotary' , () => {
             notary.getSanNotation(move).serialize()
         }).toThrowError(`method must be called before move is made`)
     })
-
 
     it('it notates simple pawn moves' , () => {
         const move = new ChessMove('d6','d5', Piece.pawnBlack())
@@ -64,11 +56,10 @@ describe('MoveNotary' , () => {
     it('it notates with file and rank disambiguation' , () => {
         const move = new ChessMove('b6','d7', Piece.knightWhite())
         const notary = new MoveNotary(MoveArbiter.fromFen('rNbq1rk1/1p3pbp/pN1p1N2/2p1pP2/2B1P3/3P4/PPP3PP/R1B1QRK1 w - - 0 10'))
-        const notation = notary.getSanNotation(move,'h4')
+        const notation = notary.getSanNotation(move)
         expect(notation.serialize()).toEqual('Nb6d7')
         expect(notation.startFile).toEqual('b')
         expect(notation.startRank).toEqual(6)
-
     })
 
     it('it notates piece captures' , () => {

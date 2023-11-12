@@ -12,7 +12,7 @@ export class CoordinateNotation extends MoveNotation {
 
     readonly promoteToType: ChessPieceType|null
 
-    constructor(oldSquare: SquareType,newSquare: SquareType, promotionType: string|null) {
+    constructor(oldSquare: SquareType,newSquare: SquareType, promotionType: string|null = null) {
         super()
         this.oldSquare = oldSquare
         this.newSquare = newSquare

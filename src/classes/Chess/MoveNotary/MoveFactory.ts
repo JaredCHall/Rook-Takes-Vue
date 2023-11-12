@@ -28,8 +28,8 @@ export class MoveFactory {
     make(notation: SanNotation|CoordinateNotation): ChessMove
     {
         const isCoordinate = notation instanceof CoordinateNotation
-        const move = isCoordinate ? this.fromCoordinateNotation(notation)
-            : this.fromSanNotation(notation)
+        const move = isCoordinate ? this.#fromCoordinateNotation(notation)
+            : this.#fromSanNotation(notation)
 
         const promoteToType = notation.getPromoteToType()
         if(move instanceof PawnPromotionMove && promoteToType) {
@@ -39,7 +39,7 @@ export class MoveFactory {
         return move
     }
 
-    fromSanNotation(notation: SanNotation): ChessMove
+    #fromSanNotation(notation: SanNotation): ChessMove
     {
         const piece = notation.movingPiece
         const moveArbiter = this.moveArbiter
@@ -93,7 +93,7 @@ export class MoveFactory {
         throw new Error('Move is ambiguous.')
     }
 
-    fromCoordinateNotation(notation: CoordinateNotation): ChessMove
+    #fromCoordinateNotation(notation: CoordinateNotation): ChessMove
     {
         const possibleMoves = this.moveArbiter
             .getLegalMoves(notation.oldSquare)
@@ -101,7 +101,7 @@ export class MoveFactory {
 
         const move = possibleMoves.first()
         if(!move){
-            throw new Error(`Invalid Move. ${notation.oldSquare} ${notation.newSquare} is not possible.`)
+            throw new Error('Move is illegal.')
         }
 
         return move
